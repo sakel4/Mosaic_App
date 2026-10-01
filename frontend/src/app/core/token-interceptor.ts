@@ -3,16 +3,13 @@ import {
   HttpInterceptorFn,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
+
 import { AuthService } from './services/auth-service';
 
-export const TOKEN_KEY = 'access_token';
-
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
   const auth = inject(AuthService);
-  const token = localStorage.getItem(TOKEN_KEY);
+  const token = auth.token();
 
   const authReq = token
     ? req.clone({
