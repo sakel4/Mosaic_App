@@ -6,12 +6,14 @@ import { Progress } from './pages/progress/progress';
 import { RealWorld } from './pages/real-world/real-world';
 import { Auth } from './pages/auth/auth';
 import { Profile } from './pages/profile/profile';
+import { authGuard } from './core/auth-guard';
 
 export const routes: Routes = [
     // Shown inside the layout (layout's <router-outlet>)
     {
         path: '',
         component: AppLayout,
+        canActivate: [authGuard],
         children: [
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
             { path: 'dashboard', component: Dashboard },

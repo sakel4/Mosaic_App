@@ -5,11 +5,13 @@ import {
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
+import { AuthService } from './services/auth-service';
 
 export const TOKEN_KEY = 'access_token';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const auth = inject(AuthService);
   const token = localStorage.getItem(TOKEN_KEY);
 
   const authReq = token
@@ -23,8 +25,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        localStorage.removeItem(TOKEN_KEY);
-        router.navigate(['/login']);
+        auth.logout();
       }
 
       return throwError(() => error);
