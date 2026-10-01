@@ -12,3 +12,8 @@ frontend/node_modules/
 # Secrets
 .env
 policy.json
+
+# Files
+FutureEd AI 2026.docx
+message.txt
+Proposal.docx
