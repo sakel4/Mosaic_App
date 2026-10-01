@@ -1,26 +1,48 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, signal } from '@angular/core';
+import { inject, Inject, Injectable, signal } from '@angular/core';
 import { LearnerProfile } from '../models/learner-profile.model';
 import { AccessibilityPreferences } from '../models/accessibility-preferences.model';
 import { defaultProfile } from './dummy_data';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private readonly http = inject(HttpClient);
   private readonly learner = signal<LearnerProfile>(structuredClone(defaultProfile));
   readonly profile = this.learner.asReadonly();
   private readonly assessmentDone = signal(false);
   readonly assessmentCompleted = this.assessmentDone.asReadonly();
-
-  completeAssessment(): void {
-    this.assessmentDone.set(true);
-  }
   readonly fontSize = signal<AccessibilityPreferences['fontSize']>('comfortable');
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
 
-  save(profile: LearnerProfile): void {
-    this.learner.set(profile);
-    this.apply(profile);
+  load(): Observable<LearnerProfile> {
+    return this.http.get<any>('/users/me/').pipe(
+      tap((me) => this.assessmentDone.set(me.assessment_completed)),
+      map((me) => ({
+        ...this.learner(),
+        name: `${me.first_name} ${me.last_name}`.trim() || this.learner().name,
+      })),
+      tap((profile) => {
+        this.learner.set(profile);
+        this.apply(profile);
+        console.log(profile);
+      }),
+    );
+  }
+
+  save(profile: LearnerProfile): Observable<LearnerProfile> {
+    const [first_name, ...rest] = profile.name.trim().split(/\s+/);
+    return this.http
+      .patch<any>('/users/me/', { first_name, last_name: rest.join(' ') })
+      .pipe(
+        map(() => profile),
+        tap((saved) => {
+          this.learner.set(saved);
+          this.apply(saved);
+        }),
+      );
   }
 
   apply(profile: LearnerProfile): void {

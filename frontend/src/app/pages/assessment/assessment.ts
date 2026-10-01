@@ -27,7 +27,7 @@ export class Assessment {
   onCompleted(attempt: ExerciseAttempt): void {
     this.lastAttempt.set(attempt);
     this.assessmentService.recordAttempt(attempt, this.exercise().skill);
-    if (this.index() === this.exercises.length - 1) this.users.completeAssessment();
+    // if (this.index() === this.exercises.length - 1) this.users.completeAssessment();
     this.feedback.set(true);
   }
 
