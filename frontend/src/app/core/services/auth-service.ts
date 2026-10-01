@@ -9,7 +9,8 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload extends LoginPayload {
-  name: string;
+  first_name: string;
+  last_name: string;
 }
 
 interface AuthResponse {
@@ -32,13 +33,13 @@ export class AuthService {
   readonly isLoggedIn = computed(() => !!this.tokenSignal());
 
   register(data: RegisterPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/auth/register', data).pipe(
+    return this.http.post<AuthResponse>('/auth/register/', data).pipe(
       tap((res) => this.saveToken(res.token)),
     );
   }
 
   login(data: LoginPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/auth/login', data).pipe(
+    return this.http.post<AuthResponse>('/auth/login/', data).pipe(
       tap((res) => this.saveToken(res.token)),
     );
   }
