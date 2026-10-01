@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from .models import Preferences, Profile, Skill, User
@@ -12,7 +13,7 @@ class PreferencesSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    preferences = PreferencesSerializer(read_only=True)
+    preferences = PreferencesSerializer(required=False)
     current_focus = serializers.SerializerMethodField()
 
     class Meta:
@@ -37,16 +38,35 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(read_only=True)
+    profile = ProfileSerializer(required=False)
 
     class Meta:
         model = User
         fields = ("id", "email", "first_name", "last_name", "role", "assessment_completed", "created_at", "profile")
         read_only_fields = ("id", "email", "role", "assessment_completed", "created_at")
 
+    @transaction.atomic
     def update(self, instance, validated_data):
-        age_years = validated_data.pop("age_years", serializers.empty)
+        profile_data = validated_data.pop("profile", {})
+        preferences_data = profile_data.pop("preferences", {})
         instance = super().update(instance, validated_data)
-        if age_years is not serializers.empty:
-            Profile.objects.update_or_create(user=instance, defaults={"age_years": age_years})
+
+        try:
+            profile = instance.profile
+        except Profile.DoesNotExist:
+            profile = Profile(user=instance)
+
+        # Only keys present in the request are applied.
+        for attr, value in profile_data.items():
+            setattr(profile, attr, value)
+
+        if preferences_data:
+            if profile.preferences is None:
+                profile.preferences = Preferences.objects.create(**preferences_data)
+            else:
+                for attr, value in preferences_data.items():
+                    setattr(profile.preferences, attr, value)
+                profile.preferences.save()
+
+        profile.save()
         return instance
