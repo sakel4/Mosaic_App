@@ -2,14 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
-  // imports: [RouterLink, RouterLinkActive, RouterOutlet],
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterOutlet, RouterLinkActive],
   selector: 'app-app-layout',
   styleUrl: './app-layout.scss',
   templateUrl: './app-layout.html',
 })
 export class AppLayout {
-  //private readonly auth = inject(AuthService); ( BETTER USE USER )
   //private readonly users = inject(UserService);
   private readonly router = inject(Router);
   readonly navItems = [
