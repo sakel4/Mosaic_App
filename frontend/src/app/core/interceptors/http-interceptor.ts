@@ -1,5 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   // Leave absolute URLs untouched

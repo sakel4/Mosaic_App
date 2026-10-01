@@ -6,8 +6,8 @@ import { Progress } from './pages/progress/progress';
 import { RealWorld } from './pages/real-world/real-world';
 import { Auth } from './pages/auth/auth';
 import { Profile } from './pages/profile/profile';
-import { authGuard } from './core/auth-guard';
-import { Assessment } from './pages/assessment/assessment';
+import { authGuard } from './core/guards/auth-guard';
+
 
 export const routes: Routes = [
     // Shown inside the layout (layout's <router-outlet>)
@@ -21,14 +21,13 @@ export const routes: Routes = [
             { path: 'practice', component: Practice },
             { path: 'progress', component: Progress },
             { path: 'real-world', component: RealWorld },
-            { path: 'profile', component: Profile},
+            { path: 'profile', component: Profile}
         ],
     },
 
     // Outside the layout (rendered directly in app.html's <router-outlet>)
     { path: 'login', component: Auth, data: { mode: 'login' } },
     { path: 'register', component: Auth, data: { mode: 'register' } },
-    { path: 'assessment', component: Assessment},
     { path: 'auth', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: '' },
 ];
