@@ -6,6 +6,9 @@ class PracticeDataError(Exception):
     pass
 
 
+AGE_GROUPS = ("under_12", "12_15", "16_18", "19_plus")
+
+
 @dataclass(frozen=True)
 class SkillEvidence:
     baseline_score: float
@@ -44,7 +47,7 @@ class SkillEvidence:
 
 @dataclass(frozen=True)
 class LearnerContext:
-    age_years: int
+    age_group: str
     skills: Mapping[str, SkillEvidence]
     completed_practice_count: int = 0
     recent_exercises: tuple[Mapping[str, Any], ...] = ()
@@ -52,12 +55,12 @@ class LearnerContext:
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "LearnerContext":
         try:
-            age = int(value["age_years"])
+            age_group = str(value["age_group"])
             raw_skills = value["skills"]
         except (KeyError, TypeError, ValueError) as exc:
-            raise PracticeDataError("Learner context requires age_years and skills.") from exc
-        if not 0 <= age <= 120:
-            raise PracticeDataError("Learner age is outside the supported range.")
+            raise PracticeDataError("Learner context requires age_group and skills.") from exc
+        if age_group not in AGE_GROUPS:
+            raise PracticeDataError("Learner age_group is not supported.")
         if not isinstance(raw_skills, Mapping):
             raise PracticeDataError("Learner skills must be an object keyed by skill.")
 
@@ -71,7 +74,7 @@ class LearnerContext:
         if not isinstance(recent, (list, tuple)):
             raise PracticeDataError("recent_exercises must be a list.")
         return cls(
-            age_years=age,
+            age_group=age_group,
             skills=parsed_skills,
             completed_practice_count=max(0, int(value.get("completed_practice_count", 0))),
             recent_exercises=tuple(item for item in recent if isinstance(item, Mapping)),

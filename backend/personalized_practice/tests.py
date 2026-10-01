@@ -4,7 +4,7 @@ import os
 from unittest.mock import Mock, patch
 
 from personalized_practice.bank import load_age_bank, public_seed, select_seed
-from personalized_practice.domain import LearnerContext, SkillEvidence
+from personalized_practice.domain import LearnerContext, PracticeDataError, SkillEvidence
 from personalized_practice.generator import (
     BedrockExerciseGenerator,
     ExerciseGenerationError,
@@ -33,6 +33,12 @@ class PersonalizationTests(unittest.TestCase):
         for age_group in ("under_12", "12_15", "16_18", "19_plus"):
             with self.subTest(age_group=age_group):
                 self.assertEqual(load_age_bank(age_group)["age_group"], age_group)
+
+    def test_learner_context_accepts_only_database_age_groups(self):
+        context = LearnerContext.from_mapping({"age_group": "19_plus", "skills": {}})
+        self.assertEqual(context.age_group, "19_plus")
+        with self.assertRaises(PracticeDataError):
+            LearnerContext.from_mapping({"age_group": "adult", "skills": {}})
 
     def test_seed_redacts_answer_material_recursively(self):
         seed = public_seed(
@@ -106,7 +112,7 @@ class PersonalizationTests(unittest.TestCase):
 
     def test_selection_ignores_skills_missing_from_the_age_bank(self):
         context = LearnerContext(
-            14,
+            "12_15",
             {
                 "naming_speed": SkillEvidence(10, 1.0, True),
                 "comprehension": SkillEvidence(60, 0.8, True),
@@ -120,9 +126,9 @@ class PersonalizationTests(unittest.TestCase):
             "spelling": SkillEvidence(45, 0.8, True, "improving"),
             "comprehension": SkillEvidence(82, 0.9, True, "stable"),
         }
-        self.assertEqual(choose_target_skill(LearnerContext(14, skills, 0)), "decoding")
-        self.assertEqual(choose_target_skill(LearnerContext(14, skills, 12)), "spelling")
-        self.assertEqual(choose_target_skill(LearnerContext(14, skills, 17)), "comprehension")
+        self.assertEqual(choose_target_skill(LearnerContext("12_15", skills, 0)), "decoding")
+        self.assertEqual(choose_target_skill(LearnerContext("12_15", skills, 12)), "spelling")
+        self.assertEqual(choose_target_skill(LearnerContext("12_15", skills, 17)), "comprehension")
 
     def test_confidence_can_outweigh_a_lower_uncertain_score(self):
         skills = {
@@ -145,7 +151,7 @@ class PersonalizationTests(unittest.TestCase):
         without_repeats = SkillEvidence(55, 0.8)
         self.assertGreater(skill_priority(skills["decoding"]), skill_priority(without_repeats))
         self.assertEqual(
-            choose_secondary_skill(LearnerContext(14, skills), "comprehension"),
+            choose_secondary_skill(LearnerContext("12_15", skills), "comprehension"),
             "spelling",
         )
 
@@ -160,7 +166,7 @@ class PersonalizationTests(unittest.TestCase):
             saved = None
 
             def get_context(self, user_id):
-                return LearnerContext(14, {"decoding": SkillEvidence(30, 0.9, True)})
+                return LearnerContext("12_15", {"decoding": SkillEvidence(30, 0.9, True)})
 
             def save_exercise(self, user_id, record):
                 self.saved = record
@@ -190,7 +196,7 @@ class PersonalizationTests(unittest.TestCase):
         class Repository:
             def get_context(self, user_id):
                 return LearnerContext(
-                    69,
+                    "19_plus",
                     {
                         "comprehension": SkillEvidence(
                             58,
