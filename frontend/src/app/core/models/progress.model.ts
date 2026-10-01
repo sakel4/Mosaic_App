@@ -6,4 +6,5 @@ export interface Progress {
   currentStreak: number;
   skills: LearnerSkill[];
   achievements: Achievement[];
+  history?: { date: string; completed: number; accuracy: number | null }[];
 }

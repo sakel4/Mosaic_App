@@ -5,6 +5,23 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
+class ProgressAttempt(models.Model):
+    """Practice outcomes reported by the current exercise UI, not assessment scores."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    client_id = models.UUIDField()
+    exercise_id = models.CharField(max_length=100)
+    skill = models.CharField(max_length=100)
+    correct = models.BooleanField()
+    response_time = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=("user", "client_id"), name="uniq_progress_submission")]
+        indexes = [models.Index(fields=("user", "created_at"), name="progress_user_created_idx")]
+
+
 class LearnerSkillBaseline(models.Model):
     TREND_CHOICES = (
         ("improving", "Improving"),

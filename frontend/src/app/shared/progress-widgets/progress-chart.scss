@@ -1,5 +1,6 @@
 ﻿.chart-wrap {
   padding: 21px 20px 13px;
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 15px;
   background: var(--paper);
@@ -10,6 +11,12 @@
   justify-content: space-between;
   gap: 10px;
 }
+.chart-canvas { position: relative; height: 250px; margin-top: 20px; }
+.chart-empty, .chart-note { margin: 20px 0 0; color: var(--muted); font-size: 13px; }
+details { margin-top: 16px; color: var(--ink); font-size: 13px; }
+summary { cursor: pointer; }
+table { width: 100%; margin-top: 12px; border-collapse: collapse; }
+th, td { padding: 8px; text-align: start; border-bottom: 1px solid var(--line); }
 .chart-heading .eyebrow {
   margin-bottom: 3px;
   color: #9ba49d;

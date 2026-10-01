@@ -4,6 +4,9 @@
     <h1 class="page-title">Look how far you’ve come.</h1>
     <p class="page-subtitle">Every bit of practice counts. Here’s what you’ve been building.</p>
   </header>
+  <div class="preview-controls">
+    <p>Sample progress data</p>
+  </div>
   <div class="summary-row">
     <article class="summary-card surface-card">
       <span class="summary-symbol" aria-hidden="true">↗</span>
@@ -34,11 +37,13 @@
     <div class="skill-grid">
       @for (skill of progress().skills; track skill.id) {
         <app-skill-card [skill]="skill" />
+      } @empty {
+        <p>Complete an activity to see your skill accuracy here.</p>
       }
     </div>
   </section>
   <div class="lower-grid">
-    <app-progress-chart />
+    <app-progress-chart [data]="progress()" />
     <section class="milestones">
       <div class="section-title">
         <div>
@@ -52,6 +57,8 @@
           [description]="achievement.description"
           [icon]="achievement.icon"
         />
+      } @empty {
+        <p>Your first completed activity earns your first milestone.</p>
       }
     </section>
   </div>

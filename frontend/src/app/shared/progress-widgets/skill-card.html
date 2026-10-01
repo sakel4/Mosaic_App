@@ -4,5 +4,5 @@
     <h3>{{ skill().name }}</h3>
   </div>
   <app-progress-bar [value]="skill().progress" [label]="skill().name" />
-  <p>↑ {{ skill().change }}% since you started</p>
+  <p>Practice accuracy · {{ skill().change > 0 ? '+' : '' }}{{ skill().change }} percentage points after your latest answer</p>
 </article>
