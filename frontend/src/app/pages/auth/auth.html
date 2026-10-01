@@ -1,0 +1,57 @@
+
+    <main class="auth-page">
+      <section class="auth-story">
+        <a class="brand" routerLink="/dashboard"><img class="brand-mark" src="/mosaic/mosaic-logo.png" alt="" /> Mosaic</a>
+        <div class="story-copy">
+          <span class="story-kicker">LEARNING, YOUR WAY</span>
+          <h1>A little more you<br />in every lesson.</h1>
+          <p>Build reading confidence with practice that adapts to your interests, your pace, and the way you learn.</p>
+          <div class="story-art" aria-hidden="true">
+            <span class="art-orbit orbit-one"></span><span class="art-orbit orbit-two"></span>
+            <span class="art-sun"></span><span class="art-leaf leaf-one"></span><span class="art-leaf leaf-two"></span>
+            <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">✦</span>
+          </div>
+        </div>
+        <p class="story-footer">A calm space to grow, one step at a time.</p>
+      </section>
+      <section class="auth-form-wrap">
+        <div class="auth-form-card">
+          <p class="eyebrow">{{ isRegister ? 'YOUR NEXT CHAPTER' : 'WELCOME BACK' }}</p>
+          <h2>{{ isRegister ? 'Create your space' : 'Good to see you' }}</h2>
+          <p class="form-intro">{{ isRegister ? 'Let’s make learning feel a little more like you.' : 'Pick up right where you left off.' }}</p>
+          <form [formGroup]="form" (ngSubmit)="submit()">
+            @if (isRegister) {
+              <label class="field">
+                Your name
+                <input type="text" formControlName="name" autocomplete="name" placeholder="What should we call you?" />
+                @if (form.controls.name.touched && form.controls.name.invalid) {
+                  <small class="field-error">Please enter your name.</small>
+                }
+              </label>
+            }
+            <label class="field">
+              Email address
+              <input type="email" formControlName="email" autocomplete="email" placeholder="you@example.com" />
+              @if (form.controls.email.touched && form.controls.email.invalid) {
+                <small class="field-error">Enter a valid email address.</small>
+              }
+            </label>
+            <label class="field">
+              Password
+              <input type="password" formControlName="password" [autocomplete]="isRegister ? 'new-password' : 'current-password'" placeholder="At least 6 characters" />
+              @if (form.controls.password.touched && form.controls.password.invalid) {
+                <small class="field-error">Use at least 6 characters.</small>
+              }
+            </label>
+            <button class="primary-button submit-button" type="submit">
+              {{ isRegister ? 'Create account' : 'Sign in' }} <span aria-hidden="true">→</span>
+            </button>
+          </form>
+          <p class="switch-auth">
+            {{ isRegister ? 'Already have a space?' : 'New to Mosaic?' }}
+            <a [routerLink]="isRegister ? '/login' : '/register'">{{ isRegister ? 'Sign in' : 'Create an account' }}</a>
+          </p>
+          <p class="privacy-note">Your learning journey is personal. Your details stay private.</p>
+        </div>
+      </section>
+    </main>

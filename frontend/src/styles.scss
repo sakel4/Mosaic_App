@@ -1,1 +1,1039 @@
-/* You can add global styles to this file, and also import other style files */
+@import '@fontsource/lexend/400.css';
+@import '@fontsource/lexend/500.css';
+@import '@fontsource/lexend/600.css';
+@import '@fontsource/lexend/700.css';
+@import '@fontsource/opendyslexic/400.css';
+@import '@fontsource/opendyslexic/700.css';
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+:root {
+  color-scheme: light;
+  --ink: #263943;
+  --muted: #586970;
+  --line: #dce6e2;
+  --paper: #ffffff;
+  --canvas: #f6f8f6;
+  --green: #087c79;
+  --green-dark: #075f5c;
+  --green-pale: #dcefeb;
+  --peach: #ffebe5;
+  --gold: #80620b;
+  --mosaic-blue: #dff2ee;
+  --mosaic-lilac: #f7f0d7;
+  --mosaic-coral: #ffe4dd;
+  --mosaic-sage: #e8f1ed;
+  --mosaic-indigo: #087c79;
+  --mosaic-violet: #a94f49;
+  --mosaic-rose: #a84742;
+  --focus-ring: #087c79;
+  --primary-action: #087c79;
+  --primary-action-hover: #075f5c;
+  --selection-surface: #dcefeb;
+  --selection-border: #4ca89f;
+  --selection-text: #155e5b;
+  --selection-control: #087c79;
+  --difficulty-indicator: #a94f49;
+  --hover-surface: #edf5f2;
+  --disabled-surface: #e5e8ef;
+  --disabled-text: #515b70;
+  --feedback-surface: #edf5f2;
+  --feedback-border: #d4e6e0;
+  --feedback-positive-surface: #f7f0d7;
+  --feedback-positive-border: #ead99c;
+  --feedback-positive-icon: #735915;
+  --profile-field-label-size: 13px;
+  --profile-field-hint-size: 10px;
+  --profile-toggle-label-size: 11px;
+  --profile-toggle-description-size: 9px;
+  --profile-section-description-size: 10px;
+  --profile-preview-label-size: 9px;
+  --shadow: 0 12px 40px rgb(49 62 103 / 7%);
+  --reader-prompt-size: 24px;
+  --reader-choice-size: 14px;
+  --reader-support-size: 11px;
+  --reading-font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: var(--reading-letter-spacing, normal);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Manrope', sans-serif;
+  letter-spacing: -0.035em;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(27px, 3vw, 36px);
+  line-height: 1.18;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.primary-button,
+.secondary-button,
+.text-button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.primary-button {
+  padding: 0 20px;
+  background: var(--green);
+  color: #fff;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  background: var(--green-dark);
+}
+
+.secondary-button {
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.secondary-button:hover {
+  background: #f5f7f4;
+}
+
+.text-button {
+  min-height: 38px;
+  padding: 0 8px;
+  background: transparent;
+  color: var(--green-dark);
+}
+
+.surface-card {
+  border: 1px solid rgb(32 44 54 / 5%);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 17px;
+  color: #36434c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid #dce3df;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.field input::placeholder {
+  color: #a2aba9;
+}
+
+.progress-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--line);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #375fae, #725398 68%, #b14a61);
+}
+
+html[data-font-size='large'] body {
+  font-size: 18px;
+}
+
+html[data-font-size='large'] {
+  --reader-prompt-size: 30px;
+  --reader-choice-size: 18px;
+  --reader-support-size: 13px;
+}
+
+html[data-font-size='extra-large'] body {
+  font-size: 21px;
+}
+
+html[data-font-size='extra-large'] {
+  --reader-prompt-size: 36px;
+  --reader-choice-size: 22px;
+  --reader-support-size: 15px;
+}
+
+body,
+body * {
+  font-family: var(--reading-font-family) !important;
+}
+
+html[data-letter-spacing='wide'] {
+  --reading-letter-spacing: 0.04em;
+}
+
+html[data-letter-spacing='wider'] {
+  --reading-letter-spacing: 0.08em;
+}
+
+html[data-line-spacing='relaxed'] body {
+  line-height: 1.75;
+}
+
+html[data-line-spacing='wide'] body {
+  line-height: 1.95;
+}
+
+html[data-reduced-clutter='true'] .surface-card {
+  border-color: transparent;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+html[data-reduced-clutter='true'] .next-card::after,
+html[data-reduced-clutter='true'] .sidebar-note,
+html[data-reduced-clutter='true'] .gentle-note,
+html[data-reduced-clutter='true'] .support-note,
+html[data-reduced-clutter='true'] .reassurance,
+html[data-reduced-clutter='true'] .practice-aside,
+html[data-reduced-clutter='true'] .real-life-aside,
+html[data-reduced-clutter='true'] .quick-stats .stat-card {
+  display: none;
+}
+
+html[data-reduced-clutter='true'] .topbar-message {
+  visibility: hidden;
+}
+
+html[data-reduced-clutter='true'] .activity-icon,
+html[data-reduced-clutter='true'] .stat-icon {
+  display: none;
+}
+
+html[data-reduced-clutter='true'] .next-card,
+html[data-reduced-clutter='true'] .progress-card,
+html[data-reduced-clutter='true'] .exercise-card,
+html[data-reduced-clutter='true'] .profile-section {
+  box-shadow: none;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #f0f5f2;
+  --muted: #c3d2d1;
+  --line: #42575d;
+  --paper: #1d3038;
+  --canvas: #122129;
+  --green: #79d1c3;
+  --green-dark: #a0e3d6;
+  --green-pale: #254440;
+  --peach: #493532;
+  --gold: #efd775;
+  --mosaic-blue: #254440;
+  --mosaic-lilac: #423d29;
+  --mosaic-coral: #493532;
+  --mosaic-sage: #273c3e;
+  --mosaic-indigo: #79d1c3;
+  --mosaic-violet: #ffaaa0;
+  --mosaic-rose: #ffaaa0;
+  --focus-ring: #f0d66e;
+  --primary-action: #0e706b;
+  --primary-action-hover: #0c827b;
+  --selection-surface: #294846;
+  --selection-border: #70c5b9;
+  --selection-text: #ffffff;
+  --selection-control: #79d1c3;
+  --difficulty-indicator: #ffaaa0;
+  --hover-surface: #263c43;
+  --disabled-surface: #3a4d52;
+  --disabled-text: #e5eeea;
+  --feedback-surface: #263c43;
+  --feedback-border: #42575d;
+  --feedback-positive-surface: #423d29;
+  --feedback-positive-border: #756638;
+  --feedback-positive-icon: #efd775;
+  --profile-field-label-size: 13px;
+  --profile-field-hint-size: 10px;
+  --profile-toggle-label-size: 11px;
+  --profile-toggle-description-size: 9px;
+  --profile-section-description-size: 10px;
+  --profile-preview-label-size: 9px;
+  --shadow: 0 12px 40px rgb(0 0 0 / 28%);
+}
+
+html[data-theme='dark'] body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .surface-card,
+html[data-theme='dark'] .skill-card,
+html[data-theme='dark'] .chart-wrap,
+html[data-theme='dark'] .achievement-card,
+html[data-theme='dark'] .exercise-card,
+html[data-theme='dark'] .profile-section {
+  border-color: var(--line);
+  background: var(--paper);
+}
+
+html[data-theme='dark'] .sidebar,
+html[data-theme='dark'] .topbar,
+html[data-theme='dark'] .mobile-nav,
+html[data-theme='dark'] .auth-form-wrap,
+html[data-theme='dark'] .onboarding-header,
+html[data-theme='dark'] .assessment-header {
+  border-color: var(--line);
+  background: var(--canvas);
+}
+
+html[data-theme='dark'] .auth-story,
+html[data-theme='dark'] .onboarding-page,
+html[data-theme='dark'] .assessment-page {
+  background: var(--canvas);
+}
+
+html[data-theme='dark'] h1,
+html[data-theme='dark'] h2,
+html[data-theme='dark'] h3,
+html[data-theme='dark'] .skill-label,
+html[data-theme='dark'] .activity-copy h2,
+html[data-theme='dark'] .stat-card strong,
+html[data-theme='dark'] .option-card strong {
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .page-subtitle,
+html[data-theme='dark'] .activity-copy p,
+html[data-theme='dark'] .why-box p,
+html[data-theme='dark'] .practice-aside p,
+html[data-theme='dark'] .real-life-aside p,
+html[data-theme='dark'] .profile-heading p {
+  color: var(--muted);
+}
+
+html[data-theme='dark'] .answer-option,
+html[data-theme='dark'] .field input,
+html[data-theme='dark'] .field select,
+html[data-theme='dark'] .secondary-button {
+  border-color: var(--line);
+  background: #263a41;
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .why-box,
+html[data-theme='dark'] .practice-aside,
+html[data-theme='dark'] .real-life-aside,
+html[data-theme='dark'] .travel-board,
+html[data-theme='dark'] .profile-section,
+html[data-theme='dark'] .skill-card,
+html[data-theme='dark'] .chart-wrap,
+html[data-theme='dark'] .achievement-card {
+  border-color: var(--line);
+  background: var(--paper);
+}
+
+html[data-theme='dark'] .board-top,
+html[data-theme='dark'] .board-footer,
+html[data-theme='dark'] .field input:disabled,
+html[data-theme='dark'] .line-highlight {
+  background: #263a41;
+}
+
+html[data-theme='dark'] .board-top,
+html[data-theme='dark'] .travel-details strong,
+html[data-theme='dark'] .route-name,
+html[data-theme='dark'] .profile-heading h2,
+html[data-theme='dark'] .profile-heading strong,
+html[data-theme='dark'] .achievement-card strong,
+html[data-theme='dark'] .skill-heading h3 {
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .progress-track,
+html[data-theme='dark'] .bar-track {
+  background: #38425a;
+}
+
+html:not([data-theme='dark']) .brand-mark {
+  background: transparent;
+}
+
+html:not([data-theme='dark']) .sidebar .brand,
+html:not([data-theme='dark']) .auth-page .brand,
+html:not([data-theme='dark']) .onboarding-header .brand,
+html:not([data-theme='dark']) .assessment-header .brand {
+  color: var(--ink);
+}
+
+html:not([data-theme='dark']) .sidebar-note {
+  background: var(--hover-surface);
+  color: var(--muted);
+}
+
+html:not([data-theme='dark']) .sidebar-note strong {
+  color: var(--ink);
+}
+
+html:not([data-theme='dark']) .status-dot {
+  background: var(--green);
+}
+
+html:not([data-theme='dark']) .activity-icon {
+  background: var(--selection-surface);
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .why-box {
+  background: var(--hover-surface);
+}
+
+html:not([data-theme='dark']) .why-mark {
+  color: var(--mosaic-rose);
+}
+
+html:not([data-theme='dark']) .nav-link:hover,
+html:not([data-theme='dark']) .nav-link.active,
+html:not([data-theme='dark']) .mobile-nav a.active {
+  background: var(--selection-surface);
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .nav-link:hover {
+  background: var(--hover-surface);
+}
+
+html:not([data-theme='dark']) .assessment-skill,
+html:not([data-theme='dark']) .profile-icon,
+html:not([data-theme='dark']) .summary-symbol,
+html:not([data-theme='dark']) .focus-card {
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .profile-icon,
+html:not([data-theme='dark']) .summary-symbol,
+html:not([data-theme='dark']) .focus-card,
+html:not([data-theme='dark']) .assessment-link > span,
+html:not([data-theme='dark']) .stat-icon.green,
+html:not([data-theme='dark']) .option-symbol {
+  background: var(--selection-surface);
+}
+
+html:not([data-theme='dark']) .focus-label,
+html:not([data-theme='dark']) .focus-card > span:last-child {
+  color: var(--muted);
+}
+
+html:not([data-theme='dark']) .focus-card strong {
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .progress-fill,
+html:not([data-theme='dark']) .bar-fill,
+html:not([data-theme='dark']) .trend {
+  background: linear-gradient(90deg, #62c8bc, #efd775 58%, #ff827e);
+  stroke: var(--green);
+}
+
+html:not([data-theme='dark']) .skill-dot,
+html:not([data-theme='dark']) .status-dot {
+  background: var(--green);
+}
+
+html .difficulty-dots i.filled {
+  background: var(--difficulty-indicator);
+}
+
+html:not([data-theme='dark']) .skill-tag,
+html:not([data-theme='dark']) .achievement-check {
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .chart-key i {
+  background: var(--green);
+}
+
+html:not([data-theme='dark']) .chart-wrap circle {
+  fill: var(--green);
+  stroke: #fff;
+}
+
+html:not([data-theme='dark']) .achievement-icon {
+  background: var(--mosaic-coral);
+  color: var(--mosaic-rose);
+}
+
+html:not([data-theme='dark']) .interest-option.selected,
+html:not([data-theme='dark']) .choice-row.chosen {
+  border-color: var(--selection-border);
+  background: var(--selection-surface);
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .interest-option.selected .interest-check {
+  border-color: var(--selection-control);
+  background: var(--selection-control);
+}
+
+html:not([data-theme='dark']) .choice-row input,
+html:not([data-theme='dark']) .toggle-list input,
+html:not([data-theme='dark']) .preference-toggles input {
+  accent-color: var(--selection-control);
+}
+
+html:not([data-theme='dark']) .answer-option.selected,
+html:not([data-theme='dark']) .prompt-line.current-line {
+  border-color: var(--selection-border);
+  background: var(--selection-surface);
+  color: var(--selection-text);
+}
+
+html:not([data-theme='dark']) .selected .radio-mark {
+  border-color: var(--selection-control);
+}
+
+html:not([data-theme='dark']) .selected .radio-mark::after {
+  background: var(--selection-control);
+}
+
+html:not([data-theme='dark']) .primary-button {
+  background: var(--primary-action);
+}
+
+html:not([data-theme='dark']) .primary-button:hover {
+  background: var(--primary-action-hover);
+}
+
+html:not([data-theme='dark']) .text-button,
+html:not([data-theme='dark']) .switch-auth a {
+  color: var(--selection-text);
+}
+
+html[data-theme='dark'] body {
+  color: #f3f5fc;
+}
+
+html[data-theme='dark'] :is(
+  .sidebar,
+  .topbar,
+  .mobile-nav,
+  .auth-form-wrap,
+  .onboarding-header,
+  .assessment-header,
+  .auth-page,
+  .onboarding-page,
+  .assessment-page
+) {
+  border-color: var(--line);
+  background: var(--canvas);
+}
+
+html[data-theme='dark'] :is(.brand, .sidebar .brand, .auth-page .brand) {
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .brand-mark {
+  background: transparent;
+}
+
+html[data-theme='dark'] .sidebar-note {
+  border: 1px solid var(--line);
+  background: #263a41;
+  color: var(--muted);
+}
+
+html[data-theme='dark'] .avatar {
+  background: #453f2e;
+  color: #fff4dc;
+}
+
+html[data-theme='dark'] .mobile-nav a {
+  color: var(--muted);
+}
+
+html[data-theme='dark'] :is(.sidebar, .auth-story) {
+  background: var(--paper);
+}
+
+html[data-theme='dark'] :is(
+  .surface-card,
+  .skill-card,
+  .chart-wrap,
+  .achievement-card,
+  .exercise-card,
+  .profile-section,
+  .travel-board,
+  .reading-preview,
+  .toggle-list
+) {
+  border-color: var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .exercise-card.real-world-mode {
+  border-color: var(--line);
+  background: var(--paper);
+}
+
+html[data-theme='dark'] :is(
+  .why-box,
+  .practice-aside,
+  .real-life-aside,
+  .board-top,
+  .board-footer,
+  .field input,
+  .field select,
+  .field input:disabled,
+  .answer-option,
+  .secondary-button,
+  .interest-option,
+  .choice-row
+) {
+  border-color: var(--line);
+  background: #263a41;
+  color: var(--ink);
+}
+
+html[data-theme='dark'] :is(
+  h1, h2, h3, p, small, label, strong, .page-subtitle, .eyebrow,
+  .nav-link, .topbar-message, .topbar-user, .profile-label strong,
+  .profile-label small, .activity-copy p, .why-box p, .practice-aside p,
+  .real-life-aside p, .board-top, .board-footer, .route-name,
+  .travel-details strong, .profile-heading h2, .profile-heading p,
+  .field-label, .field-hint, .preference-toggles strong,
+  .preference-toggles small, .skill-heading h3, .skill-card p,
+  .chart-heading h3, .chart-key, .achievement-card strong,
+  .achievement-card small, .feedback-copy p, .mode-label,
+  .instruction, .reassurance, .audio-button, .duration,
+  .difficulty, .gentle-note, .support-note, .switch-auth,
+  .privacy-note, .form-intro, .story-copy p, .story-footer,
+  .exit-link, .progress-caption, .field-error, .assessment-skill,
+  .picker-hint, .selection-count, .line-controls, .session-count,
+  .aside-label, .aside-label + h3
+) {
+  color: var(--muted) !important;
+}
+
+html[data-theme='dark'] :is(.prompt, .prompt-lines) {
+  color: var(--ink) !important;
+}
+
+html[data-theme='dark'] :is(h1, h2, h3, strong, .field-label, .profile-heading h2, .route-name, .travel-details strong) {
+  color: var(--ink) !important;
+}
+
+html[data-theme='dark'] :is(
+  .field, .field-label, .field-hint, .picker-hint, .selection-count,
+  .support-note, .gentle-note, .privacy-note, .stat-card div span,
+  .summary-card span:last-child, .assessment-link, .line-controls,
+  .line-step, .story-kicker, .story-footer, .save-confirmation,
+  .chart-key, .profile-label small
+) {
+  color: var(--muted) !important;
+}
+
+html[data-theme='dark'] .field input::placeholder {
+  color: #aabfbd;
+}
+
+html[data-theme='dark'] :is(.nav-link.active, .mobile-nav a.active, .interest-option.selected, .choice-row.chosen, .answer-option.selected) {
+  border-color: var(--selection-border);
+  background: var(--selection-surface);
+  color: #ffffff !important;
+}
+
+html[data-theme='dark'] :is(.interest-option.selected .interest-check, .selected .radio-mark) {
+  border-color: var(--selection-control);
+  background: #0e706b;
+  color: #fff;
+}
+
+html[data-theme='dark'] :is(.prompt-line.current-line, .line-highlight) {
+  border-color: var(--focus-ring);
+  background: #3a4545;
+  color: #fff;
+}
+
+html[data-theme='dark'] :is(.primary-button, .route-number) {
+  background: var(--primary-action);
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .primary-button:hover {
+  background: var(--primary-action-hover);
+}
+
+html[data-theme='dark'] .primary-button:disabled {
+  border: 1px solid #688084;
+  background: var(--disabled-surface);
+  color: var(--disabled-text);
+}
+
+html[data-theme='dark'] :is(.nav-link:hover, .line-step:hover:not(:disabled), .answer-option:hover, .interest-option:hover) {
+  border-color: var(--selection-border);
+  background: #31504f;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] :is(input, select, button, a):focus-visible,
+html[data-theme='dark'] .interest-option:focus-within {
+  outline: 3px solid var(--focus-ring);
+  box-shadow: 0 0 0 2px var(--canvas);
+}
+
+html[data-theme='dark'] :is(.text-button, .switch-auth a, .section-heading > a, .assessment-link) {
+  color: var(--green-dark) !important;
+}
+
+html[data-theme='dark'] :is(
+  .profile-icon, .summary-symbol, .stat-icon, .option-symbol,
+  .activity-icon, .assessment-link > span, .achievement-icon
+) {
+  border-color: var(--line);
+  background: var(--selection-surface) !important;
+  color: var(--green-dark) !important;
+}
+
+html[data-theme='dark'] .focus-card {
+  background: var(--selection-surface);
+}
+
+html[data-theme='dark'] .why-box {
+  background: #263a41;
+}
+
+html[data-theme='dark'] .why-mark {
+  color: var(--gold);
+}
+
+html[data-theme='dark'] :is(.achievement-check, .skill-tag, .assessment-skill) {
+  color: var(--green-dark);
+}
+
+html[data-theme='dark'] .chart-key i,
+html[data-theme='dark'] .chart-wrap circle {
+  fill: var(--green);
+  background: var(--green);
+}
+
+html[data-theme='dark'] .chart-wrap circle {
+  stroke: var(--paper);
+}
+
+html[data-theme='dark'] .line-step:disabled {
+  color: #b5c8c7;
+}
+
+html[data-theme='dark'] .field-error {
+  color: #ffaaa0;
+}
+
+html[data-theme='dark'] .status-dot {
+  background: var(--green);
+}
+
+html[data-theme='dark'] .progress-track,
+html[data-theme='dark'] .bar-track {
+  background: #3a4b50;
+}
+
+html[data-theme='dark'] .progress-fill,
+html[data-theme='dark'] .bar-fill {
+  background: linear-gradient(90deg, #62c8bc, #efd775 58%, #ff827e);
+}
+
+html[data-theme='dark'] .trend {
+  stroke: var(--green);
+}
+
+html[data-theme='dark'] .area {
+  fill: var(--selection-surface);
+}
+
+html[data-theme='dark'] :is(
+  .sidebar,
+  .topbar,
+  .mobile-nav,
+  .auth-form-wrap,
+  .onboarding-header,
+  .assessment-header,
+  .auth-page,
+  .onboarding-page,
+  .assessment-page
+) {
+  border-color: var(--line);
+  background: var(--canvas);
+}
+
+html[data-theme='dark'] .brand-mark {
+  background: transparent;
+}
+
+html[data-theme='dark'] :is(.sidebar, .auth-story) {
+  background: var(--paper);
+}
+
+html[data-theme='dark'] :is(
+  .surface-card,
+  .skill-card,
+  .chart-wrap,
+  .achievement-card,
+  .exercise-card,
+  .profile-section,
+  .travel-board
+) {
+  border-color: var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-theme='dark'] :is(
+  .why-box,
+  .practice-aside,
+  .real-life-aside,
+  .board-top,
+  .board-footer,
+  .field input,
+  .field select,
+  .field input:disabled,
+  .answer-option,
+  .secondary-button,
+  .interest-option,
+  .choice-row,
+  .reading-preview,
+  .toggle-list
+) {
+  border-color: var(--line);
+  background: #263a41;
+  color: var(--ink);
+}
+
+html[data-theme='dark'] :is(
+  .page-subtitle,
+  .activity-copy p,
+  .why-box p,
+  .practice-aside p,
+  .real-life-aside p,
+  .profile-heading p,
+  .field-hint,
+  .progress-caption,
+  .support-note,
+  .gentle-note,
+  .difficulty,
+  .duration,
+  .story-copy p,
+  .story-footer
+) {
+  color: var(--muted) !important;
+}
+
+html[data-theme='dark'] :is(h1, h2, h3, .profile-heading h2, .field-label, strong) {
+  color: var(--ink) !important;
+}
+
+html[data-theme='dark'] :is(
+  .nav-link.active,
+  .mobile-nav a.active,
+  .interest-option.selected,
+  .choice-row.chosen,
+  .answer-option.selected,
+  .prompt-line.current-line
+) {
+  border-color: var(--selection-border);
+  background: var(--selection-surface);
+  color: #ffffff !important;
+}
+
+html[data-theme='dark'] :is(
+  .nav-link:hover,
+  .line-step:hover:not(:disabled),
+  .answer-option:hover,
+  .interest-option:hover
+) {
+  border-color: var(--selection-border);
+  background: #31504f;
+  color: #ffffff !important;
+}
+
+html[data-theme='dark'] :is(.interest-option.selected .interest-check, .selected .radio-mark) {
+  border-color: var(--selection-control);
+  background: #0e706b;
+  color: #ffffff;
+}
+
+html[data-theme='dark'] :is(.primary-button, .route-number) {
+  background: var(--primary-action);
+  color: #ffffff !important;
+}
+
+html[data-theme='dark'] .primary-button:hover {
+  background: var(--primary-action-hover);
+}
+
+html[data-theme='dark'] :is(.text-button, .switch-auth a, .section-heading > a, .assessment-link) {
+  color: var(--green-dark) !important;
+}
+
+html[data-theme='dark'] :is(
+  .profile-icon,
+  .summary-symbol,
+  .stat-icon,
+  .option-symbol,
+  .activity-icon,
+  .assessment-link > span,
+  .achievement-icon
+) {
+  border-color: var(--line);
+  background: var(--selection-surface) !important;
+  color: var(--green-dark) !important;
+}
+
+html[data-theme='dark'] :is(.stat-icon.warm, .profile-icon.warm, .achievement-icon) {
+  background: var(--mosaic-coral) !important;
+  color: var(--mosaic-rose) !important;
+}
+
+html[data-theme='dark'] :is(.why-mark, .gentle-note img) {
+  color: var(--gold);
+}
+
+html[data-theme='dark'] :is(.progress-fill, .bar-fill) {
+  background: linear-gradient(90deg, #62c8bc, #efd775 58%, #ff827e);
+}
+
+html[data-theme='dark'] :is(.chart-key i, .skill-dot, .status-dot) {
+  background: var(--green);
+}
+
+html[data-theme='dark'] :is(.progress-track, .bar-track) {
+  background: #3a4b50;
+}
+
+html[data-theme='dark'] .trend {
+  stroke: var(--green);
+}
+
+html[data-theme='dark'] .chart-wrap circle {
+  fill: var(--green);
+  stroke: var(--paper);
+}
+
+html[data-theme='dark'] .focus-card {
+  background: var(--selection-surface);
+  color: var(--green-dark);
+}
+
+html[data-theme='dark'] :is(.achievement-check, .skill-tag) {
+  color: var(--green-dark);
+}
+
+html[data-theme='dark'] :is(.prompt-line.current-line, .line-highlight) {
+  border-color: var(--focus-ring);
+  background: #3a4545;
+  color: var(--ink);
+}
+
+html[data-theme='dark'] .field input::placeholder {
+  color: #aabfbd;
+}
+
+html[data-theme='dark'] :is(input, select, button, a):focus-visible,
+html[data-theme='dark'] .interest-option:focus-within {
+  outline: 3px solid var(--focus-ring);
+  box-shadow: 0 0 0 2px var(--canvas);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
