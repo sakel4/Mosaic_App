@@ -1,1 +1,61 @@
-<p>dashboard works!</p>
+<section class="page">
+      <header class="welcome">
+        <div>
+          <p class="eyebrow">SUNDAY, SEPTEMBER 27</p>
+          <h1 class="page-title">Good afternoon, {{ firstName }} <span aria-hidden="true">✳</span></h1>
+          <p class="page-subtitle">A little practice today can take you a long way.</p>
+        </div>
+        @if (!assessmentCompleted) {
+          <a class="assessment-link" routerLink="/assessment"><span aria-hidden="true">＋</span> Start an assessment</a>
+        }
+      </header>
+
+      <div class="dashboard-grid">
+        <!-- <app-next-activity [activity]="activity" /> -->
+        <section class="progress-card surface-card" aria-labelledby="progress-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">YOUR PROGRESS</p>
+              <h2 id="progress-heading">Growing, one step at a time</h2>
+            </div>
+            <a routerLink="/progress" aria-label="See all progress">↗</a>
+          </div>
+          <div class="skill-list">
+         
+            <!-- @for (skill of progress().skills.slice(0, 3); track skill.id) {
+              <div class="skill-row">
+                <div class="skill-label"><span>{{ skill.name }}</span><strong>{{ skill.progress }}%</strong></div>
+                <div class="progress-track" role="progressbar" [attr.aria-valuenow]="skill.progress"
+                  aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="skill.name">
+                  <div class="progress-fill" [style.width.%]="skill.progress"></div>
+                </div>
+                <small>↑ {{ skill.change }}% since you started</small>
+              </div>
+            } -->
+          </div>
+          <a class="text-button progress-link" routerLink="/progress">Explore your progress <span aria-hidden="true">→</span></a>
+        </section>
+      </div>
+
+      <section class="quick-stats" aria-label="Your activity">
+        <article class="stat-card surface-card">
+          <span class="stat-icon warm" aria-hidden="true">↗</span>
+          <!-- <div><strong>{{ progress().exercisesCompleted }}</strong><span>activities completed</span></div> -->
+        </article>
+        <article class="stat-card surface-card">
+          <span class="stat-icon green" aria-hidden="true">✳</span>
+          <!-- <div><strong>{{ progress().currentStreak }} days</strong><span>your current rhythm</span></div> -->
+        </article>
+        <a class="option-card surface-card" routerLink="/practice">
+          <span class="option-symbol" aria-hidden="true">Aa</span>
+          <span><strong>Practice</strong><small>Build skills at your pace</small></span>
+          <span class="option-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="option-card surface-card real-life" routerLink="/real-world">
+          <span class="option-symbol" aria-hidden="true">⌖</span>
+          <span><strong>Real life</strong><small>Try everyday situations</small></span>
+          <span class="option-arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+      <p class="gentle-note"><span aria-hidden="true">✳</span> Your path is your own. Mosaic adapts learning to you.</p>
+    </section>

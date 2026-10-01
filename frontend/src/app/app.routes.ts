@@ -17,11 +17,12 @@ export const routes: Routes = [
             { path: 'practice', component: Practice },
             { path: 'progress', component: Progress },
             { path: 'real-world', component: RealWorld },
-            { path: 'profile', component: Auth },
         ],
     },
 
     // Outside the layout (rendered directly in app.html's <router-outlet>)
-    { path: 'auth', component: Auth },
+    { path: 'login', component: Auth, data: { mode: 'login' } },
+    { path: 'register', component: Auth, data: { mode: 'register' } },
+    { path: 'auth', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: '' },
 ];
