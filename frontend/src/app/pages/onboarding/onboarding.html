@@ -1,103 +1,163 @@
 <main class="onboarding-page">
-      <header class="onboarding-header">
-        <a class="brand" routerLink="/dashboard" aria-label="Onoma"><span class="brand-mark" aria-hidden="true">o</span> onoma</a>
-        <span>STEP {{ step() + 1 }} OF 4</span>
-      </header>
-      <section class="onboarding-content">
-        <div class="onboarding-progress" aria-label="Onboarding progress">
-          <span [class.current]="step() >= 0"></span><span [class.current]="step() >= 1"></span>
-          <span [class.current]="step() >= 2"></span><span [class.current]="step() >= 3"></span>
-        </div>
-        <p class="eyebrow">LET’S MAKE IT YOURS</p>
-        @switch (step()) {
-          @case (0) {
-            <h1 class="page-title">First, a little about you.</h1>
-            <p class="page-subtitle">This helps us find the right words and pace for your practice.</p>
-          }
-          @case (1) {
-            <h1 class="page-title">What would you like to work on?</h1>
-            <p class="page-subtitle">Choose what matters to you right now. You can change this later.</p>
-          }
-          @case (2) {
-            <h1 class="page-title">What are you into?</h1>
-            <p class="page-subtitle">We can use your interests to make practice feel more familiar.</p>
-          }
-          @default {
-            <h1 class="page-title">Make reading comfortable.</h1>
-            <p class="page-subtitle">Choose the settings that feel best. These are always easy to change.</p>
-          }
-        }
-        <form [formGroup]="form" (ngSubmit)="save()">
-          @switch (step()) {
-            @case (0) {
-              <label class="field">Your name
-                <input type="text" formControlName="name" autocomplete="given-name" />
-                @if (form.controls.name.touched && form.controls.name.invalid) { <small class="field-error">Add your name to continue.</small> }
-              </label>
-              <div class="field-row">
-                <label class="field">Age group
-                  <select formControlName="ageGroup">
-                    <option>Under 12</option><option>12–15</option><option>16–18</option><option>19+</option>
-                  </select>
-                </label>
-              </div>
+  <header class="onboarding-header">
+    <a class="brand" routerLink="/dashboard" aria-label="Onoma"
+      ><span class="brand-mark" aria-hidden="true">o</span> onoma</a
+    >
+    <span>STEP {{ step() + 1 }} OF 4</span>
+  </header>
+  <section class="onboarding-content">
+    <div class="onboarding-progress" aria-label="Onboarding progress">
+      <span [class.current]="step() >= 0"></span><span [class.current]="step() >= 1"></span>
+      <span [class.current]="step() >= 2"></span><span [class.current]="step() >= 3"></span>
+    </div>
+    <p class="eyebrow">LET’S MAKE IT YOURS</p>
+    @switch (step()) {
+      @case (0) {
+        <h1 class="page-title">First, a little about you.</h1>
+        <p class="page-subtitle">This helps us find the right words and pace for your practice.</p>
+      }
+      @case (1) {
+        <h1 class="page-title">What would you like to work on?</h1>
+        <p class="page-subtitle">
+          Choose what matters to you right now. You can change this later.
+        </p>
+      }
+      @case (2) {
+        <h1 class="page-title">What are you into?</h1>
+        <p class="page-subtitle">We can use your interests to make practice feel more familiar.</p>
+      }
+      @default {
+        <h1 class="page-title">Make reading comfortable.</h1>
+        <p class="page-subtitle">
+          Choose the settings that feel best. These are always easy to change.
+        </p>
+      }
+    }
+    <form [formGroup]="form" (ngSubmit)="save()">
+      @switch (step()) {
+        @case (0) {
+          <label class="field"
+            >Your name
+            <input type="text" formControlName="name" autocomplete="given-name" />
+            @if (form.controls.name.touched && form.controls.name.invalid) {
+              <small class="field-error">Add your name to continue.</small>
             }
-            @case (1) {
-              <div class="choice-list" role="radiogroup" aria-label="Learning goal">
-                @for (goal of goals; track goal) {
-                  <label class="choice-row" [class.chosen]="form.controls.goal.value === goal">
-                    <input type="radio" formControlName="goal" [value]="goal" />
-                    <span>{{ goal }}</span><span class="choice-check" aria-hidden="true">✓</span>
-                  </label>
-                }
-              </div>
-            }
-            @case (2) {
-              <!-- <app-interest-picker
-                [options]="interestOptions"
-                [selected]="form.controls.interests.value"
-                (selectedChange)="form.controls.interests.setValue($event)"
-              /> -->
-            }
-            @default {
-              <div class="field-row">
-                <label class="field">Reading font
-                  <select formControlName="readingFont" (change)="applyReadingFont()">
-                    <option value="default">Default</option><option value="lexend">Lexend</option><option value="opendyslexic">OpenDyslexic</option>
-                  </select>
-                </label>
-                <label class="field">Text size
-                  <span class="field-hint">Also adjusts exercise text</span>
-                  <select formControlName="fontSize"><option value="comfortable">Comfortable</option><option value="large">Large</option><option value="extra-large">Extra large</option></select>
-                </label>
-              </div>
-              <div class="field-row">
-                <label class="field">Line spacing
-                  <select formControlName="lineSpacing"><option value="standard">Standard</option><option value="relaxed">Relaxed</option><option value="wide">Wide</option></select>
-                </label>
-                <label class="field">Letter spacing
-                  <select formControlName="letterSpacing"><option value="standard">Standard</option><option value="wide">Wide</option><option value="wider">Wider</option></select>
-                </label>
-              </div>
-              <div class="reading-preview" [style.--reading-font-family]="previewFont" [style.font-size]="previewSize" [style.letter-spacing]="previewLetterSpacing" [style.line-height]="previewLineHeight">
-                <span>PREVIEW</span>
-                <p>Small steps make a difference. Read at a pace that feels comfortable for you.</p>
-              </div>
-              <label class="field">Theme
-                <select formControlName="theme"><option value="light">Light</option><option value="dark">Dark</option></select>
-              </label>
-              <div class="toggle-list">
-                <label><span><strong>Text-to-speech</strong><small>Listen to reading content</small></span><input type="checkbox" formControlName="textToSpeech" /></label>
-                <label><span><strong>Highlight the current line</strong><small>Keep your place while you read</small></span><input type="checkbox" formControlName="currentLineHighlight" /></label>
-                <label><span><strong>Reduce visual clutter</strong><small>Keep the page extra simple</small></span><input type="checkbox" formControlName="reducedClutter" /></label>
-              </div>
-            }
-          }
-          <div class="form-actions">
-            @if (step() > 0) { <button class="secondary-button" type="button" (click)="back()">Back</button> }
-            <button class="primary-button" type="button" (click)="next()">{{ step() === 3 ? 'Continue to assessment' : 'Continue' }} <span aria-hidden="true">→</span></button>
+          </label>
+          <div class="field-row">
+            <label class="field"
+              >Age group
+              <select formControlName="ageGroup">
+                <option>Under 12</option>
+                <option>12–15</option>
+                <option>16–18</option>
+                <option>19+</option>
+              </select>
+            </label>
           </div>
-        </form>
-        <p class="gentle-note">No labels, no pressure — just learning that adapts to you.</p>
-      </section>
-    </main>
+        }
+        @case (1) {
+          <div class="choice-list" role="radiogroup" aria-label="Learning goal">
+            @for (goal of goals; track goal) {
+              <label class="choice-row" [class.chosen]="form.controls.goal.value === goal">
+                <input type="radio" formControlName="goal" [value]="goal" />
+                <span>{{ goal }}</span
+                ><span class="choice-check" aria-hidden="true">✓</span>
+              </label>
+            }
+          </div>
+        }
+        @case (2) {
+          <app-interest-picker-component
+            [options]="interestOptions"
+            [selected]="form.controls.interests.value"
+            (selectedChange)="form.controls.interests.setValue($event)"
+          />
+        }
+        @default {
+          <div class="field-row">
+            <label class="field"
+              >Reading font
+              <select formControlName="readingFont" (change)="applyReadingFont()">
+                <option value="default">Default</option>
+                <option value="lexend">Lexend</option>
+                <option value="opendyslexic">OpenDyslexic</option>
+              </select>
+            </label>
+            <label class="field"
+              >Text size
+              <span class="field-hint">Also adjusts exercise text</span>
+              <select formControlName="fontSize">
+                <option value="comfortable">Comfortable</option>
+                <option value="large">Large</option>
+                <option value="extra-large">Extra large</option>
+              </select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field"
+              >Line spacing
+              <select formControlName="lineSpacing">
+                <option value="standard">Standard</option>
+                <option value="relaxed">Relaxed</option>
+                <option value="wide">Wide</option>
+              </select>
+            </label>
+            <label class="field"
+              >Letter spacing
+              <select formControlName="letterSpacing">
+                <option value="standard">Standard</option>
+                <option value="wide">Wide</option>
+                <option value="wider">Wider</option>
+              </select>
+            </label>
+          </div>
+          <div
+            class="reading-preview"
+            [style.--reading-font-family]="previewFont"
+            [style.font-size]="previewSize"
+            [style.letter-spacing]="previewLetterSpacing"
+            [style.line-height]="previewLineHeight"
+          >
+            <span>PREVIEW</span>
+            <p>Small steps make a difference. Read at a pace that feels comfortable for you.</p>
+          </div>
+          <label class="field"
+            >Theme
+            <select formControlName="theme">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
+          <div class="toggle-list">
+            <label
+              ><span><strong>Text-to-speech</strong><small>Listen to reading content</small></span
+              ><input type="checkbox" formControlName="textToSpeech"
+            /></label>
+            <label
+              ><span
+                ><strong>Highlight the current line</strong
+                ><small>Keep your place while you read</small></span
+              ><input type="checkbox" formControlName="currentLineHighlight"
+            /></label>
+            <label
+              ><span
+                ><strong>Reduce visual clutter</strong
+                ><small>Keep the page extra simple</small></span
+              ><input type="checkbox" formControlName="reducedClutter"
+            /></label>
+          </div>
+        }
+      }
+      <div class="form-actions">
+        @if (step() > 0) {
+          <button class="secondary-button" type="button" (click)="back()">Back</button>
+        }
+        <button class="primary-button" type="button" (click)="next()">
+          {{ step() === 3 ? 'Continue to assessment' : 'Continue' }}
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </form>
+    <p class="gentle-note">No labels, no pressure — just learning that adapts to you.</p>
+  </section>
+</main>

@@ -62,9 +62,7 @@ export class Auth {
           next: () => void this.router.navigate(['/dashboard']),
           error: (err: HttpErrorResponse) => {
             this.loading.set(false);
-            this.errorMessage.set(
-              err.error?.message ?? 'Something went wrong. Please try again.'
-            );
+            this.errorMessage.set(err.error?.message ?? 'Something went wrong. Please try again.');
           },
         });
 
@@ -75,9 +73,7 @@ export class Auth {
       next: () => void this.router.navigate(['/dashboard']),
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
-        this.errorMessage.set(
-          err.error?.message ?? 'Something went wrong. Please try again.'
-        );
+        this.errorMessage.set(err.error?.message ?? 'Something went wrong. Please try again.');
       },
     });
   }

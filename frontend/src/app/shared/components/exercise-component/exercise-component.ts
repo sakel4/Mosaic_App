@@ -1,9 +1,17 @@
-
-import { Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { Exercise } from '../../../core/models/exercise.model';
 import { ExerciseAttempt } from '../../../core/models/exercise-attempt.model';
 import { ExerciseMode } from '../../../core/models/exercise-mode.model';
-// import { UserService } from '../core/services/onoma.services';
+import { UserService } from '../../../core/services/user-service';
 
 @Component({
   imports: [],
@@ -12,7 +20,7 @@ import { ExerciseMode } from '../../../core/models/exercise-mode.model';
   templateUrl: './exercise-component.html',
 })
 export class ExcerciseComponent {
-  //readonly users = inject(UserService);
+  readonly users = inject(UserService);
   readonly exercise = input.required<Exercise>();
   readonly mode = input.required<ExerciseMode>();
   readonly completed = output<ExerciseAttempt>();
@@ -22,17 +30,15 @@ export class ExcerciseComponent {
   readonly currentLine = signal(0);
   readonly promptFontSize = computed(() => {
     const sizes = { comfortable: '24px', large: '30px', 'extra-large': '36px' };
-    // return sizes[this.users.fontSize()];
-    return sizes['comfortable'];
+    return sizes[this.users.fontSize()];
   });
   readonly choiceFontSize = computed(() => {
     const sizes = { comfortable: '14px', large: '18px', 'extra-large': '22px' };
-    // return sizes[this.users.fontSize()];
-    return sizes['comfortable'];  
+    return sizes[this.users.fontSize()];
   });
   readonly supportFontSize = computed(() => {
     const sizes = { comfortable: '11px', large: '13px', 'extra-large': '15px' };
-    // return sizes[this.users.fontSize()];
+    return sizes[this.users.fontSize()];
   });
   readonly speechSpeaking = signal(false);
   readonly speechStatus = signal('');
@@ -59,7 +65,9 @@ export class ExcerciseComponent {
   }
 
   moveLine(direction: -1 | 1): void {
-    this.currentLine.update((line) => Math.max(0, Math.min(this.promptLines().length - 1, line + direction)));
+    this.currentLine.update((line) =>
+      Math.max(0, Math.min(this.promptLines().length - 1, line + direction)),
+    );
   }
 
   submit(): void {
@@ -124,7 +132,12 @@ export class ExcerciseComponent {
       this.speakingOption.set(null);
     };
     utterance.onerror = (event) => {
-      if (requestId !== this.speechRequestId || event.error === 'canceled' || event.error === 'interrupted') return;
+      if (
+        requestId !== this.speechRequestId ||
+        event.error === 'canceled' ||
+        event.error === 'interrupted'
+      )
+        return;
       this.speechSpeaking.set(false);
       this.speakingOption.set(null);
       this.speechStatus.set('Speech playback failed. Please try again.');
@@ -151,31 +164,91 @@ export class ExcerciseComponent {
       <span class="feedback-icon" aria-hidden="true">{{ attempt().correct ? '✓' : '↗' }}</span>
       <div class="feedback-copy">
         <h2>{{ attempt().correct ? 'Nice work!' : 'Not quite — keep exploring' }}</h2>
-        <p>{{ attempt().correct ? exercise().content.explanation : 'The answer was “' + exercise().content.correctAnswer + '”. ' + exercise().content.explanation }}</p>
+        <p>
+          {{
+            attempt().correct
+              ? exercise().content.explanation
+              : 'The answer was “' +
+                exercise().content.correctAnswer +
+                '”. ' +
+                exercise().content.explanation
+          }}
+        </p>
       </div>
       <button class="primary-button" type="button" (click)="continued.emit()">
         {{ continueLabel() }} <span aria-hidden="true">→</span>
       </button>
     </section>
   `,
-  styles: [`
-    .feedback-card { display: flex; align-items: center; gap: 15px; padding: 20px; border: 1px solid var(--feedback-border);
-      border-radius: 16px; background: var(--feedback-surface); }
-    .feedback-card.encouraging { border-color: var(--feedback-positive-border); background: var(--feedback-positive-surface); }
-    .feedback-icon { display: grid; width: 39px; height: 39px; flex: 0 0 auto; place-items: center;
-      border-radius: 13px; background: var(--mosaic-coral); color: var(--mosaic-rose); font-size: 17px; font-weight: 700; }
-    .encouraging .feedback-icon { background: var(--feedback-positive-border); color: var(--feedback-positive-icon); }
-    .feedback-copy { flex: 1; }
-    h2 { margin: 0 0 3px; font: 700 15px 'Manrope', sans-serif; }
-    p { margin: 0; color: var(--muted); font-size: 12px; }
-    .feedback-card .primary-button { min-height: 41px; padding-inline: 15px; background: var(--primary-action); font-size: 12px; }
-    .feedback-card .primary-button:hover { background: var(--primary-action-hover); }
-    @media (max-width: 640px) {
-      .feedback-card { align-items: flex-start; flex-wrap: wrap; padding: 15px; }
-      .feedback-copy { min-width: calc(100% - 58px); }
-      .feedback-card .primary-button { width: 100%; }
-    }
-  `],
+  styles: [
+    `
+      .feedback-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        border: 1px solid var(--feedback-border);
+        border-radius: 16px;
+        background: var(--feedback-surface);
+      }
+      .feedback-card.encouraging {
+        border-color: var(--feedback-positive-border);
+        background: var(--feedback-positive-surface);
+      }
+      .feedback-icon {
+        display: grid;
+        width: 39px;
+        height: 39px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 13px;
+        background: var(--mosaic-coral);
+        color: var(--mosaic-rose);
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .encouraging .feedback-icon {
+        background: var(--feedback-positive-border);
+        color: var(--feedback-positive-icon);
+      }
+      .feedback-copy {
+        flex: 1;
+      }
+      h2 {
+        margin: 0 0 3px;
+        font:
+          700 15px 'Manrope',
+          sans-serif;
+      }
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .feedback-card .primary-button {
+        min-height: 41px;
+        padding-inline: 15px;
+        background: var(--primary-action);
+        font-size: 12px;
+      }
+      .feedback-card .primary-button:hover {
+        background: var(--primary-action-hover);
+      }
+      @media (max-width: 640px) {
+        .feedback-card {
+          align-items: flex-start;
+          flex-wrap: wrap;
+          padding: 15px;
+        }
+        .feedback-copy {
+          min-width: calc(100% - 58px);
+        }
+        .feedback-card .primary-button {
+          width: 100%;
+        }
+      }
+    `,
+  ],
 })
 export class ExerciseFeedbackComponent {
   readonly attempt = input.required<ExerciseAttempt>();

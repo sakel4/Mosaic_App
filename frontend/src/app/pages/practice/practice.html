@@ -1,44 +1,58 @@
 <section class="page">
-      <header class="page-header">
-        <p class="eyebrow">PRACTICE</p>
-        <h1 class="page-title">A moment for you</h1>
-        <p class="page-subtitle">Choose a small activity and take it at your own pace.</p>
-      </header>
-      <div class="practice-layout">
-        <div>
-          <!-- @if (setComplete()) {
-            <section class="set-complete surface-card" aria-live="polite">
-              <span class="complete-icon" aria-hidden="true">✓</span>
-              <p class="eyebrow">PRACTICE SET COMPLETE</p>
-              <h2>That’s six activities done.</h2>
-              <p>You can finish here or start another set whenever you’re ready.</p>
-              <div class="complete-actions">
-                <a class="secondary-button" routerLink="/dashboard">Finish for now</a>
-                <button class="primary-button" type="button" (click)="startAnotherSet()">Start another set <span aria-hidden="true">→</span></button>
-              </div>
-            </section>
-          } @else {
-            <div class="exercise-meta">
-              <span class="round-icon" aria-hidden="true">Aa</span>
-              <div><strong>{{ exercise().skill }}</strong><small>Activity {{ completedInSet() + 1 }} of {{ sessionSize }}</small></div>
-              <span class="session-count">{{ progress().exercisesCompleted }} activities<br />completed</span>
-            </div>
-            @if (feedback()) {
-              <app-exercise-feedback [attempt]="lastAttempt()!" [exercise]="exercise()"
-                [continueLabel]="completedInSet() === sessionSize ? 'Finish this set' : 'Next activity'"
-                (continued)="continuePractice()" />
-            } @else {
-              <app-exercise-container [exercise]="exercise()" mode="practice" (completed)="onCompleted($event)" />
-            }
-          } -->
+  <header class="page-header">
+    <p class="eyebrow">PRACTICE</p>
+    <h1 class="page-title">A moment for you</h1>
+    <p class="page-subtitle">Choose a small activity and take it at your own pace.</p>
+  </header>
+  <div class="practice-layout">
+    <div>
+      @if (setComplete()) {
+        <section class="set-complete surface-card" aria-live="polite">
+          <span class="complete-icon" aria-hidden="true">✓</span>
+          <p class="eyebrow">PRACTICE SET COMPLETE</p>
+          <h2>That’s six activities done.</h2>
+          <p>You can finish here or start another set whenever you’re ready.</p>
+          <div class="complete-actions">
+            <a class="secondary-button" routerLink="/dashboard">Finish for now</a>
+            <button class="primary-button" type="button" (click)="startAnotherSet()">
+              Start another set <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </section>
+      } @else {
+        <div class="exercise-meta">
+          <span class="round-icon" aria-hidden="true">Aa</span>
+          <div>
+            <strong>{{ exercise().skill }}</strong
+            ><small>Activity {{ completedInSet() + 1 }} of {{ sessionSize }}</small>
+          </div>
+          <span class="session-count"
+            >{{ progress().exercisesCompleted }} activities<br />completed</span
+          >
         </div>
-        <aside class="practice-aside surface-card">
-          <span class="aside-symbol" aria-hidden="true">✳</span>
-          <h2>Make it your own</h2>
-          <p>There’s no timer and no pressure. Every try helps Mosaic understand what works for you.</p>
-          <div class="aside-divider"></div>
-          <span class="aside-label">TODAY'S REMINDER</span>
-          <p class="reminder">Progress is built from practice, not perfection.</p>
-        </aside>
-      </div>
-    </section>
+        @if (feedback()) {
+          <app-exercise-feedback
+            [attempt]="lastAttempt()!"
+            [exercise]="exercise()"
+            [continueLabel]="completedInSet() === sessionSize ? 'Finish this set' : 'Next activity'"
+            (continued)="continuePractice()"
+          />
+        } @else {
+          <app-excercise-component
+            [exercise]="exercise()"
+            mode="practice"
+            (completed)="onCompleted($event)"
+          />
+        }
+      }
+    </div>
+    <aside class="practice-aside surface-card">
+      <span class="aside-symbol" aria-hidden="true">✳</span>
+      <h2>Make it your own</h2>
+      <p>There’s no timer and no pressure. Every try helps Mosaic understand what works for you.</p>
+      <div class="aside-divider"></div>
+      <span class="aside-label">TODAY'S REMINDER</span>
+      <p class="reminder">Progress is built from practice, not perfection.</p>
+    </aside>
+  </div>
+</section>

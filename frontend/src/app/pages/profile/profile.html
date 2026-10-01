@@ -1,71 +1,170 @@
 <section class="page">
-      <header class="page-header">
-        @if (afterAssessment) {
-          <p class="eyebrow">MAKE IT COMFORTABLE</p>
-          <h1 class="page-title">Choose what feels right for you.</h1>
-          <p class="page-subtitle">Your starting point is set. Adjust how Mosaic looks and sounds while you learn. You can change these settings any time in your profile.</p>
-        } @else {
-          <p class="eyebrow">YOUR SPACE</p>
-          <h1 class="page-title">Your learning, your way.</h1>
-          <p class="page-subtitle">Update your details and make your space feel right for you.</p>
-        }
-      </header>
-      <form [formGroup]="form" (ngSubmit)="save()" class="profile-form">
-        @if (!afterAssessment) {
-          <section class="profile-section surface-card">
-            <div class="profile-heading"><span class="profile-icon" aria-hidden="true">○</span><div><h2>About you</h2><p>The basics that help make your learning personal.</p></div></div>
-            <div class="profile-fields">
-              <label class="field">Name<input type="text" formControlName="name" autocomplete="name" /></label>
-              <!-- <label class="field">Email<input type="email" [value]="email" disabled /></label> -->
-              <label class="field">Age group<select formControlName="ageGroup"><option>Under 12</option><option>12–15</option><option>16–18</option><option>19+</option></select></label>
-            </div>
-          </section>
-          <section class="profile-section surface-card">
-            <div class="profile-heading"><span class="profile-icon warm" aria-hidden="true">✳</span><div><h2>Your interests & goals</h2><p>We use these to make activities more relevant.</p></div></div>
-            <div class="profile-fields">
-              <label class="field">Learning focus<select formControlName="goal"><option>Reading faster</option><option>Reading words with confidence</option><option>Understanding texts</option><option>Spelling</option><option>General reading support</option><option>I'm not sure yet</option></select></label>
-              <!-- <app-interest-picker
-                [options]="interestOptions"
-                [selected]="form.controls.interests.value"
-                (selectedChange)="form.controls.interests.setValue($event)"
-              /> -->
-            </div>
-          </section>
-        }
-        <section class="profile-section surface-card">
-          <div class="profile-heading"><span class="profile-icon lavender" aria-hidden="true">Aa</span><div><h2>Reading preferences</h2><p>Adjust the way content looks and sounds.</p></div></div>
-          <div class="profile-fields">
-            <div class="field-row">
-              <label class="field">Reading font<select formControlName="readingFont" (change)="applyReadingFont()"><option value="default">Default</option><option value="lexend">Lexend</option><option value="opendyslexic">OpenDyslexic</option></select></label>
-              <label class="field">Text size <span class="field-hint">Also adjusts exercise text</span><select formControlName="fontSize" (change)="applyFontSize()"><option value="comfortable">Comfortable</option><option value="large">Large</option><option value="extra-large">Extra large</option></select></label>
-            </div>
-            <div class="field-row">
-              <label class="field">Line spacing<select formControlName="lineSpacing"><option value="standard">Standard</option><option value="relaxed">Relaxed</option><option value="wide">Wide</option></select></label>
-              <label class="field">Letter spacing<select formControlName="letterSpacing"><option value="standard">Standard</option><option value="wide">Wide</option><option value="wider">Wider</option></select></label>
-            </div>
-            <div class="reading-preview" [style.--reading-font-family]="previewFont" [style.font-size]="previewSize" [style.letter-spacing]="previewLetterSpacing" [style.line-height]="previewLineHeight">
-              <span>PREVIEW</span>
-              <p>Small steps make a difference. Read at a pace that feels comfortable for you.</p>
-            </div>
-            <label class="field">Theme<select formControlName="theme"><option value="light">Light</option><option value="dark">Dark</option></select></label>
-            <div class="preference-toggles">
-              <label><span><strong>Text-to-speech</strong><small>Listen to reading content</small></span><input type="checkbox" formControlName="textToSpeech" /></label>
-              <label><span><strong>Highlight current line</strong><small>Help keep your place while reading</small></span><input type="checkbox" formControlName="currentLineHighlight" /></label>
-              <label><span><strong>Reduce visual clutter</strong><small>Keep screens focused and simple</small></span><input type="checkbox" formControlName="reducedClutter" /></label>
-            </div>
+  <header class="page-header">
+    @if (afterAssessment) {
+      <p class="eyebrow">MAKE IT COMFORTABLE</p>
+      <h1 class="page-title">Choose what feels right for you.</h1>
+      <p class="page-subtitle">
+        Your starting point is set. Adjust how Mosaic looks and sounds while you learn. You can
+        change these settings any time in your profile.
+      </p>
+    } @else {
+      <p class="eyebrow">YOUR SPACE</p>
+      <h1 class="page-title">Your learning, your way.</h1>
+      <p class="page-subtitle">Update your details and make your space feel right for you.</p>
+    }
+  </header>
+  <form [formGroup]="form" (ngSubmit)="save()" class="profile-form">
+    @if (!afterAssessment) {
+      <section class="profile-section surface-card">
+        <div class="profile-heading">
+          <span class="profile-icon" aria-hidden="true">○</span>
+          <div>
+            <h2>About you</h2>
+            <p>The basics that help make your learning personal.</p>
           </div>
-        </section>
-        <div class="form-footer">
-          @if (saved && !afterAssessment) { <span class="save-confirmation" role="status">Your preferences are saved.</span> }
-          @if (afterAssessment) {
-            <button class="text-button" type="button" (click)="continueToDashboard()">Skip for now</button>
-            <button class="primary-button" type="submit">Save preferences and continue <span aria-hidden="true">→</span></button>
-          } @else {
-            <button class="primary-button" type="submit">Save changes <span aria-hidden="true">→</span></button>
-          }
         </div>
-      </form>
-      @if (!afterAssessment) {
-        <div class="logout-row"><span>Ready to take a break?</span><button class="text-button" type="button" (click)="logout()">Sign out</button></div>
-      }
+        <div class="profile-fields">
+          <label class="field"
+            >Name<input type="text" formControlName="name" autocomplete="name"
+          /></label>
+          <!-- <label class="field">Email<input type="email" [value]="email" disabled /></label> -->
+          <label class="field"
+            >Age group<select formControlName="ageGroup">
+              <option>Under 12</option>
+              <option>12–15</option>
+              <option>16–18</option>
+              <option>19+</option>
+            </select></label
+          >
+        </div>
+      </section>
+      <section class="profile-section surface-card">
+        <div class="profile-heading">
+          <span class="profile-icon warm" aria-hidden="true">✳</span>
+          <div>
+            <h2>Your interests & goals</h2>
+            <p>We use these to make activities more relevant.</p>
+          </div>
+        </div>
+        <div class="profile-fields">
+          <label class="field"
+            >Learning focus<select formControlName="goal">
+              <option>Reading faster</option>
+              <option>Reading words with confidence</option>
+              <option>Understanding texts</option>
+              <option>Spelling</option>
+              <option>General reading support</option>
+              <option>I'm not sure yet</option>
+            </select></label
+          >
+          <app-interest-picker-component
+            [options]="interestOptions"
+            [selected]="form.controls.interests.value"
+            (selectedChange)="form.controls.interests.setValue($event)"
+          />
+        </div>
+      </section>
+    }
+    <section class="profile-section surface-card">
+      <div class="profile-heading">
+        <span class="profile-icon lavender" aria-hidden="true">Aa</span>
+        <div>
+          <h2>Reading preferences</h2>
+          <p>Adjust the way content looks and sounds.</p>
+        </div>
+      </div>
+      <div class="profile-fields">
+        <div class="field-row">
+          <label class="field"
+            >Reading font<select formControlName="readingFont" (change)="applyReadingFont()">
+              <option value="default">Default</option>
+              <option value="lexend">Lexend</option>
+              <option value="opendyslexic">OpenDyslexic</option>
+            </select></label
+          >
+          <label class="field"
+            >Text size <span class="field-hint">Also adjusts exercise text</span
+            ><select formControlName="fontSize" (change)="applyFontSize()">
+              <option value="comfortable">Comfortable</option>
+              <option value="large">Large</option>
+              <option value="extra-large">Extra large</option>
+            </select></label
+          >
+        </div>
+        <div class="field-row">
+          <label class="field"
+            >Line spacing<select formControlName="lineSpacing">
+              <option value="standard">Standard</option>
+              <option value="relaxed">Relaxed</option>
+              <option value="wide">Wide</option>
+            </select></label
+          >
+          <label class="field"
+            >Letter spacing<select formControlName="letterSpacing">
+              <option value="standard">Standard</option>
+              <option value="wide">Wide</option>
+              <option value="wider">Wider</option>
+            </select></label
+          >
+        </div>
+        <div
+          class="reading-preview"
+          [style.--reading-font-family]="previewFont"
+          [style.font-size]="previewSize"
+          [style.letter-spacing]="previewLetterSpacing"
+          [style.line-height]="previewLineHeight"
+        >
+          <span>PREVIEW</span>
+          <p>Small steps make a difference. Read at a pace that feels comfortable for you.</p>
+        </div>
+        <label class="field"
+          >Theme<select formControlName="theme">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select></label
+        >
+        <div class="preference-toggles">
+          <label
+            ><span><strong>Text-to-speech</strong><small>Listen to reading content</small></span
+            ><input type="checkbox" formControlName="textToSpeech"
+          /></label>
+          <label
+            ><span
+              ><strong>Highlight current line</strong
+              ><small>Help keep your place while reading</small></span
+            ><input type="checkbox" formControlName="currentLineHighlight"
+          /></label>
+          <label
+            ><span
+              ><strong>Reduce visual clutter</strong
+              ><small>Keep screens focused and simple</small></span
+            ><input type="checkbox" formControlName="reducedClutter"
+          /></label>
+        </div>
+      </div>
     </section>
+    <div class="form-footer">
+      @if (saved && !afterAssessment) {
+        <span class="save-confirmation" role="status">Your preferences are saved.</span>
+      }
+      @if (afterAssessment) {
+        <button class="text-button" type="button" (click)="continueToDashboard()">
+          Skip for now
+        </button>
+        <button class="primary-button" type="submit">
+          Save preferences and continue <span aria-hidden="true">→</span>
+        </button>
+      } @else {
+        <button class="primary-button" type="submit">
+          Save changes <span aria-hidden="true">→</span>
+        </button>
+      }
+    </div>
+  </form>
+  @if (!afterAssessment) {
+    <div class="logout-row">
+      <span>Ready to take a break?</span
+      ><button class="text-button" type="button" (click)="logout()">Sign out</button>
+    </div>
+  }
+</section>

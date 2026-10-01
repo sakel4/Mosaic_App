@@ -1,13 +1,6 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, inject, Injectable, signal } from '@angular/core';
-import { Achievement } from '../models/achievement.model';
-import { Activity } from '../models/activity.model';
-import { Exercise} from '../models/exercise.model';
+﻿import { Exercise } from '../models/exercise.model';
 import { LearnerProfile } from '../models/learner-profile.model';
 import { Progress } from '../models/progress.model';
-import { User } from '../models/user.model';
-import { ExerciseAttempt } from '../models/exercise-attempt.model';
-import { AccessibilityPreferences } from '../models/accessibility-preferences.model';
 
 export const API_BASE_URL = '/api';
 export const API_ENDPOINTS = {
@@ -22,7 +15,7 @@ export const API_ENDPOINTS = {
   nextRealWorld: `${API_BASE_URL}/real-world/next/`,
 } as const;
 
-const defaultProfile: LearnerProfile = {
+export const defaultProfile: LearnerProfile = {
   name: 'Alex',
   ageGroup: '16–18',
   learningGoals: ['Reading faster', 'Understanding texts'],
@@ -40,7 +33,7 @@ const defaultProfile: LearnerProfile = {
   },
 };
 
-const exercises: Exercise[] = [
+export const exercises: Exercise[] = [
   {
     id: 201,
     type: 'reading_fluency',
@@ -116,7 +109,7 @@ const exercises: Exercise[] = [
   },
 ];
 
-const realWorldExercise: Exercise = {
+export const realWorldExercise: Exercise = {
   id: 301,
   type: 'comprehension',
   skill: 'Everyday reading',
@@ -129,7 +122,7 @@ const realWorldExercise: Exercise = {
   },
 };
 
-const defaultProgress: Progress = {
+export const defaultProgress: Progress = {
   exercisesCompleted: 24,
   currentStreak: 4,
   skills: [
@@ -143,218 +136,3 @@ const defaultProgress: Progress = {
     { id: 2, title: 'A curious mind', description: 'Completed 20 activities', icon: '↗' },
   ],
 };
-
-@Injectable({ providedIn: 'root' })
-export class AuthService {
-  private readonly authenticated = signal(true);
-  readonly isAuthenticated = this.authenticated.asReadonly();
-
-  login(_email: string, _password: string): void {
-    this.authenticated.set(true);
-  }
-
-  register(name: string, email: string): void {
-    this.authenticated.set(true);
-    this.user.update((user) => ({
-      ...user,
-      name,
-      email,
-      assessmentCompleted: false,
-      profile: { ...user.profile, name },
-    }));
-  }
-
-  completeAssessment(): void {
-    this.user.update((user) => ({ ...user, assessmentCompleted: true }));
-  }
-
-  logout(): void {
-    this.authenticated.set(false);
-  }
-
-  private readonly user = signal<User>({
-    id: 1,
-    name: defaultProfile.name,
-    email: 'alex@example.com',
-    assessmentCompleted: false,
-    profile: defaultProfile,
-  });
-
-  get currentUser(): User {
-    return this.user();
-  }
-
-  updateProfile(profile: LearnerProfile): void {
-    this.user.update((user) => ({ ...user, name: profile.name, profile }));
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class UserService {
-  private readonly learner = signal(defaultProfile);
-  readonly profile = this.learner.asReadonly();
-  readonly fontSize = signal<AccessibilityPreferences['fontSize']>('comfortable');
-
-  constructor(@Inject(DOCUMENT) private readonly document: Document) {}
-
-  save(profile: LearnerProfile): void {
-    this.learner.set(profile);
-    this.apply(profile);
-  }
-
-  apply(profile: LearnerProfile): void {
-    const root = this.document.documentElement;
-    root.dataset['theme'] = profile.preferences.theme;
-    this.applyReadingFont(profile.preferences.readingFont);
-    this.applyFontSize(profile.preferences.fontSize);
-    root.dataset['letterSpacing'] = profile.preferences.letterSpacing;
-    root.dataset['lineSpacing'] = profile.preferences.lineSpacing;
-    root.dataset['reducedClutter'] = String(profile.preferences.reducedClutter);
-  }
-
-  applyReadingFont(readingFont: AccessibilityPreferences['readingFont']): void {
-    const fonts: Record<AccessibilityPreferences['readingFont'], string> = {
-      default: "'DM Sans', sans-serif",
-      lexend: "'Lexend', sans-serif",
-      opendyslexic: "'OpenDyslexic', sans-serif",
-    };
-    const root = this.document.documentElement;
-    root.dataset['readingFont'] = readingFont;
-    root.style.setProperty('--reading-font-family', fonts[readingFont]);
-  }
-
-  applyFontSize(fontSize: AccessibilityPreferences['fontSize']): void {
-    const profileTextSizes: Record<
-      AccessibilityPreferences['fontSize'],
-      {
-        fieldLabel: string;
-        fieldHint: string;
-        toggleLabel: string;
-        toggleDescription: string;
-        sectionDescription: string;
-        previewLabel: string;
-      }
-    > = {
-      comfortable: {
-        fieldLabel: '13px',
-        fieldHint: '10px',
-        toggleLabel: '11px',
-        toggleDescription: '9px',
-        sectionDescription: '10px',
-        previewLabel: '9px',
-      },
-      large: {
-        fieldLabel: '15px',
-        fieldHint: '12px',
-        toggleLabel: '13px',
-        toggleDescription: '11px',
-        sectionDescription: '12px',
-        previewLabel: '11px',
-      },
-      'extra-large': {
-        fieldLabel: '17px',
-        fieldHint: '14px',
-        toggleLabel: '15px',
-        toggleDescription: '13px',
-        sectionDescription: '14px',
-        previewLabel: '13px',
-      },
-    };
-    const sizes = profileTextSizes[fontSize];
-    this.fontSize.set(fontSize);
-    const root = this.document.documentElement;
-    root.dataset['fontSize'] = fontSize;
-    root.style.setProperty('--profile-field-label-size', sizes.fieldLabel);
-    root.style.setProperty('--profile-field-hint-size', sizes.fieldHint);
-    root.style.setProperty('--profile-toggle-label-size', sizes.toggleLabel);
-    root.style.setProperty('--profile-toggle-description-size', sizes.toggleDescription);
-    root.style.setProperty('--profile-section-description-size', sizes.sectionDescription);
-    root.style.setProperty('--profile-preview-label-size', sizes.previewLabel);
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class ExerciseService {
-  private index = 0;
-
-  nextExercise(): Exercise {
-    const exercise = exercises[this.index % exercises.length];
-    this.index += 1;
-    return exercise;
-  }
-
-  assessmentExercises(): Exercise[] {
-    return exercises;
-  }
-
-  realWorldExercise(): Exercise {
-    return realWorldExercise;
-  }
-
-  nextActivity(): Activity {
-    return {
-      id: 1,
-      type: 'exercise',
-      skill: 'Reading fluency',
-      title: 'Words in a sentence',
-      description: 'Build confidence spotting familiar words in context.',
-      estimatedMinutes: 5,
-      difficulty: 2,
-      reason:
-        'You’ve been practicing reading fluency, so this activity helps you recognize common words more quickly.',
-    };
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class AssessmentService {
-  private readonly exerciseService = inject(ExerciseService);
-  private readonly progressService = inject(ProgressService);
-
-  getAssessment(): Exercise[] {
-    return this.exerciseService.assessmentExercises();
-  }
-
-  recordAttempt(attempt: ExerciseAttempt, skill: string): void {
-    this.progressService.recordAttempt(attempt, skill);
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class RealWorldService {
-  private readonly exerciseService = inject(ExerciseService);
-  private readonly progressService = inject(ProgressService);
-
-  nextScenario(): Exercise {
-    return this.exerciseService.realWorldExercise();
-  }
-
-  recordAttempt(attempt: ExerciseAttempt, skill: string): void {
-    this.progressService.recordAttempt(attempt, skill);
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class ProgressService {
-  private readonly currentProgress = signal<Progress>(defaultProgress);
-  readonly progress = this.currentProgress.asReadonly();
-
-  recordAttempt(attempt: ExerciseAttempt, skill: string): void {
-    this.currentProgress.update((progress) => ({
-      ...progress,
-      exercisesCompleted: progress.exercisesCompleted + 1,
-      skills: progress.skills.map((item) =>
-        item.name === skill
-          ? { ...item, progress: attempt.correct ? Math.min(100, item.progress + 2) : item.progress }
-          : item,
-      ),
-    }));
-  }
-
-  addAchievement(achievement: Achievement): void {
-    this.currentProgress.update((progress) => ({
-      ...progress,
-      achievements: [...progress.achievements, achievement],
-    }));
-  }
-}

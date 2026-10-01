@@ -1,3 +1,5 @@
+import { UserService } from '../../core/services/user-service';
+import { normalizeLearnerInterests } from '../../core/models/learner-interest.model';
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -7,7 +9,6 @@ import { LearnerInterest } from '../../core/models/learner-interest.model';
 import { LearnerProfile } from '../../core/models/learner-profile.model';
 import { ReadingFont } from '../../core/models/reading-font.model';
 import { InterestPickerComponent } from '../../shared/components/interest-picker-component/interest-picker-component';
-// import { AuthService, UserService } from '../../core/services/onoma.services';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink, InterestPickerComponent],
@@ -16,42 +17,47 @@ import { InterestPickerComponent } from '../../shared/components/interest-picker
   templateUrl: './onboarding.html',
 })
 export class Onboarding {
-  // private readonly auth = inject(AuthService);
-  // private readonly users = inject(UserService);
+  private readonly users = inject(UserService);
   private readonly router = inject(Router);
   readonly step = signal(0);
-  readonly goals = ['Read faster', 'Read words with confidence', 'Understand what I read', 'Spelling', 'General reading support', 'I’m not sure yet'];
+  readonly goals = [
+    'Read faster',
+    'Read words with confidence',
+    'Understand what I read',
+    'Spelling',
+    'General reading support',
+    'I’m not sure yet',
+  ];
   readonly interestOptions = LEARNER_INTERESTS;
-  // readonly form = new FormGroup({
-  //   name: new FormControl(this.auth.currentUser.profile.name, { nonNullable: true, validators: [Validators.required] }),
-  //   ageGroup: new FormControl(this.auth.currentUser.profile.ageGroup, { nonNullable: true }),
-  //   goal: new FormControl(this.auth.currentUser.profile.learningGoals[0] ?? this.goals[0], { nonNullable: true }),
-  //   interests: new FormControl<LearnerInterest[]>(
-  //     normalizeLearnerInterests(this.auth.currentUser.profile.interests),
-  //     { nonNullable: true },
-  //   ),
-  //   fontSize: new FormControl<AccessibilityPreferences['fontSize']>('comfortable', { nonNullable: true }),
-  //   readingFont: new FormControl<ReadingFont>('default', { nonNullable: true }),
-  //   letterSpacing: new FormControl<AccessibilityPreferences['letterSpacing']>('standard', { nonNullable: true }),
-  //   lineSpacing: new FormControl<AccessibilityPreferences['lineSpacing']>('relaxed', { nonNullable: true }),
-  //   theme: new FormControl<AccessibilityPreferences['theme']>('light', { nonNullable: true }),
-  //   textToSpeech: new FormControl(this.auth.currentUser.profile.preferences.textToSpeech, { nonNullable: true }),
-  //   currentLineHighlight: new FormControl(true, { nonNullable: true }),
-  //   reducedClutter: new FormControl(false, { nonNullable: true }),
-  // });
   readonly form = new FormGroup({
-    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    ageGroup: new FormControl('', { nonNullable: true }),
-    goal: new FormControl('General reading support', { nonNullable: true }),
-    interests: new FormControl<LearnerInterest[]>([], { nonNullable: true }),
+    name: new FormControl(this.users.profile().name, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    ageGroup: new FormControl(this.users.profile().ageGroup, { nonNullable: true }),
+    goal: new FormControl(this.users.profile().learningGoals[0] ?? this.goals[0], {
+      nonNullable: true,
+    }),
+    interests: new FormControl<LearnerInterest[]>(
+      normalizeLearnerInterests(this.users.profile().interests),
+      { nonNullable: true },
+    ),
+    fontSize: new FormControl<AccessibilityPreferences['fontSize']>('comfortable', {
+      nonNullable: true,
+    }),
     readingFont: new FormControl<ReadingFont>('default', { nonNullable: true }),
-    fontSize: new FormControl<AccessibilityPreferences['fontSize']>('comfortable', { nonNullable: true }),
-    letterSpacing: new FormControl<AccessibilityPreferences['letterSpacing']>('standard', { nonNullable: true }),
-    lineSpacing: new FormControl<AccessibilityPreferences['lineSpacing']>('standard', { nonNullable: true }),
-    textToSpeech: new FormControl(false, { nonNullable: true }),
-    currentLineHighlight: new FormControl(false, { nonNullable: true }),
-    reducedClutter: new FormControl(false, { nonNullable: true }),
+    letterSpacing: new FormControl<AccessibilityPreferences['letterSpacing']>('standard', {
+      nonNullable: true,
+    }),
+    lineSpacing: new FormControl<AccessibilityPreferences['lineSpacing']>('relaxed', {
+      nonNullable: true,
+    }),
     theme: new FormControl<AccessibilityPreferences['theme']>('light', { nonNullable: true }),
+    textToSpeech: new FormControl(this.users.profile().preferences.textToSpeech, {
+      nonNullable: true,
+    }),
+    currentLineHighlight: new FormControl(true, { nonNullable: true }),
+    reducedClutter: new FormControl(false, { nonNullable: true }),
   });
 
   get previewFont(): string {
@@ -64,7 +70,7 @@ export class Onboarding {
   }
 
   applyReadingFont(): void {
-    // this.users.applyReadingFont(this.form.controls.readingFont.value);
+    this.users.applyReadingFont(this.form.controls.readingFont.value);
   }
 
   get previewSize(): string {
@@ -113,26 +119,25 @@ export class Onboarding {
   save(): void {
     if (this.step() !== 3 || !this.form.valid) return;
     const values = this.form.getRawValue();
-    // const profile: LearnerProfile = {
-    //   ...this.auth.currentUser.profile,
-    //   name: values.name.trim(),
-    //   ageGroup: values.ageGroup,
-    //   learningGoals: [values.goal],
-    //   interests: values.interests,
-    //   preferences: {
-    //     ...this.auth.currentUser.profile.preferences,
-    //     readingFont: values.readingFont,
-    //     fontSize: values.fontSize,
-    //     letterSpacing: values.letterSpacing,
-    //     lineSpacing: values.lineSpacing,
-    //     theme: values.theme,
-    //     textToSpeech: values.textToSpeech,
-    //     currentLineHighlight: values.currentLineHighlight,
-    //     reducedClutter: values.reducedClutter,
-    //   },
-    // };
-    // this.users.save(profile);
-    // this.auth.updateProfile(profile);
+    const profile: LearnerProfile = {
+      ...this.users.profile(),
+      name: values.name.trim(),
+      ageGroup: values.ageGroup,
+      learningGoals: [values.goal],
+      interests: values.interests,
+      preferences: {
+        ...this.users.profile().preferences,
+        readingFont: values.readingFont,
+        fontSize: values.fontSize,
+        letterSpacing: values.letterSpacing,
+        lineSpacing: values.lineSpacing,
+        theme: values.theme,
+        textToSpeech: values.textToSpeech,
+        currentLineHighlight: values.currentLineHighlight,
+        reducedClutter: values.reducedClutter,
+      },
+    };
+    this.users.save(profile);
     void this.router.navigate(['/assessment']);
   }
 }

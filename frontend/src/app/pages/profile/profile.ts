@@ -1,4 +1,6 @@
-﻿import { Component, inject } from '@angular/core';
+﻿import { UserService } from '../../core/services/user-service';
+import { normalizeLearnerInterests } from '../../core/models/learner-interest.model';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccessibilityPreferences } from '../../core/models/accessibility-preferences.model';
@@ -8,55 +10,62 @@ import { ReadingFont } from '../../core/models/reading-font.model';
 import { LEARNER_INTERESTS } from '../../core/models/learner-interest.model';
 import { InterestPickerComponent } from '../../shared/components/interest-picker-component/interest-picker-component';
 import { AuthService } from '../../core/services/auth-service';
-// import { AuthService, UserService } from '../../core/services/onoma.services';
-// import { InterestPickerComponent } from '../../shared/interest-picker.component';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, InterestPickerComponent],
   selector: 'app-profile',
   styleUrl: './profile.scss',
   templateUrl: './profile.html',
 })
 export class Profile {
   private readonly auth = inject(AuthService);
-  // private readonly users = inject(UserService);
+  private readonly users = inject(UserService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   readonly afterAssessment = this.route.snapshot.queryParamMap.get('afterAssessment') === 'true';
   readonly interestOptions = LEARNER_INTERESTS;
   saved = false;
-  // readonly email = this.auth.currentUser.email;
-  // readonly email = this.auth.currentUser.email;
-  // readonly form = new FormGroup({
-  //   name: new FormControl(this.auth.currentUser.profile.name, { nonNullable: true, validators: [Validators.required] }),
-  //   ageGroup: new FormControl(this.auth.currentUser.profile.ageGroup, { nonNullable: true }),
-  //   goal: new FormControl(this.auth.currentUser.profile.learningGoals[0] ?? 'General reading support', { nonNullable: true }),
-  //   interests: new FormControl<LearnerInterest[]>(
-  //     normalizeLearnerInterests(this.auth.currentUser.profile.interests),
-  //     { nonNullable: true },
-  //   ),
-  //   readingFont: new FormControl<ReadingFont>(this.auth.currentUser.profile.preferences.readingFont, { nonNullable: true }),
-  //   fontSize: new FormControl<AccessibilityPreferences['fontSize']>(this.auth.currentUser.profile.preferences.fontSize, { nonNullable: true }),
-  //   letterSpacing: new FormControl<AccessibilityPreferences['letterSpacing']>(this.auth.currentUser.profile.preferences.letterSpacing, { nonNullable: true }),
-  //   lineSpacing: new FormControl<AccessibilityPreferences['lineSpacing']>(this.auth.currentUser.profile.preferences.lineSpacing, { nonNullable: true }),
-  //   textToSpeech: new FormControl(this.auth.currentUser.profile.preferences.textToSpeech, { nonNullable: true }),
-  //   currentLineHighlight: new FormControl(this.auth.currentUser.profile.preferences.currentLineHighlight, { nonNullable: true }),
-  //   reducedClutter: new FormControl(this.auth.currentUser.profile.preferences.reducedClutter, { nonNullable: true }),
-  //   theme: new FormControl<AccessibilityPreferences['theme']>(this.auth.currentUser.profile.preferences.theme, { nonNullable: true }),
-  // });
   readonly form = new FormGroup({
-    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    ageGroup: new FormControl('', { nonNullable: true }),
-    goal: new FormControl('General reading support', { nonNullable: true }),
-    interests: new FormControl<LearnerInterest[]>([], { nonNullable: true }),
-    readingFont: new FormControl<ReadingFont>('default', { nonNullable: true }),
-    fontSize: new FormControl<AccessibilityPreferences['fontSize']>('comfortable', { nonNullable: true }),
-    letterSpacing: new FormControl<AccessibilityPreferences['letterSpacing']>('standard', { nonNullable: true }),
-    lineSpacing: new FormControl<AccessibilityPreferences['lineSpacing']>('standard', { nonNullable: true }),
-    textToSpeech: new FormControl(false, { nonNullable: true }),
-    currentLineHighlight: new FormControl(false, { nonNullable: true }),
-    reducedClutter: new FormControl(false, { nonNullable: true }),
-    theme: new FormControl<AccessibilityPreferences['theme']>('light', { nonNullable: true }),
+    name: new FormControl(this.users.profile().name, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    ageGroup: new FormControl(this.users.profile().ageGroup, { nonNullable: true }),
+    goal: new FormControl(this.users.profile().learningGoals[0] ?? 'General reading support', {
+      nonNullable: true,
+    }),
+    interests: new FormControl<LearnerInterest[]>(
+      normalizeLearnerInterests(this.users.profile().interests),
+      { nonNullable: true },
+    ),
+    readingFont: new FormControl<ReadingFont>(this.users.profile().preferences.readingFont, {
+      nonNullable: true,
+    }),
+    fontSize: new FormControl<AccessibilityPreferences['fontSize']>(
+      this.users.profile().preferences.fontSize,
+      { nonNullable: true },
+    ),
+    letterSpacing: new FormControl<AccessibilityPreferences['letterSpacing']>(
+      this.users.profile().preferences.letterSpacing,
+      { nonNullable: true },
+    ),
+    lineSpacing: new FormControl<AccessibilityPreferences['lineSpacing']>(
+      this.users.profile().preferences.lineSpacing,
+      { nonNullable: true },
+    ),
+    textToSpeech: new FormControl(this.users.profile().preferences.textToSpeech, {
+      nonNullable: true,
+    }),
+    currentLineHighlight: new FormControl(this.users.profile().preferences.currentLineHighlight, {
+      nonNullable: true,
+    }),
+    reducedClutter: new FormControl(this.users.profile().preferences.reducedClutter, {
+      nonNullable: true,
+    }),
+    theme: new FormControl<AccessibilityPreferences['theme']>(
+      this.users.profile().preferences.theme,
+      { nonNullable: true },
+    ),
   });
 
   get previewFont(): string {
@@ -96,18 +105,18 @@ export class Profile {
   }
 
   applyFontSize(): void {
-    // this.users.applyFontSize(this.form.controls.fontSize.value);
+    this.users.applyFontSize(this.form.controls.fontSize.value);
   }
 
   applyReadingFont(): void {
-    // this.users.applyReadingFont(this.form.controls.readingFont.value);
+    this.users.applyReadingFont(this.form.controls.readingFont.value);
   }
 
   save(): void {
     this.form.markAllAsTouched();
     if (!this.afterAssessment && this.form.invalid) return;
     const value = this.form.getRawValue();
-    // const currentProfile = this.auth.currentUser.profile;
+    const currentProfile = this.users.profile();
     const preferences: AccessibilityPreferences = {
       readingFont: value.readingFont,
       fontSize: value.fontSize,
@@ -118,21 +127,20 @@ export class Profile {
       reducedClutter: value.reducedClutter,
       theme: value.theme,
     };
-    // const profile: LearnerProfile = this.afterAssessment
-    //   ? {
-    //       // ...currentProfile,
-    //       preferences,
-    //     }
-    //   : {
-    //       // ...currentProfile,
-    //       name: value.name.trim(),
-    //       ageGroup: value.ageGroup,
-    //       learningGoals: [value.goal],
-    //       interests: value.interests,
-    //       preferences,
-    //     };
-    // this.users.save(profile);
-    // this.auth.updateProfile(profile);
+    const profile: LearnerProfile = this.afterAssessment
+      ? {
+          ...currentProfile,
+          preferences,
+        }
+      : {
+          ...currentProfile,
+          name: value.name.trim(),
+          ageGroup: value.ageGroup,
+          learningGoals: [value.goal],
+          interests: value.interests,
+          preferences,
+        };
+    this.users.save(profile);
     if (this.afterAssessment) {
       this.continueToDashboard();
       return;
@@ -141,7 +149,7 @@ export class Profile {
   }
 
   continueToDashboard(): void {
-    // this.users.apply(this.auth.currentUser.profile);
+    this.users.apply(this.users.profile());
     void this.router.navigate(['/dashboard']);
   }
 

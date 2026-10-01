@@ -1,3 +1,4 @@
+import { UserService } from '../../core/services/user-service';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
@@ -8,7 +9,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
   templateUrl: './app-layout.html',
 })
 export class AppLayout {
-  //private readonly users = inject(UserService);
+  private readonly users = inject(UserService);
   private readonly router = inject(Router);
   readonly navItems = [
     { label: 'Home', path: '/dashboard', icon: '⌂' },
@@ -19,16 +20,20 @@ export class AppLayout {
   ];
 
   constructor() {
-    //this.users.apply(this.auth.currentUser.profile);
+    this.users.apply(this.users.profile());
   }
 
   get name(): string {
-    // return this.auth.currentUser.profile.name;
-    return 'John Doe'; // Replace with actual name retrieval logic
+    return this.users.profile().name;
   }
 
   get initials(): string {
-    return this.name.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+    return this.name
+      .split(/\s+/)
+      .map((part) => part[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
   }
 
   goToProfile(): void {

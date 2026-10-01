@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
+import { UserService } from '../../core/services/user-service';
+import { ExerciseService } from '../../core/services/exercise-service';
+import { ProgressService } from '../../core/services/progress-service';
 
 @Component({
   imports: [RouterLink],
@@ -9,19 +11,16 @@ import { RouterLink } from '@angular/router';
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
-  //private readonly auth = inject(AuthService); ( better user)
- // private readonly progressService = inject(ProgressService);
-  //private readonly exerciseService = inject(ExerciseService);
-  //readonly progress = this.progressService.progress;
- // readonly activity = this.exerciseService.nextActivity();
+  private readonly users = inject(UserService);
+  private readonly progressService = inject(ProgressService);
+  private readonly exerciseService = inject(ExerciseService);
+  readonly progress = this.progressService.progress;
+  readonly activity = this.exerciseService.nextActivity();
 
   get assessmentCompleted(): boolean {
-    // return this.auth.currentUser.assessmentCompleted;
-    return true; // Replace with actual logic to check if assessment is completed
+    return this.users.assessmentCompleted();
   }
-
   get firstName(): string {
-    // return this.auth.currentUser.profile.name.split(/\s+/)[0] || 'there'; ( better user)
-    return 'there'; // Replace with actual logic to get the user's
+    return this.users.profile().name.trim().split(/\s+/)[0] || 'there';
   }
 }
