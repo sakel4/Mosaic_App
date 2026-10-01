@@ -14,6 +14,7 @@ export class UserService {
   readonly profile = this.learner.asReadonly();
   private readonly assessmentDone = signal(false);
   readonly assessmentCompleted = this.assessmentDone.asReadonly();
+  readonly onboardingCompleted = this.assessmentDone.asReadonly();
   readonly fontSize = signal<AccessibilityPreferences['fontSize']>('comfortable');
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
