@@ -162,8 +162,12 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_THROTTLE_RATES': {
         'auth': '10/min',
+        'speech_transcribe': '10/hour',
     },
 }
+
+MAX_SPOKEN_AUDIO_BYTES = int(os.environ.get('MAX_SPOKEN_AUDIO_BYTES', str(10 * 1024 * 1024)))
+DATA_UPLOAD_MAX_MEMORY_SIZE = MAX_SPOKEN_AUDIO_BYTES + (1024 * 1024)
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),

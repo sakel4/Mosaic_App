@@ -1,9 +1,14 @@
 import unittest
 import json
+import io
 import os
-from unittest.mock import Mock, patch
+import wave
+from unittest.mock import AsyncMock, Mock, patch
+
+from amazon_transcribe.model import Alternative, Item, Result, Transcript, TranscriptEvent
 
 from personalized_practice.bank import load_age_bank, public_seed, select_seed
+from personalized_practice.assessment import AssessmentSubmissionError, score_assessment
 from personalized_practice.domain import LearnerContext, PracticeDataError, SkillEvidence
 from personalized_practice.generator import (
     BedrockExerciseGenerator,
@@ -20,9 +25,231 @@ from personalized_practice.selection import (
     difficulty_for_score,
     skill_priority,
 )
+from personalized_practice.speech_scoring import (
+    SpeechScoringError,
+    TranscribeSpeechScorer,
+    score_transcription,
+)
 
 
 class PersonalizationTests(unittest.TestCase):
+    @staticmethod
+    def _transcribe_result(words, confidence="0.95"):
+        return {
+            "results": {
+                "items": [
+                    {
+                        "type": "pronunciation",
+                        "alternatives": [{"content": word, "confidence": confidence}],
+                    }
+                    for word in words
+                ]
+            }
+        }
+
+    def test_transcribe_alignment_splits_correct_and_attempted_word_counts(self):
+        exercise = next(
+            item for item in load_age_bank("19_plus")["exercises"]
+            if item["kind"] == "word_reading_sample"
+        )
+        transcription = self._transcribe_result([
+            "relvicate", "monestral", "preficiant", "clostering", "subrenity",
+            "receipt", "maintenance", "schedule", "colleague",
+        ])
+        result = score_transcription(exercise, transcription)
+        self.assertEqual(result["scores"]["pseudowords"]["correct"], 4)
+        self.assertEqual(result["scores"]["pseudowords"]["attempted"], 5)
+        self.assertEqual(result["scores"]["real_words"]["correct"], 4)
+        self.assertEqual(result["scores"]["real_words"]["attempted"], 4)
+
+    def test_transcribe_alignment_does_not_count_unreached_words_as_attempted(self):
+        exercise = next(
+            item for item in load_age_bank("19_plus")["exercises"]
+            if item["kind"] == "word_reading_sample"
+        )
+        transcription = self._transcribe_result([
+            "relvicate", "monestral", "preficient", "clostering", "subrenity",
+        ])
+        result = score_transcription(exercise, transcription)
+        self.assertEqual(result["scores"]["pseudowords"]["attempted"], 5)
+        self.assertEqual(result["scores"]["real_words"]["attempted"], 0)
+
+    @staticmethod
+    def _wav_audio(sample_rate=16000, seconds=1):
+        buffer = io.BytesIO()
+        with wave.open(buffer, "wb") as recording:
+            recording.setnchannels(1)
+            recording.setsampwidth(2)
+            recording.setframerate(sample_rate)
+            recording.writeframes(b"\x00\x00" * sample_rate * seconds)
+        return io.BytesIO(buffer.getvalue())
+
+    @patch("personalized_practice.speech_scoring.signing.dumps", return_value="signed-result")
+    def test_transcribe_stream_scores_wav_and_returns_signed_results(self, _sign):
+        bank = load_age_bank("19_plus")
+        exercise = next(item for item in bank["exercises"] if item["kind"] == "word_reading_sample")
+        target_words = [word for section in exercise["content_data"]["sections"] for word in section["items"]]
+        transcription = self._transcribe_result(target_words)
+
+        def transcript_event(words, is_partial):
+            items = [
+                Item(item_type="pronunciation", content=word, confidence=0.95)
+                for word in words
+            ]
+            alternative = Alternative(" ".join(words), items, [])
+            return TranscriptEvent(Transcript([Result(is_partial=is_partial, alternatives=[alternative])]))
+
+        class FakeInputStream:
+            def __init__(self):
+                self.chunks = []
+                self.ended = False
+
+            async def send_audio_event(self, audio_chunk):
+                self.chunks.append(audio_chunk)
+
+            async def end_stream(self):
+                self.ended = True
+
+        class FakeOutputStream:
+            async def __aiter__(self):
+                yield transcript_event(["incorrect-partial"], True)
+                yield transcript_event(target_words, False)
+
+        class FakeClient:
+            def __init__(self):
+                self.stream = Mock()
+                self.stream.input_stream = FakeInputStream()
+                self.stream.output_stream = FakeOutputStream()
+
+            async def start_stream_transcription(self, **kwargs):
+                self.kwargs = kwargs
+                return self.stream
+
+        client = FakeClient()
+        service = TranscribeSpeechScorer(streaming_client=client)
+        with patch("personalized_practice.speech_scoring.asyncio.sleep", new=AsyncMock()):
+            result = service.score_audio(
+                "learner-id",
+                "19_plus",
+                bank["assessment_version"],
+                exercise["id"],
+                self._wav_audio(),
+            )
+
+        self.assertEqual(result["status"], "completed")
+        self.assertEqual(result["speech_result_token"], "signed-result")
+        self.assertEqual(result["scores"]["pseudowords"]["correct"], 5)
+        self.assertEqual(result["scores"]["real_words"]["correct"], 4)
+        self.assertEqual(len(client.stream.input_stream.chunks), 10)
+        self.assertTrue(all(len(chunk) == 3200 for chunk in client.stream.input_stream.chunks))
+        self.assertTrue(client.stream.input_stream.ended)
+        self.assertEqual(client.kwargs["media_sample_rate_hz"], 16000)
+        self.assertEqual(client.kwargs["media_encoding"], "pcm")
+
+    def test_transcribe_stream_rejects_audio_not_in_required_pcm_format(self):
+        bank = load_age_bank("19_plus")
+        service = TranscribeSpeechScorer(streaming_client=Mock())
+        with self.assertRaises(SpeechScoringError):
+            service.score_audio(
+                "learner-id",
+                "19_plus",
+                bank["assessment_version"],
+                "19_plus_voice_words_01",
+                self._wav_audio(sample_rate=44100),
+            )
+
+    def _assessment_submission(self, overrides=None):
+        bank = load_age_bank("19_plus")
+        responses = [{"exercise_id": item["id"], "skipped": True} for item in bank["exercises"]]
+        for exercise_id, response in (overrides or {}).items():
+            next(item for item in responses if item["exercise_id"] == exercise_id).update(response)
+        return {
+            "assessment_version": bank["assessment_version"],
+            "responses": responses,
+        }
+
+    def test_assessment_scores_answers_and_leaves_skipped_voice_skills_unscored(self):
+        submission = self._assessment_submission({
+            "19_plus_pa_nv_01": {"skipped": False, "answers": {"a": "1", "b": "wrong"}},
+        })
+        results = {item["skill"]: item for item in score_assessment("19_plus", submission)}
+        self.assertEqual(results["phonological_awareness"]["baseline_score"], 50)
+        self.assertEqual(results["phonological_awareness"]["confidence"], 0.42)
+        self.assertIsNone(results["decoding"]["baseline_score"])
+        self.assertIsNone(results["word_recognition"]["baseline_score"])
+        self.assertIsNone(results["reading_fluency"]["baseline_score"])
+
+    def test_assessment_validates_spoken_counts_and_splits_reading_skills(self):
+        submission = self._assessment_submission({
+            "19_plus_voice_words_01": {"skipped": False},
+        })
+        verified = {
+            "19_plus_voice_words_01": {
+                "scores": {
+                    "pseudowords": {"correct": 4, "attempted": 5},
+                    "real_words": {"correct": 3, "attempted": 4},
+                },
+                "confidence": 0.95,
+            },
+        }
+        results = {
+            item["skill"]: item
+            for item in score_assessment("19_plus", submission, verified)
+        }
+        self.assertEqual(results["decoding"]["baseline_score"], 80)
+        self.assertEqual(results["word_recognition"]["baseline_score"], 75)
+        verified["19_plus_voice_words_01"]["scores"]["pseudowords"] = {
+            "correct": 6,
+            "attempted": 6,
+        }
+        with self.assertRaises(AssessmentSubmissionError):
+            score_assessment("19_plus", submission, verified)
+
+    def test_assessment_rejects_client_supplied_spoken_counts(self):
+        submission = self._assessment_submission({
+            "19_plus_voice_words_01": {
+                "skipped": False,
+                "spoken_scores": {"pseudowords": {"correct": 5, "attempted": 5}},
+            },
+        })
+        with self.assertRaises(AssessmentSubmissionError):
+            score_assessment("19_plus", submission)
+
+    def test_assessment_rejects_unknown_items(self):
+        submission = self._assessment_submission({
+            "19_plus_pa_nv_01": {"skipped": False, "answers": {"not-an-item": "1"}},
+        })
+        with self.assertRaises(AssessmentSubmissionError):
+            score_assessment("19_plus", submission)
+
+    def test_assessment_rejects_unknown_versions(self):
+        submission = self._assessment_submission()
+        submission["assessment_version"] = "wrong-version"
+        with self.assertRaises(AssessmentSubmissionError):
+            score_assessment("19_plus", submission)
+
+    def test_assessment_requires_boolean_skip_marker(self):
+        submission = self._assessment_submission({
+            "19_plus_pa_nv_01": {"skipped": 0, "answers": {"a": "1"}},
+        })
+        with self.assertRaises(AssessmentSubmissionError):
+            score_assessment("19_plus", submission)
+
+    def test_working_memory_awards_partial_sequence_element_credit(self):
+        submission = self._assessment_submission({
+            "19_plus_wm_nv_01": {
+                "skipped": False,
+                "answers": {"a": ["4", "9", "0", "7", "3"]},
+            },
+        })
+        result = next(
+            item for item in score_assessment("19_plus", submission)
+            if item["skill"] == "working_memory"
+        )
+        self.assertEqual(result["baseline_score"], 80)
+        self.assertEqual(result["items_attempted"], 5)
+        self.assertEqual(result["items_available"], 9)
+
     def test_age_band_boundaries(self):
         cases = [(11, "under_12"), (12, "12_15"), (15, "12_15"), (16, "16_18"), (18, "16_18"), (19, "19_plus")]
         for age, expected in cases:

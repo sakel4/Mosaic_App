@@ -26,7 +26,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Public signup always creates learners; admins are created via admin/createsuperuser.
         user = User.objects.create_user(**validated_data)
-        skills = Skill.objects.create(**{name: 0 for name in SKILL_FIELDS})
+        skills = Skill.objects.create(**{name: None for name in SKILL_FIELDS})
         Profile.objects.create(user=user, skills=skills, preferences=Preferences.objects.create())
         return user
 
