@@ -14,14 +14,15 @@ export class UserService {
   readonly profile = this.learner.asReadonly();
   private readonly assessmentDone = signal(false);
   readonly assessmentCompleted = this.assessmentDone.asReadonly();
-  readonly onboardingCompleted = this.assessmentDone.asReadonly();
+  private readonly onboardingDone = signal(false);
+  readonly onboardingCompleted = this.onboardingDone.asReadonly();
   readonly fontSize = signal<AccessibilityPreferences['fontSize']>('comfortable');
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
 
   load(): Observable<LearnerProfile> {
     return this.http.get<User>('/users/me/').pipe(
-      tap((me) => this.assessmentDone.set(me.assessment_completed)),
+      tap((me) => this.updateCompletion(me)),
       map((me) => this.fromUser(me)),
       tap((profile) => {
         this.learner.set(profile);
@@ -30,10 +31,11 @@ export class UserService {
     );
   }
 
-  save(profile: LearnerProfile): Observable<LearnerProfile> {
+  save(profile: LearnerProfile, completeOnboarding = false): Observable<LearnerProfile> {
     const [first_name, ...rest] = profile.name.trim().split(/\s+/);
     return this.http
       .patch<User>('/users/me/', {
+        ...(completeOnboarding ? { onboarding_completed: true } : {}),
         first_name,
         last_name: rest.join(' '),
         profile: {
@@ -55,13 +57,24 @@ export class UserService {
         },
       })
       .pipe(
-        tap((me) => this.assessmentDone.set(me.assessment_completed)),
+        tap((me) => this.updateCompletion(me)),
         map((me) => this.fromUser(me)),
         tap((saved) => {
           this.learner.set(saved);
           this.apply(saved);
         }),
       );
+  }
+
+  completeAssessment(): Observable<User> {
+    return this.http.patch<User>('/users/me/', { assessment_completed: true }).pipe(
+      tap((me) => this.updateCompletion(me)),
+    );
+  }
+
+  private updateCompletion(user: User): void {
+    this.onboardingDone.set(user.onboarding_completed);
+    this.assessmentDone.set(user.assessment_completed);
   }
 
   private fromUser(user: User): LearnerProfile {

@@ -138,7 +138,7 @@ export class Onboarding {
         reducedClutter: values.reducedClutter,
       },
     };
-    this.users.save(profile).subscribe({
+    this.users.save(profile, true).subscribe({
       next: () => { void this.router.navigate(['/assessment']); },
       error: () => { this.saveError = 'Could not save your profile. Please try again.'; },
     });

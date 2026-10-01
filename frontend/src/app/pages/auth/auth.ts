@@ -59,7 +59,7 @@ export class Auth {
           password,
         })
         .subscribe({
-          next: () => void this.router.navigate(['/dashboard']),
+          next: () => void this.router.navigate(['/onboarding']),
           error: (err: HttpErrorResponse) => {
             this.loading.set(false);
             this.errorMessage.set(err.error?.message ?? 'Something went wrong. Please try again.');

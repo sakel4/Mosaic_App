@@ -44,6 +44,12 @@
         (completed)="onCompleted($event)"
       />
     }
+    @if (saving()) {
+      <p role="status">Saving your assessment...</p>
+    }
+    @if (saveError()) {
+      <p role="alert">{{ saveError() }}</p>
+    }
     <p class="support-note">
       <span aria-hidden="true">◖</span> Need a hand? Select “Listen” to hear instructions.
     </p>
