@@ -1,1 +1,20 @@
-<p>interest-picker-component works!</p>
+<fieldset class="interest-picker">
+      <legend class="sr-only">Choose your interests</legend>
+      <p class="picker-hint">Choose any that interest you.</p>
+      <div class="interest-grid">
+        @for (interest of options(); track interest) {
+          <label class="interest-option" [class.selected]="selected().includes(interest)">
+            <input
+              type="checkbox"
+              [checked]="selected().includes(interest)"
+              (change)="toggle(interest)"
+            />
+            <span class="interest-check" aria-hidden="true">✓</span>
+            <span>{{ interest }}</span>
+          </label>
+        }
+      </div>
+      <p class="selection-count" aria-live="polite">
+        {{ selected().length }} selected
+      </p>
+    </fieldset>
