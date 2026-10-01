@@ -5,6 +5,7 @@ import { Practice } from './pages/practice/practice';
 import { Progress } from './pages/progress/progress';
 import { RealWorld } from './pages/real-world/real-world';
 import { Auth } from './pages/auth/auth';
+import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
     // Shown inside the layout (layout's <router-outlet>)
@@ -17,6 +18,7 @@ export const routes: Routes = [
             { path: 'practice', component: Practice },
             { path: 'progress', component: Progress },
             { path: 'real-world', component: RealWorld },
+            { path: 'profile', component: Profile}
         ],
     },
 

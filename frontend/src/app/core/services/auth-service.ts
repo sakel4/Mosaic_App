@@ -26,12 +26,14 @@ export class AuthService {
   readonly isLoggedIn = computed(() => !!this.tokenSignal());
 
   register(data: RegisterPayload): Observable<any> {
+      console.log(data)
     return this.http.post<any>('/auth/register', data).pipe(
       tap((res) => this.saveToken(res.token)),
     );
   }
 
   login(data: LoginPayload): Observable<any> {
+    console.log(data)
     return this.http.post<any>('/auth/login', data).pipe(
       tap((res) => this.saveToken(res.token)),
     );
