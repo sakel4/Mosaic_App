@@ -496,14 +496,14 @@ html:not([data-theme='dark']) .focus-card {
 html:not([data-theme='dark']) .profile-icon,
 html:not([data-theme='dark']) .summary-symbol,
 html:not([data-theme='dark']) .focus-card,
-html:not([data-theme='dark']) .assessment-link > span,
+html:not([data-theme='dark']) .assessment-link>span,
 html:not([data-theme='dark']) .stat-icon.green,
 html:not([data-theme='dark']) .option-symbol {
   background: var(--selection-surface);
 }
 
 html:not([data-theme='dark']) .focus-label,
-html:not([data-theme='dark']) .focus-card > span:last-child {
+html:not([data-theme='dark']) .focus-card>span:last-child {
   color: var(--muted);
 }
 
@@ -596,8 +596,7 @@ html[data-theme='dark'] body {
   color: #f3f5fc;
 }
 
-html[data-theme='dark'] :is(
-  .sidebar,
+html[data-theme='dark'] :is(.sidebar,
   .topbar,
   .mobile-nav,
   .auth-form-wrap,
@@ -605,8 +604,7 @@ html[data-theme='dark'] :is(
   .assessment-header,
   .auth-page,
   .onboarding-page,
-  .assessment-page
-) {
+  .assessment-page) {
   border-color: var(--line);
   background: var(--canvas);
 }
@@ -638,8 +636,7 @@ html[data-theme='dark'] :is(.sidebar, .auth-story) {
   background: var(--paper);
 }
 
-html[data-theme='dark'] :is(
-  .surface-card,
+html[data-theme='dark'] :is(.surface-card,
   .skill-card,
   .chart-wrap,
   .achievement-card,
@@ -647,8 +644,7 @@ html[data-theme='dark'] :is(
   .profile-section,
   .travel-board,
   .reading-preview,
-  .toggle-list
-) {
+  .toggle-list) {
   border-color: var(--line);
   background: var(--paper);
   color: var(--ink);
@@ -659,8 +655,7 @@ html[data-theme='dark'] .exercise-card.real-world-mode {
   background: var(--paper);
 }
 
-html[data-theme='dark'] :is(
-  .why-box,
+html[data-theme='dark'] :is(.why-box,
   .practice-aside,
   .real-life-aside,
   .board-top,
@@ -671,15 +666,13 @@ html[data-theme='dark'] :is(
   .answer-option,
   .secondary-button,
   .interest-option,
-  .choice-row
-) {
+  .choice-row) {
   border-color: var(--line);
   background: #263a41;
   color: var(--ink);
 }
 
-html[data-theme='dark'] :is(
-  h1, h2, h3, p, small, label, strong, .page-subtitle, .eyebrow,
+html[data-theme='dark'] :is(h1, h2, h3, p, small, label, strong, .page-subtitle, .eyebrow,
   .nav-link, .topbar-message, .topbar-user, .profile-label strong,
   .profile-label small, .activity-copy p, .why-box p, .practice-aside p,
   .real-life-aside p, .board-top, .board-footer, .route-name,
@@ -693,8 +686,7 @@ html[data-theme='dark'] :is(
   .privacy-note, .form-intro, .story-copy p, .story-footer,
   .exit-link, .progress-caption, .field-error, .assessment-skill,
   .picker-hint, .selection-count, .line-controls, .session-count,
-  .aside-label, .aside-label + h3
-) {
+  .aside-label, .aside-label + h3) {
   color: var(--muted) !important;
 }
 
@@ -706,13 +698,11 @@ html[data-theme='dark'] :is(h1, h2, h3, strong, .field-label, .profile-heading h
   color: var(--ink) !important;
 }
 
-html[data-theme='dark'] :is(
-  .field, .field-label, .field-hint, .picker-hint, .selection-count,
+html[data-theme='dark'] :is(.field, .field-label, .field-hint, .picker-hint, .selection-count,
   .support-note, .gentle-note, .privacy-note, .stat-card div span,
   .summary-card span:last-child, .assessment-link, .line-controls,
   .line-step, .story-kicker, .story-footer, .save-confirmation,
-  .chart-key, .profile-label small
-) {
+  .chart-key, .profile-label small) {
   color: var(--muted) !important;
 }
 
@@ -769,10 +759,8 @@ html[data-theme='dark'] :is(.text-button, .switch-auth a, .section-heading > a, 
   color: var(--green-dark) !important;
 }
 
-html[data-theme='dark'] :is(
-  .profile-icon, .summary-symbol, .stat-icon, .option-symbol,
-  .activity-icon, .assessment-link > span, .achievement-icon
-) {
+html[data-theme='dark'] :is(.profile-icon, .summary-symbol, .stat-icon, .option-symbol,
+  .activity-icon, .assessment-link > span, .achievement-icon) {
   border-color: var(--line);
   background: var(--selection-surface) !important;
   color: var(--green-dark) !important;
@@ -834,8 +822,7 @@ html[data-theme='dark'] .area {
   fill: var(--selection-surface);
 }
 
-html[data-theme='dark'] :is(
-  .sidebar,
+html[data-theme='dark'] :is(.sidebar,
   .topbar,
   .mobile-nav,
   .auth-form-wrap,
@@ -843,8 +830,7 @@ html[data-theme='dark'] :is(
   .assessment-header,
   .auth-page,
   .onboarding-page,
-  .assessment-page
-) {
+  .assessment-page) {
   border-color: var(--line);
   background: var(--canvas);
 }
@@ -857,22 +843,19 @@ html[data-theme='dark'] :is(.sidebar, .auth-story) {
   background: var(--paper);
 }
 
-html[data-theme='dark'] :is(
-  .surface-card,
+html[data-theme='dark'] :is(.surface-card,
   .skill-card,
   .chart-wrap,
   .achievement-card,
   .exercise-card,
   .profile-section,
-  .travel-board
-) {
+  .travel-board) {
   border-color: var(--line);
   background: var(--paper);
   color: var(--ink);
 }
 
-html[data-theme='dark'] :is(
-  .why-box,
+html[data-theme='dark'] :is(.why-box,
   .practice-aside,
   .real-life-aside,
   .board-top,
@@ -885,15 +868,13 @@ html[data-theme='dark'] :is(
   .interest-option,
   .choice-row,
   .reading-preview,
-  .toggle-list
-) {
+  .toggle-list) {
   border-color: var(--line);
   background: #263a41;
   color: var(--ink);
 }
 
-html[data-theme='dark'] :is(
-  .page-subtitle,
+html[data-theme='dark'] :is(.page-subtitle,
   .activity-copy p,
   .why-box p,
   .practice-aside p,
@@ -906,8 +887,7 @@ html[data-theme='dark'] :is(
   .difficulty,
   .duration,
   .story-copy p,
-  .story-footer
-) {
+  .story-footer) {
   color: var(--muted) !important;
 }
 
@@ -915,25 +895,21 @@ html[data-theme='dark'] :is(h1, h2, h3, .profile-heading h2, .field-label, stron
   color: var(--ink) !important;
 }
 
-html[data-theme='dark'] :is(
-  .nav-link.active,
+html[data-theme='dark'] :is(.nav-link.active,
   .mobile-nav a.active,
   .interest-option.selected,
   .choice-row.chosen,
   .answer-option.selected,
-  .prompt-line.current-line
-) {
+  .prompt-line.current-line) {
   border-color: var(--selection-border);
   background: var(--selection-surface);
   color: #ffffff !important;
 }
 
-html[data-theme='dark'] :is(
-  .nav-link:hover,
+html[data-theme='dark'] :is(.nav-link:hover,
   .line-step:hover:not(:disabled),
   .answer-option:hover,
-  .interest-option:hover
-) {
+  .interest-option:hover) {
   border-color: var(--selection-border);
   background: #31504f;
   color: #ffffff !important;
@@ -958,15 +934,13 @@ html[data-theme='dark'] :is(.text-button, .switch-auth a, .section-heading > a, 
   color: var(--green-dark) !important;
 }
 
-html[data-theme='dark'] :is(
-  .profile-icon,
+html[data-theme='dark'] :is(.profile-icon,
   .summary-symbol,
   .stat-icon,
   .option-symbol,
   .activity-icon,
   .assessment-link > span,
-  .achievement-icon
-) {
+  .achievement-icon) {
   border-color: var(--line);
   background: var(--selection-surface) !important;
   color: var(--green-dark) !important;
@@ -1036,6 +1010,7 @@ html[data-theme='dark'] .interest-option:focus-within {
   --mat-snack-bar-supporting-text-size: 1rem;
   --mat-snack-bar-supporting-text-line-height: 1.6;
   --mat-snack-bar-supporting-text-weight: 500;
+  padding-bottom: 5vh;
 }
 
 .error-snackbar .mat-mdc-snackbar-surface {
@@ -1050,7 +1025,6 @@ html[data-theme='dark'] .interest-option:focus-within {
 
 .error-snackbar .mat-mdc-snack-bar-action {
   min-height: 44px;
-  margin-bottom: 2vh;
   border-radius: 8px;
   font-weight: 700;
 }
@@ -1077,6 +1051,7 @@ html[data-theme='dark'] .error-snackbar .mat-mdc-snackbar-surface {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
