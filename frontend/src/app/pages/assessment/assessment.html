@@ -1,0 +1,27 @@
+<main class="assessment-page">
+    <header class="assessment-header">
+    <a class="brand" routerLink="/dashboard"><img class="brand-mark" src="/mosaic/mosaic-logo.png" alt="" /> Mosaic</a>
+    <a class="exit-link" routerLink="/dashboard">Save and leave</a>
+    </header>
+    <section class="assessment-main">
+    <div class="assessment-intro">
+        <p class="eyebrow">A QUICK STARTING POINT</p>
+        <h1 class="page-title">Let’s find your learning rhythm.</h1>
+        <p class="page-subtitle">A few short activities help us tailor practice to you. This isn’t a test — just a place to begin.</p>
+    </div>
+    <div class="step-progress">
+        <!-- <div class="progress-caption"><span>Activity {{ index() + 1 }} of {{ exercises.length }}</span><span>About 10 minutes</span></div> -->
+        <!-- <div class="progress-track" role="progressbar" [attr.aria-valuenow]="index() + 1"
+        [attr.aria-valuemax]="exercises.length" aria-valuemin="1" aria-label="Assessment progress">
+        <div class="progress-fill" [style.width.%]="((index() + 1) / exercises.length) * 100"></div>
+        </div> -->
+    </div>
+    <!-- <div class="assessment-skill"><span class="skill-dot"></span>{{ exercise().skill }}</div>
+    @if (feedback()) {
+        <app-exercise-feedback [attempt]="lastAttempt()!" [exercise]="exercise()" (continued)="nextExercise()" />
+    } @else {
+        <app-exercise-container [exercise]="exercise()" mode="assessment" (completed)="onCompleted($event)" />
+    } -->
+    <p class="support-note"><span aria-hidden="true">◖</span> Need a hand? Select “Listen” to hear instructions.</p>
+    </section>
+</main>

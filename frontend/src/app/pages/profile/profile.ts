@@ -17,7 +17,7 @@ import { InterestPickerComponent } from '../../shared/components/interest-picker
   templateUrl: './profile.html',
 })
 export class Profile {
-  // private readonly auth = inject(AuthService);
+  // private readonly auth = inject(AuthService); ( BETTER USE USER )
   // private readonly users = inject(UserService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

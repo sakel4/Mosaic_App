@@ -9,7 +9,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
   templateUrl: './app-layout.html',
 })
 export class AppLayout {
-  //private readonly auth = inject(AuthService);
+  //private readonly auth = inject(AuthService); ( BETTER USE USER )
   //private readonly users = inject(UserService);
   private readonly router = inject(Router);
   readonly navItems = [
