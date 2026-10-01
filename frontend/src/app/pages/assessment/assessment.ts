@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { ExcerciseComponent } from '../../shared/components/excercise-component/excercise-component';
-import { ExerciseFeedbackComponent } from '../../shared/components/excercise-component/excercise-component';
+import { ExcerciseComponent } from '../../shared/components/exercise-component/exercise-component';
+import { ExerciseFeedbackComponent } from '../../shared/components/exercise-component/exercise-component';
 import { Exercise } from '../../core/models/exercise.model';
 import { ExerciseAttempt } from '../../core/models/exercise-attempt.model';
 import { AuthService } from '../../core/services/auth-service';

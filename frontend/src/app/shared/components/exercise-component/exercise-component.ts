@@ -8,8 +8,8 @@ import { ExerciseMode } from '../../../core/models/exercise-mode.model';
 @Component({
   imports: [],
   selector: 'app-excercise-component',
-  styleUrl: './excercise-component.scss',
-  templateUrl: './excercise-component.html',
+  styleUrl: './exercise-component.scss',
+  templateUrl: './exercise-component.html',
 })
 export class ExcerciseComponent {
   //readonly users = inject(UserService);
