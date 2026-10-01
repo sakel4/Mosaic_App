@@ -30,6 +30,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         Profile.objects.create(user=user, skills=skills, preferences=Preferences.objects.create())
         return user
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        refresh = CustomTokenObtainPairSerializer.get_token(instance)
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
+        return data
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
