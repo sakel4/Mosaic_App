@@ -5,7 +5,13 @@ from unittest.mock import Mock, patch
 
 from personalized_practice.bank import load_age_bank, public_seed, select_seed
 from personalized_practice.domain import LearnerContext, SkillEvidence
-from personalized_practice.generator import BedrockExerciseGenerator, _describe_shape
+from personalized_practice.generator import (
+    BedrockExerciseGenerator,
+    ExerciseGenerationError,
+    _describe_shape,
+    _normalize_private_scoring,
+    _parse_json_object,
+)
 from personalized_practice.orchestrator import PracticeOrchestrator
 from personalized_practice.selection import age_group_for_age, choose_target_skill, difficulty_for_score
 
@@ -40,6 +46,21 @@ class PersonalizationTests(unittest.TestCase):
     def test_generation_blueprint_contains_shape_not_assessment_text(self):
         shape = _describe_shape({"prompt": "private assessment prompt", "items": ["test word"]})
         self.assertEqual(shape, {"prompt": "string", "items": {"type": "array", "length": 1, "items": "string"}})
+
+    def test_model_json_parser_accepts_wrapped_object_only(self):
+        expected = {"title": "Practice", "private_scoring": {"answer_key": {"q1": "a"}}}
+        wrapped = f"Here is the exercise:\n```json\n{json.dumps(expected)}\n```"
+        self.assertEqual(_parse_json_object(wrapped), expected)
+        with self.assertRaises(ExerciseGenerationError):
+            _parse_json_object("No JSON was returned.")
+
+    def test_private_scoring_normalizes_answer_aliases_but_requires_a_key(self):
+        generated = {"private_scoring": {"answers": {"q1": "a"}}}
+        _normalize_private_scoring(generated)
+        self.assertEqual(generated["private_scoring"]["answer_key"], {"q1": "a"})
+        self.assertEqual(generated["private_scoring"]["error_types"], [])
+        with self.assertRaises(ExerciseGenerationError):
+            _normalize_private_scoring({"private_scoring": {"error_types": []}})
 
     @patch.dict(
         os.environ,

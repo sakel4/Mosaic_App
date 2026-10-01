@@ -39,6 +39,48 @@ def _describe_shape(value: Any) -> Any:
     return "null"
 
 
+def _parse_json_object(text: str) -> dict[str, Any]:
+    decoder = json.JSONDecoder()
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            return parsed
+    except json.JSONDecodeError:
+        pass
+
+    for start, character in enumerate(text):
+        if character != "{":
+            continue
+        try:
+            parsed, _ = decoder.raw_decode(text[start:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    raise ExerciseGenerationError("Amazon Bedrock did not return a valid JSON object.")
+
+
+def _normalize_private_scoring(generated: dict[str, Any]) -> None:
+    scoring = generated["private_scoring"]
+    if not isinstance(scoring, dict):
+        raise ExerciseGenerationError("Generated exercise private_scoring must be an object.")
+
+    if not scoring.get("answer_key"):
+        for alias in ("answers", "correct_answers", "correct_answer"):
+            if scoring.get(alias):
+                scoring["answer_key"] = scoring[alias]
+                break
+    if not scoring.get("answer_key"):
+        raise ExerciseGenerationError("Generated exercise lacks a non-empty private answer key.")
+
+    error_types = scoring.get("error_types", [])
+    if isinstance(error_types, str):
+        error_types = [error_types]
+    if not isinstance(error_types, list):
+        raise ExerciseGenerationError("Generated exercise error_types must be a list.")
+    scoring["error_types"] = error_types
+
+
 class BedrockExerciseGenerator:
     def __init__(self, client=None):
         self.client = client
@@ -66,9 +108,10 @@ class BedrockExerciseGenerator:
                 "Use the exact age_group, target skill, and difficulty supplied by the server.",
                 "Do not copy assessment wording, passages, items, or answer options from the seed.",
                 "Create new content that measures only the target skill and is appropriate to the age group.",
-                "Return valid JSON only, with no markdown or surrounding prose.",
+                "Return only one JSON object. The response must start with { and end with }.",
+                "Do not include markdown fences, commentary, or prose around the JSON object.",
                 "Return an object with title, instructions, prompt, content_data, and private_scoring.",
-                "private_scoring must include answer_key and error_types for server-side evaluation.",
+                "private_scoring must contain a non-empty answer_key object mapping item IDs to correct answers, plus error_types as an array (an empty array is allowed).",
             ],
             "age_group": age_group,
             "target_skill": skill,
@@ -101,8 +144,8 @@ class BedrockExerciseGenerator:
             )
             content = response["output"]["message"]["content"]
             text = next(block["text"] for block in content if "text" in block)
-            generated = json.loads(text)
-        except (BotoCoreError, ClientError, KeyError, StopIteration, json.JSONDecodeError) as exc:
+            generated = _parse_json_object(text)
+        except (BotoCoreError, ClientError, KeyError, StopIteration) as exc:
             raise ExerciseGenerationError("Amazon Bedrock did not return a valid exercise response.") from exc
 
         required = {"title", "instructions", "prompt", "content_data", "private_scoring"}
@@ -110,7 +153,5 @@ class BedrockExerciseGenerator:
             raise ExerciseGenerationError("Generated exercise is missing required fields.")
         if not isinstance(generated["content_data"], dict) or not isinstance(generated["private_scoring"], dict):
             raise ExerciseGenerationError("Generated exercise content or scoring has an invalid shape.")
-        scoring = generated["private_scoring"]
-        if not scoring.get("answer_key") or not isinstance(scoring.get("error_types"), list):
-            raise ExerciseGenerationError("Generated exercise lacks a private answer key or error types.")
+        _normalize_private_scoring(generated)
         return generated
