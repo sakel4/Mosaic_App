@@ -22,7 +22,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         snackBar.open(
           messageFor(err),
           'Dismiss',
-          { duration: 5000 },
+          {
+            duration: 5000,
+            panelClass: ['error-snackbar'],
+            verticalPosition: 'bottom'
+          },
         );
       }
 
