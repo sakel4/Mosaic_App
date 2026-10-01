@@ -1,59 +1,54 @@
 <div class="app-shell">
-      <aside class="sidebar" aria-label="Main navigation">
-        <a class="brand" routerLink="/dashboard" aria-label="Mosaic home">
-          <img class="brand-mark" src="/mosaic/mosaic-logo.png" alt="" />
-          <span>Mosaic</span>
-        </a>
-        <p class="nav-caption">YOUR SPACE</p>
-        <nav class="primary-nav">
-          @for (item of navItems; track item.path) {
-            <a
-              class="nav-link"
-              [routerLink]="item.path"
-              routerLinkActive="active"
-              ariaCurrentWhenActive="page"
-            >
-              <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
-              <span>{{ item.label }}</span>
-            </a>
-          }
-        </nav>
-        <div class="sidebar-note">
-          <span class="note-spark" aria-hidden="true">✳</span>
-          <p>Small steps add up.<br /><strong>Keep going at your pace.</strong></p>
-        </div>
-        <a class="sidebar-profile" routerLink="/profile">
-          <span class="avatar">{{ initials }}</span>
-          <span class="profile-label">
-            <strong>{{ name }}</strong>
-            <small>Your learning space</small>
-          </span>
-        </a>
-      </aside>
-
-      <div class="workspace">
-        <header class="topbar">
-          <div class="topbar-message">
-            <span class="status-dot" aria-hidden="true"></span>
-            A little progress, every day
-          </div>
-          <button class="topbar-user" type="button" (click)="goToProfile()">
-            <span class="avatar avatar-small">{{ initials }}</span>
-            <span>{{ name }}</span>
-            <span aria-hidden="true">⌄</span>
-          </button>
-        </header>
-        <main class="main-content">
-          <router-outlet />
-        </main>
-      </div>
-
-      <nav class="mobile-nav" aria-label="Main navigation">
-        @for (item of navItems; track item.path) {
-          <a [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
-            <span aria-hidden="true">{{ item.icon }}</span>
-            <small>{{ item.label }}</small>
-          </a>
-        }
-      </nav>
+  <aside class="sidebar" aria-label="Main navigation">
+    <a class="brand" routerLink="/dashboard" aria-label="Mosaic home">
+      <img class="brand-mark" src="/mosaic/mosaic-logo.png" alt="" />
+      <span>Mosaic</span>
+    </a>
+    <p class="nav-caption">YOUR SPACE</p>
+    <nav class="primary-nav">
+      @for (item of navItems; track item.path) {
+      <a class="nav-link" [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
+        <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+      }
+    </nav>
+    <div class="sidebar-note">
+      <span class="note-spark" aria-hidden="true">✳</span>
+      <p>Small steps add up.<br /><strong>Keep going at your pace.</strong></p>
     </div>
+    <a class="sidebar-profile" routerLink="/profile">
+      <span class="avatar">{{ initials }}</span>
+      <span class="profile-label">
+        <strong>{{ name }}</strong>
+        <small>Your learning space</small>
+      </span>
+    </a>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar">
+      <div class="topbar-message">
+        <span class="status-dot" aria-hidden="true"></span>
+        A little progress, every day
+      </div>
+      <button class="topbar-user" type="button" (click)="goToProfile()">
+        <span class="avatar avatar-small">{{ initials }}</span>
+        <span>{{ name }}</span>
+        <span aria-hidden="true">⌄</span>
+      </button>
+    </header>
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Main navigation">
+    @for (item of navItems; track item.path) {
+    <a [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
+      <span aria-hidden="true">{{ item.icon }}</span>
+      <small>{{ item.label }}</small>
+    </a>
+    }
+  </nav>
+</div>

@@ -36,7 +36,7 @@ export class AuthService {
     return this.http.post<AuthResponse>('/auth/register/', data).pipe(
       tap((res) => this.saveToken(res.access)),
     );
-  }
+  }//redirect to login
 
   login(data: LoginPayload): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/auth/login/', data).pipe(

@@ -20,7 +20,10 @@ export class AppLayout {
   ];
 
   constructor() {
-    this.users.apply(this.users.profile());
+    this.users.load().subscribe({
+      next: (profile) => console.log('profile', profile),
+      error: (err) => console.error('profile load failed', err),
+    });
   }
 
   get name(): string {
