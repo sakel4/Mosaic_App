@@ -1,0 +1,76 @@
+ .feedback-card {
+     display: flex;
+     align-items: center;
+     gap: 15px;
+     padding: 20px;
+     border: 1px solid var(--feedback-border);
+     border-radius: 16px;
+     background: var(--feedback-surface);
+ }
+
+ .feedback-card.encouraging {
+     border-color: var(--feedback-positive-border);
+     background: var(--feedback-positive-surface);
+ }
+
+ .feedback-icon {
+     display: grid;
+     width: 39px;
+     height: 39px;
+     flex: 0 0 auto;
+     place-items: center;
+     border-radius: 13px;
+     background: var(--mosaic-coral);
+     color: var(--mosaic-rose);
+     font-size: 17px;
+     font-weight: 700;
+ }
+
+ .encouraging .feedback-icon {
+     background: var(--feedback-positive-border);
+     color: var(--feedback-positive-icon);
+ }
+
+ .feedback-copy {
+     flex: 1;
+ }
+
+ h2 {
+     margin: 0 0 3px;
+     font:
+         700 15px 'Manrope',
+         sans-serif;
+ }
+
+ p {
+     margin: 0;
+     color: var(--muted);
+     font-size: 12px;
+ }
+
+ .feedback-card .primary-button {
+     min-height: 41px;
+     padding-inline: 15px;
+     background: var(--primary-action);
+     font-size: 12px;
+ }
+
+ .feedback-card .primary-button:hover {
+     background: var(--primary-action-hover);
+ }
+
+ @media (max-width: 640px) {
+     .feedback-card {
+         align-items: flex-start;
+         flex-wrap: wrap;
+         padding: 15px;
+     }
+
+     .feedback-copy {
+         min-width: calc(100% - 58px);
+     }
+
+     .feedback-card .primary-button {
+         width: 100%;
+     }
+ }

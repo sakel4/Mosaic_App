@@ -31,7 +31,7 @@
           >
         </div>
         @if (feedback()) {
-          <app-exercise-feedback
+          <app-exercise-feedback-component
             [attempt]="lastAttempt()!"
             [exercise]="exercise()"
             [continueLabel]="completedInSet() === sessionSize ? 'Finish this set' : 'Next activity'"

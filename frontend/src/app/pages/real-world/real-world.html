@@ -27,7 +27,7 @@
         <div class="board-footer">Next bus · 09:05 &nbsp; Platform 2</div>
       </article>
       @if (feedback()) {
-        <app-exercise-feedback
+        <app-exercise-feedback-component
           [attempt]="lastAttempt()!"
           [exercise]="exercise"
           (continued)="tryAnother()"

@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ExcerciseComponent } from '../../shared/components/exercise-component/exercise-component';
-import { ExerciseFeedbackComponent } from '../../shared/components/exercise-component/exercise-component';
 import { Exercise } from '../../core/models/exercise.model';
 import { ExerciseAttempt } from '../../core/models/exercise-attempt.model';
 import { ExerciseService } from '../../core/services/exercise-service';
 import { ProgressService } from '../../core/services/progress-service';
+import { ExerciseFeedbackComponent } from '../../shared/components/exercise-feedback-component/exercise-feedback-component';
+
 
 @Component({
   imports: [ExcerciseComponent, ExerciseFeedbackComponent, RouterLink],
