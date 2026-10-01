@@ -22,7 +22,7 @@ export class Auth {
   readonly form = this.fb.nonNullable.group({
     name: ['', this.isRegister ? Validators.required : []],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   get isRegister(): boolean {
@@ -31,6 +31,7 @@ export class Auth {
 
   submit(): void {
     this.form.markAllAsTouched();
+
     if (
       this.form.controls.email.invalid ||
       this.form.controls.password.invalid ||
@@ -40,18 +41,43 @@ export class Auth {
     }
 
     const { name, email, password } = this.form.getRawValue();
+
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const request$ = this.isRegister
-      ? this.auth.register({ name, email, password })
-      : this.auth.login({ email, password });
+    if (this.isRegister) {
+      const parts = name.trim().split(/\s+/);
 
-    request$.subscribe({
+      const first_name = parts[0];
+      const last_name = parts.slice(1).join(' ');
+
+      this.auth
+        .register({
+          first_name,
+          last_name,
+          email,
+          password,
+        })
+        .subscribe({
+          next: () => void this.router.navigate(['/dashboard']),
+          error: (err: HttpErrorResponse) => {
+            this.loading.set(false);
+            this.errorMessage.set(
+              err.error?.message ?? 'Something went wrong. Please try again.'
+            );
+          },
+        });
+
+      return;
+    }
+
+    this.auth.login({ email, password }).subscribe({
       next: () => void this.router.navigate(['/dashboard']),
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
-        this.errorMessage.set(err.error?.message ?? 'Something went wrong. Please try again.');
+        this.errorMessage.set(
+          err.error?.message ?? 'Something went wrong. Please try again.'
+        );
       },
     });
   }

@@ -39,9 +39,9 @@
         <label class="field">
           Password
           <input type="password" formControlName="password"
-            [autocomplete]="isRegister ? 'new-password' : 'current-password'" placeholder="At least 6 characters" />
+            [autocomplete]="isRegister ? 'new-password' : 'current-password'" placeholder="At least 8 characters" />
           @if (form.controls.password.touched && form.controls.password.invalid) {
-          <small class="field-error">Use at least 6 characters.</small>
+          <small class="field-error">Use at least 8 characters.</small>
           }
         </label>
         @if (errorMessage()) {
