@@ -18,9 +18,9 @@ def age_group_for_age(age_years: int) -> str:
 
 def skill_priority(evidence: SkillEvidence) -> float:
     repeated_errors = sum(max(0, count - 1) for count in evidence.error_counts.values())
-    error_bonus = min(20, repeated_errors * 5)
-    evidence_bonus = 5 if evidence.direct_evidence else 0
-    return (100 - evidence.baseline_score) * evidence.confidence + error_bonus + evidence_bonus
+    error_factor = 1 + min(0.5, repeated_errors * 0.1)
+    evidence_factor = 1 if evidence.direct_evidence else 0.75
+    return max(0, 100 - evidence.baseline_score) * evidence.confidence * error_factor * evidence_factor
 
 
 def choose_target_skill(context: LearnerContext, supported_skills: set[str] | None = None) -> str:
@@ -51,6 +51,26 @@ def choose_target_skill(context: LearnerContext, supported_skills: set[str] | No
 
     maintenance = {skill: item for skill, item in eligible.items() if item.baseline_score >= 60}
     return strongest(maintenance or eligible)
+
+
+def choose_secondary_skill(
+    context: LearnerContext,
+    primary_skill: str,
+    supported_skills: set[str] | None = None,
+) -> str | None:
+    eligible = {
+        skill: evidence
+        for skill, evidence in context.skills.items()
+        if skill != primary_skill
+        and evidence.baseline_score is not None
+        and (supported_skills is None or skill in supported_skills)
+    }
+    if not eligible:
+        return None
+
+    improving = {skill: item for skill, item in eligible.items() if item.trend == "improving"}
+    candidates = improving or eligible
+    return min(candidates, key=lambda skill: (-skill_priority(candidates[skill]), skill))
 
 
 def difficulty_for_score(baseline_score: float, bank_difficulty: int) -> int:

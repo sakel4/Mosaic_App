@@ -34,6 +34,8 @@ class DjangoPracticeRepository:
                 "direct_evidence": baseline.direct_evidence,
                 "trend": baseline.trend,
                 "error_counts": baseline.error_counts,
+                "metrics": baseline.metrics,
+                "metrics": baseline.metrics,
             }
             for baseline in LearnerSkillBaseline.objects.filter(user_id=user_id)
             if baseline.baseline_score is not None
@@ -60,6 +62,7 @@ class DjangoPracticeRepository:
             age_group=record["age_group"],
             bank_version=record["bank_version"],
             target_skill=record["target_skill"],
+            secondary_skill=record.get("secondary_skill", ""),
             difficulty=record["difficulty"],
             source_exercise_id=record["source_exercise_id"],
             response_type=record["response_type"],

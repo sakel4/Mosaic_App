@@ -5,7 +5,12 @@ from typing import Any, Mapping
 
 from personalized_practice.bank import load_age_bank, public_content, select_seed, supported_skills
 from personalized_practice.domain import LearnerContext
-from personalized_practice.selection import age_group_for_age, choose_target_skill, difficulty_for_score
+from personalized_practice.selection import (
+    age_group_for_age,
+    choose_secondary_skill,
+    choose_target_skill,
+    difficulty_for_score,
+)
 
 
 class PracticeOrchestrator:
@@ -18,8 +23,27 @@ class PracticeOrchestrator:
         if not isinstance(context, LearnerContext):
             context = LearnerContext.from_mapping(context)
         age_group = age_group_for_age(context.age_years)
-        target_skill = choose_target_skill(context, supported_skills(age_group))
+        age_skills = supported_skills(age_group)
+        target_skill = choose_target_skill(context, age_skills)
+        secondary_skill = choose_secondary_skill(context, target_skill, age_skills)
         evidence = context.skills[target_skill]
+        learner_profile = {
+            "age_group": age_group,
+            "skills": {
+                skill: {
+                    "mastery": item.baseline_score / 100,
+                    "confidence": item.confidence,
+                    "direct_evidence": item.direct_evidence,
+                    "trend": item.trend,
+                    "metrics": dict(item.metrics),
+                    "error_counts": dict(item.error_counts),
+                    "error_patterns": sorted(
+                        error for error, count in item.error_counts.items() if count > 0
+                    ),
+                }
+                for skill, item in context.skills.items()
+            },
+        }
         recent_source_ids = {
             str(item["source_exercise_id"])
             for item in context.recent_exercises
@@ -33,6 +57,8 @@ class PracticeOrchestrator:
             difficulty=difficulty,
             seed=seed,
             recent_exercises=context.recent_exercises,
+            secondary_skill=secondary_skill,
+            learner_profile=learner_profile,
         )
         exercise_id = str(uuid.uuid4())
         fingerprint = hashlib.sha256(
@@ -43,6 +69,7 @@ class PracticeOrchestrator:
             "age_group": age_group,
             "bank_version": load_age_bank(age_group)["assessment_version"],
             "target_skill": target_skill,
+            "secondary_skill": secondary_skill or "",
             "difficulty": difficulty,
             "source_exercise_id": seed["id"],
             "response_type": seed["response_type"],
@@ -58,6 +85,7 @@ class PracticeOrchestrator:
             "exercise_id": exercise_id,
             "age_group": age_group,
             "target_skill": target_skill,
+            "secondary_skill": secondary_skill,
             "difficulty": difficulty,
             "response_type": seed["response_type"],
             "exercise": {

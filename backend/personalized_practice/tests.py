@@ -13,7 +13,13 @@ from personalized_practice.generator import (
     _parse_json_object,
 )
 from personalized_practice.orchestrator import PracticeOrchestrator
-from personalized_practice.selection import age_group_for_age, choose_target_skill, difficulty_for_score
+from personalized_practice.selection import (
+    age_group_for_age,
+    choose_secondary_skill,
+    choose_target_skill,
+    difficulty_for_score,
+    skill_priority,
+)
 
 
 class PersonalizationTests(unittest.TestCase):
@@ -90,6 +96,8 @@ class PersonalizationTests(unittest.TestCase):
         )
         self.assertEqual(result, generated)
         self.assertEqual(client.converse.call_args.kwargs["modelId"], "zai.glm-4.7-flash")
+        prompt = json.loads(client.converse.call_args.kwargs["messages"][0]["content"][0]["text"])
+        self.assertIn("learner_profile", prompt)
 
     def test_decoding_selects_combined_word_reading_seed(self):
         seed = select_seed("12_15", "decoding", set())
@@ -115,6 +123,31 @@ class PersonalizationTests(unittest.TestCase):
         self.assertEqual(choose_target_skill(LearnerContext(14, skills, 0)), "decoding")
         self.assertEqual(choose_target_skill(LearnerContext(14, skills, 12)), "spelling")
         self.assertEqual(choose_target_skill(LearnerContext(14, skills, 17)), "comprehension")
+
+    def test_confidence_can_outweigh_a_lower_uncertain_score(self):
+        skills = {
+            "working_memory": SkillEvidence(35, 0.35),
+            "reading_fluency": SkillEvidence(45, 0.94),
+        }
+        self.assertGreater(skill_priority(skills["reading_fluency"]), skill_priority(skills["working_memory"]))
+
+    def test_direct_evidence_has_higher_priority_when_other_evidence_matches(self):
+        direct = SkillEvidence(50, 0.8, direct_evidence=True)
+        indirect = SkillEvidence(50, 0.8, direct_evidence=False)
+        self.assertGreater(skill_priority(direct), skill_priority(indirect))
+
+    def test_repeated_errors_raise_priority_and_secondary_prefers_improving(self):
+        skills = {
+            "decoding": SkillEvidence(55, 0.8, error_counts={"substitution": 4}),
+            "spelling": SkillEvidence(50, 0.8, trend="improving"),
+            "comprehension": SkillEvidence(30, 0.95, trend="stable"),
+        }
+        without_repeats = SkillEvidence(55, 0.8)
+        self.assertGreater(skill_priority(skills["decoding"]), skill_priority(without_repeats))
+        self.assertEqual(
+            choose_secondary_skill(LearnerContext(14, skills), "comprehension"),
+            "spelling",
+        )
 
     def test_proposal_difficulty_bands_adjust_and_cap_seed_difficulty(self):
         self.assertEqual(difficulty_for_score(25, 3), 2)
@@ -152,6 +185,51 @@ class PersonalizationTests(unittest.TestCase):
         self.assertNotIn("private_scoring", result)
         self.assertNotIn("correct_answer", result["exercise"]["content_data"])
         self.assertNotIn("correct_option_id", result["exercise"]["content_data"])
+
+    def test_orchestrator_passes_multidimensional_profile_and_secondary_focus(self):
+        class Repository:
+            def get_context(self, user_id):
+                return LearnerContext(
+                    69,
+                    {
+                        "comprehension": SkillEvidence(
+                            58,
+                            0.82,
+                            True,
+                            "stable",
+                            {"inference_miss": 2},
+                            {"accuracy": 0.58, "response_time_ms": 4200},
+                        ),
+                        "spelling": SkillEvidence(70, 0.8, True, "improving"),
+                    },
+                )
+
+            def save_exercise(self, user_id, record):
+                pass
+
+        class Generator:
+            received = None
+
+            def generate(self, **kwargs):
+                self.received = kwargs
+                return {
+                    "title": "Practice",
+                    "instructions": "Read the passage.",
+                    "prompt": "Choose an answer.",
+                    "content_data": {"items": []},
+                    "private_scoring": {"answer_key": {"q1": "a"}, "error_types": []},
+                }
+
+        generator = Generator()
+        PracticeOrchestrator(Repository(), generator).next_exercise("learner-1")
+        self.assertEqual(generator.received["age_group"], "19_plus")
+        self.assertEqual(generator.received["skill"], "comprehension")
+        self.assertEqual(generator.received["secondary_skill"], "spelling")
+        profile = generator.received["learner_profile"]
+        self.assertEqual(profile["skills"]["comprehension"]["mastery"], 0.58)
+        self.assertEqual(profile["skills"]["comprehension"]["metrics"]["response_time_ms"], 4200)
+        self.assertEqual(profile["skills"]["comprehension"]["error_counts"]["inference_miss"], 2)
+        self.assertNotIn("diagnosis", profile)
 
 
 if __name__ == "__main__":

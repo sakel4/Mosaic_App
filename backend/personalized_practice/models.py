@@ -31,6 +31,7 @@ class LearnerSkillBaseline(models.Model):
     direct_evidence = models.BooleanField(default=False)
     trend = models.CharField(max_length=16, choices=TREND_CHOICES, default="unknown")
     error_counts = models.JSONField(default=dict, blank=True)
+    metrics = models.JSONField(default=dict, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -57,6 +58,7 @@ class PracticeExercise(models.Model):
     age_group = models.CharField(max_length=16, choices=AGE_GROUP_CHOICES)
     bank_version = models.CharField(max_length=80)
     target_skill = models.CharField(max_length=64)
+    secondary_skill = models.CharField(max_length=64, blank=True)
     difficulty = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     source_exercise_id = models.CharField(max_length=100)
     response_type = models.CharField(max_length=40)

@@ -13,6 +13,7 @@ class SkillEvidence:
     direct_evidence: bool = False
     trend: str = "unknown"
     error_counts: Mapping[str, int] = field(default_factory=dict)
+    metrics: Mapping[str, Any] = field(default_factory=dict)
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "SkillEvidence":
@@ -25,6 +26,9 @@ class SkillEvidence:
         errors = value.get("error_counts", {})
         if not isinstance(errors, Mapping):
             raise PracticeDataError("Skill error_counts must be an object.")
+        metrics = value.get("metrics", {})
+        if not isinstance(metrics, Mapping):
+            raise PracticeDataError("Skill metrics must be an object.")
         trend = str(value.get("trend", "unknown"))
         if trend not in {"improving", "stable", "declining", "unknown"}:
             raise PracticeDataError("Unsupported skill trend.")
@@ -34,6 +38,7 @@ class SkillEvidence:
             direct_evidence=bool(value.get("direct_evidence", False)),
             trend=trend,
             error_counts={str(name): max(0, int(count)) for name, count in errors.items()},
+            metrics=dict(metrics),
         )
 
 

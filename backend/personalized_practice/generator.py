@@ -93,6 +93,8 @@ class BedrockExerciseGenerator:
         difficulty: int,
         seed: Mapping[str, Any],
         recent_exercises: tuple[Mapping[str, Any], ...],
+        secondary_skill: str | None = None,
+        learner_profile: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         model_id = os.getenv("BEDROCK_MODEL_ID")
         region = os.getenv("AWS_DEFAULT_REGION", "eu-west-1")
@@ -106,6 +108,11 @@ class BedrockExerciseGenerator:
             "constraints": [
                 "This is educational practice, never a diagnosis or clinical assessment.",
                 "Use the exact age_group, target skill, and difficulty supplied by the server.",
+                "Treat the server-selected target_skill as authoritative; do not select or replace it.",
+                "Use secondary_skill only as a light supporting context, never as the main task.",
+                "Use learner_profile confidence, metrics, and repeated errors to adapt examples without making diagnoses.",
+                "These are criterion-based evidence values, not age-normalized or norm-referenced scores.",
+                "Use age_group to adapt vocabulary, context, and language complexity while preserving the same underlying skill construct.",
                 "Do not copy assessment wording, passages, items, or answer options from the seed.",
                 "Create new content that measures only the target skill and is appropriate to the age group.",
                 "Return only one JSON object. The response must start with { and end with }.",
@@ -115,7 +122,9 @@ class BedrockExerciseGenerator:
             ],
             "age_group": age_group,
             "target_skill": skill,
+            "secondary_skill": secondary_skill,
             "difficulty": difficulty,
+            "learner_profile": learner_profile or {},
             "response_type": seed["response_type"],
             "source_structure_only": {
                 "kind": seed["kind"],
