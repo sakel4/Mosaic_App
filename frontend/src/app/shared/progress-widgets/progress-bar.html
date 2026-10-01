@@ -1,0 +1,13 @@
+﻿<div class="bar-wrap">
+  <div
+    class="bar-track"
+    role="progressbar"
+    [attr.aria-valuenow]="value()"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-label]="label()"
+  >
+    <div class="bar-fill" [style.width.%]="value()"></div>
+  </div>
+  <strong>{{ value() }}%</strong>
+</div>

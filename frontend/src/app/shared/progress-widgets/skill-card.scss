@@ -1,0 +1,28 @@
+﻿.skill-card {
+  padding: 17px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+.skill-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+}
+.skill-heading h3 {
+  margin: 0;
+  color: #3d4a42;
+  font-size: 14px;
+}
+.skill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mosaic-indigo);
+}
+p {
+  margin: 10px 0 0;
+  color: #8b978e;
+  font-size: 10px;
+}

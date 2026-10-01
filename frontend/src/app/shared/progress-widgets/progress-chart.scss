@@ -1,0 +1,65 @@
+﻿.chart-wrap {
+  padding: 21px 20px 13px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--paper);
+}
+.chart-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.chart-heading .eyebrow {
+  margin-bottom: 3px;
+  color: #9ba49d;
+  font-size: 9px;
+}
+.chart-heading h3 {
+  margin: 0;
+  font-size: 15px;
+}
+.chart-key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #849087;
+  font-size: 9px;
+}
+.chart-key i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mosaic-indigo);
+}
+svg {
+  width: 100%;
+  margin-top: 13px;
+  overflow: visible;
+}
+line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+svg text {
+  fill: #a1aaa3;
+  font:
+    8px 'DM Sans',
+    sans-serif;
+}
+.area {
+  fill: var(--selection-surface);
+  opacity: 0.9;
+}
+.trend {
+  fill: none;
+  stroke: var(--mosaic-indigo);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+circle {
+  fill: var(--mosaic-indigo);
+  stroke: var(--paper);
+  stroke-width: 2;
+}

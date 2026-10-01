@@ -1,0 +1,26 @@
+﻿:host {
+  display: block;
+}
+.bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.bar-track {
+  height: 8px;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--line);
+}
+.bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mosaic-indigo);
+}
+strong {
+  min-width: 34px;
+  color: #425047;
+  font-size: 12px;
+  text-align: right;
+}

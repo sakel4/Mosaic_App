@@ -1,9 +1,19 @@
-import { Component } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
+// import { ProgressService } from '../../core/services/onoma.services';
+import {
+  AchievementComponent,
+  ProgressChartComponent,
+  SkillCardComponent,
+} from '../../shared/progress-widgets/progress-widgets';
 
 @Component({
-  imports: [],
   selector: 'app-progress',
-  styleUrl: './progress.scss',
+  imports: [AchievementComponent, ProgressChartComponent, SkillCardComponent],
   templateUrl: './progress.html',
+  styleUrl: './progress.scss',
 })
-export class Progress {}
+export class Progress {
+  //private readonly progressService = inject(ProgressService);
+  // readonly progress = this.progressService.progress;
+  readonly focus = 'Reading fluency';
+}

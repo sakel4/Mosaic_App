@@ -1,1 +1,28 @@
-<p>progress works!</p>
+﻿<section class="page">
+      <header class="page-header">
+        <p class="eyebrow">YOUR PROGRESS</p>
+        <h1 class="page-title">Look how far you’ve come.</h1>
+        <p class="page-subtitle">Every bit of practice counts. Here’s what you’ve been building.</p>
+      </header>
+      <div class="summary-row">
+        <!-- <article class="summary-card surface-card"><span class="summary-symbol" aria-hidden="true">↗</span><div><strong>{{ progress().exercisesCompleted }}</strong><span>activities completed</span></div></article>
+        <article class="summary-card surface-card"><span class="summary-symbol sun" aria-hidden="true">✳</span><div><strong>{{ progress().currentStreak }} days</strong><span>current streak</span></div></article> -->
+        <article class="focus-card"><span class="focus-label">CURRENT FOCUS</span><strong>{{ focus }}</strong><span>You’re making steady progress here.</span></article>
+      </div>
+      <section class="section-block">
+        <div class="section-title"><div><p class="eyebrow">SKILLS YOU’RE GROWING</p><h2>Your progress, in many ways</h2></div><span>Only skills with activity are shown</span></div>
+        <div class="skill-grid">
+          <!-- @for (skill of progress().skills; track skill.id) { <app-skill-card [skill]="skill" /> } -->
+        </div>
+      </section>
+      <div class="lower-grid">
+        <app-progress-chart />
+        <section class="milestones">
+          <div class="section-title"><div><p class="eyebrow">MILESTONES</p><h2>Little wins along the way</h2></div></div>
+          <!-- @for (achievement of progress().achievements; track achievement.id) {
+            <app-achievement-card [title]="achievement.title" [description]="achievement.description" [icon]="achievement.icon" />
+          } -->
+        </section>
+      </div>
+      <p class="gentle-note">Progress looks different for everyone. This is your journey, at your pace.</p>
+    </section>
