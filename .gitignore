@@ -1,5 +1,6 @@
 # Django Rest API Backend git ignored files
 backend/__pycache__/
+backend/venv/
 
 # Angular Frontend git ignore files
-frontend/node_modules/
+frontend/node_modules/  

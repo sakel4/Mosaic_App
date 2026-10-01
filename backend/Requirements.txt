@@ -1,0 +1,22 @@
+# Python 3.14
+Django==6.1.1
+djangorestframework==3.18.0
+djangorestframework-simplejwt==5.5.1
+PyJWT==2.15.0
+django-cors-headers==4.9.0
+drf-recaptcha==4.0.3
+whitenoise==6.11.0
+
+# postgresql
+psycopg2-binary==2.9.13
+
+# Images
+Pillow==12.2.0
+django-cleanup==9.0.0
+
+# Tests
+pytest-django==4.14.0
+pytest-cov==7.1.0
+
+# deployment 
+gunicorn==26.2.0
