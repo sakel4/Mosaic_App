@@ -5,11 +5,7 @@ from rest_framework.views import APIView
 
 from user.permissions import IsLearnerRole
 from personalized_practice.domain import PracticeDataError
-from personalized_practice.generator import (
-    AnthropicExerciseGenerator,
-    ExerciseGenerationError,
-    ExerciseGenerationNotConfigured,
-)
+from personalized_practice.generator import BedrockExerciseGenerator, ExerciseGenerationError, ExerciseGenerationNotConfigured
 from personalized_practice.orchestrator import PracticeOrchestrator
 from personalized_practice.repository import get_repository
 
@@ -20,7 +16,7 @@ class NextExerciseView(APIView):
     def post(self, request):
         try:
             repository = get_repository()
-            orchestrator = PracticeOrchestrator(repository, AnthropicExerciseGenerator())
+            orchestrator = PracticeOrchestrator(repository, BedrockExerciseGenerator())
             result = orchestrator.next_exercise(str(request.user.pk))
         except ImproperlyConfigured as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)

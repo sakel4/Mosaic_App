@@ -1,8 +1,11 @@
 import unittest
+import json
+import os
+from unittest.mock import Mock, patch
 
 from personalized_practice.bank import load_age_bank, public_seed, select_seed
 from personalized_practice.domain import LearnerContext, SkillEvidence
-from personalized_practice.generator import _describe_shape
+from personalized_practice.generator import BedrockExerciseGenerator, _describe_shape
 from personalized_practice.orchestrator import PracticeOrchestrator
 from personalized_practice.selection import age_group_for_age, choose_target_skill, difficulty_for_score
 
@@ -37,6 +40,35 @@ class PersonalizationTests(unittest.TestCase):
     def test_generation_blueprint_contains_shape_not_assessment_text(self):
         shape = _describe_shape({"prompt": "private assessment prompt", "items": ["test word"]})
         self.assertEqual(shape, {"prompt": "string", "items": {"type": "array", "length": 1, "items": "string"}})
+
+    @patch.dict(
+        os.environ,
+        {
+            "BEDROCK_MODEL_ID": "zai.glm-4.7-flash",
+            "AWS_DEFAULT_REGION": "eu-west-1",
+        },
+    )
+    def test_bedrock_generator_uses_converse_and_parses_json(self):
+        generated = {
+            "title": "Practice",
+            "instructions": "Complete the task.",
+            "prompt": "Try this.",
+            "content_data": {"items": []},
+            "private_scoring": {"answer_key": {"item": "a"}, "error_types": []},
+        }
+        client = Mock()
+        client.converse.return_value = {
+            "output": {"message": {"content": [{"text": json.dumps(generated)}]}}
+        }
+        result = BedrockExerciseGenerator(client).generate(
+            age_group="12_15",
+            skill="spelling",
+            difficulty=2,
+            seed={"id": "seed", "kind": "spelling", "response_type": "typed_text", "content_data": {}},
+            recent_exercises=(),
+        )
+        self.assertEqual(result, generated)
+        self.assertEqual(client.converse.call_args.kwargs["modelId"], "zai.glm-4.7-flash")
 
     def test_decoding_selects_combined_word_reading_seed(self):
         seed = select_seed("12_15", "decoding", set())

@@ -3,7 +3,8 @@ import os
 from pathlib import Path
 from typing import Any, Mapping
 
-import httpx
+import boto3
+from botocore.exceptions import BotoCoreError, ClientError
 from dotenv import load_dotenv
 
 from personalized_practice.bank import public_content
@@ -38,8 +39,9 @@ def _describe_shape(value: Any) -> Any:
     return "null"
 
 
-class AnthropicExerciseGenerator:
-    endpoint = "https://api.anthropic.com/v1/messages"
+class BedrockExerciseGenerator:
+    def __init__(self, client=None):
+        self.client = client
 
     def generate(
         self,
@@ -50,11 +52,11 @@ class AnthropicExerciseGenerator:
         seed: Mapping[str, Any],
         recent_exercises: tuple[Mapping[str, Any], ...],
     ) -> dict[str, Any]:
-        api_key = os.getenv("CLAUDE_API_KEY")
-        model = os.getenv("CLAUDE_MODEL")
-        if not api_key or not model:
+        model_id = os.getenv("BEDROCK_MODEL_ID")
+        region = os.getenv("AWS_DEFAULT_REGION", "eu-west-1")
+        if not model_id:
             raise ExerciseGenerationNotConfigured(
-                "Set CLAUDE_API_KEY and CLAUDE_MODEL in the backend environment."
+                "Set BEDROCK_MODEL_ID in the backend environment."
             )
 
         prompt = {
@@ -86,29 +88,22 @@ class AnthropicExerciseGenerator:
             ],
         }
         try:
-            response = httpx.post(
-                self.endpoint,
-                headers={
-                    "x-api-key": api_key,
-                    "anthropic-version": "2023-06-01",
-                    "content-type": "application/json",
-                },
-                json={
-                    "model": model,
-                    "max_tokens": 1400,
-                    "temperature": 0.7,
-                    "messages": [{"role": "user", "content": json.dumps(prompt, ensure_ascii=True)}],
-                },
-                timeout=30,
+            client = self.client or boto3.client("bedrock-runtime", region_name=region)
+            response = client.converse(
+                modelId=model_id,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [{"text": json.dumps(prompt, ensure_ascii=True)}],
+                    }
+                ],
+                inferenceConfig={"maxTokens": 1400, "temperature": 0.7},
             )
-            response.raise_for_status()
-            message = response.json()
-            text = next(
-                block["text"] for block in message.get("content", []) if block.get("type") == "text"
-            )
+            content = response["output"]["message"]["content"]
+            text = next(block["text"] for block in content if "text" in block)
             generated = json.loads(text)
-        except (httpx.HTTPError, KeyError, StopIteration, json.JSONDecodeError) as exc:
-            raise ExerciseGenerationError("The exercise provider did not return valid JSON.") from exc
+        except (BotoCoreError, ClientError, KeyError, StopIteration, json.JSONDecodeError) as exc:
+            raise ExerciseGenerationError("Amazon Bedrock did not return a valid exercise response.") from exc
 
         required = {"title", "instructions", "prompt", "content_data", "private_scoring"}
         if not isinstance(generated, dict) or not required.issubset(generated):

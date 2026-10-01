@@ -6,6 +6,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 
 from personalized_practice.domain import LearnerContext
+from personalized_practice.models import LearnerSkillBaseline, PracticeExercise
+from personalized_practice.domain import PracticeDataError
+from user.models import Profile
 
 
 class PracticeRepository(Protocol):
@@ -18,6 +21,57 @@ class PracticeRepository(Protocol):
         ...
 
 
+class DjangoPracticeRepository:
+    def get_context(self, user_id: str) -> LearnerContext:
+        profile = Profile.objects.filter(user_id=user_id).only("age_years").first()
+        if profile is None or profile.age_years is None:
+            raise PracticeDataError("Set the learner's age in their profile before requesting practice.")
+
+        skills = {
+            baseline.skill: {
+                "baseline_score": baseline.baseline_score,
+                "confidence": baseline.confidence,
+                "direct_evidence": baseline.direct_evidence,
+                "trend": baseline.trend,
+                "error_counts": baseline.error_counts,
+            }
+            for baseline in LearnerSkillBaseline.objects.filter(user_id=user_id)
+            if baseline.baseline_score is not None
+        }
+        exercises = list(
+            PracticeExercise.objects.filter(user_id=user_id)
+            .order_by("-created_at")
+            .values("source_exercise_id", "title", "prompt", "content_data")[:5]
+        )
+        completed_count = PracticeExercise.objects.filter(user_id=user_id).count()
+        return LearnerContext.from_mapping(
+            {
+                "age_years": profile.age_years,
+                "skills": skills,
+                "completed_practice_count": completed_count,
+                "recent_exercises": exercises,
+            }
+        )
+
+    def save_exercise(self, user_id: str, record: Mapping[str, Any]) -> None:
+        PracticeExercise.objects.create(
+            id=record["id"],
+            user_id=user_id,
+            age_group=record["age_group"],
+            bank_version=record["bank_version"],
+            target_skill=record["target_skill"],
+            difficulty=record["difficulty"],
+            source_exercise_id=record["source_exercise_id"],
+            response_type=record["response_type"],
+            title=record["title"],
+            instructions=record["instructions"],
+            prompt=record["prompt"],
+            content_data=record["content_data"],
+            private_scoring=record["private_scoring"],
+            content_fingerprint=record["content_fingerprint"],
+        )
+
+
 def get_repository() -> PracticeRepository:
     provider_path = getattr(
         settings,
@@ -25,9 +79,6 @@ def get_repository() -> PracticeRepository:
         os.getenv("ONOMA_PRACTICE_REPOSITORY"),
     )
     if not provider_path:
-        raise ImproperlyConfigured(
-            "Configure ONOMA_PRACTICE_REPOSITORY with a class implementing "
-            "get_context(user_id) and save_exercise(user_id, record)."
-        )
+        return DjangoPracticeRepository()
     provider_class = import_string(provider_path)
     return provider_class()

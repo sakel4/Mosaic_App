@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class TimeStampedModel(models.Model):
@@ -87,5 +88,10 @@ class User(BaseUser):
 
 class Profile(TimeStampedModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    age_years = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(120)],
+    )
     avatar = models.ImageField(upload_to="avatars/", blank=True)
     bio = models.TextField(blank=True)
