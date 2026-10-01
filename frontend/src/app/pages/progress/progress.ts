@@ -18,6 +18,6 @@ export class Progress {
   readonly progress = this.progressService.progress;
   private readonly users = inject(UserService);
   get focus(): string {
-    return this.users.profile().currentFocus;
+    return this.users.profile().currentFocus.map((focus) => focus.skill).join(', ');
   }
 }

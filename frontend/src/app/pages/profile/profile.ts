@@ -1,6 +1,6 @@
 ﻿import { UserService } from '../../core/services/user-service';
 import { normalizeLearnerInterests } from '../../core/models/learner-interest.model';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccessibilityPreferences } from '../../core/models/accessibility-preferences.model';
@@ -25,6 +25,7 @@ export class Profile {
   readonly afterAssessment = this.route.snapshot.queryParamMap.get('afterAssessment') === 'true';
   readonly interestOptions = LEARNER_INTERESTS;
   saved = false;
+  saveError = '';
   readonly form = new FormGroup({
     name: new FormControl(this.users.profile().name, {
       nonNullable: true,
@@ -67,6 +68,20 @@ export class Profile {
       { nonNullable: true },
     ),
   });
+
+  constructor() {
+    effect(() => {
+      const profile = this.users.profile();
+      if (this.form.dirty) return;
+      this.form.patchValue({
+        name: profile.name,
+        ageGroup: profile.ageGroup,
+        goal: profile.learningGoals[0] ?? '',
+        interests: normalizeLearnerInterests(profile.interests),
+        ...profile.preferences,
+      });
+    });
+  }
 
   get previewFont(): string {
     const fonts: Record<ReadingFont, string> = {
@@ -140,12 +155,16 @@ export class Profile {
           interests: value.interests,
           preferences,
         };
-    this.users.save(profile);
-    if (this.afterAssessment) {
-      this.continueToDashboard();
-      return;
-    }
-    this.saved = true;
+    this.saved = false;
+    this.saveError = '';
+    this.users.save(profile).subscribe({
+      next: () => {
+        this.form.markAsPristine();
+        if (this.afterAssessment) this.continueToDashboard();
+        else this.saved = true;
+      },
+      error: () => { this.saveError = 'Could not save your profile. Please try again.'; },
+    });
   }
 
   continueToDashboard(): void {

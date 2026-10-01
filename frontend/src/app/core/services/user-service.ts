@@ -5,6 +5,7 @@ import { AccessibilityPreferences } from '../models/accessibility-preferences.mo
 import { defaultProfile } from './dummy_data';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, tap } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -18,16 +19,12 @@ export class UserService {
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
 
   load(): Observable<LearnerProfile> {
-    return this.http.get<any>('/users/me/').pipe(
+    return this.http.get<User>('/users/me/').pipe(
       tap((me) => this.assessmentDone.set(me.assessment_completed)),
-      map((me) => ({
-        ...this.learner(),
-        name: `${me.first_name} ${me.last_name}`.trim() || this.learner().name,
-      })),
+      map((me) => this.fromUser(me)),
       tap((profile) => {
         this.learner.set(profile);
         this.apply(profile);
-        console.log(profile);
       }),
     );
   }
@@ -35,14 +32,58 @@ export class UserService {
   save(profile: LearnerProfile): Observable<LearnerProfile> {
     const [first_name, ...rest] = profile.name.trim().split(/\s+/);
     return this.http
-      .patch<any>('/users/me/', { first_name, last_name: rest.join(' ') })
+      .patch<User>('/users/me/', {
+        first_name,
+        last_name: rest.join(' '),
+        profile: {
+          age_group: profile.ageGroup,
+          interests: profile.interests,
+          learning_goal: profile.learningGoals[0] ?? '',
+          preferences: {
+            reading_font: profile.preferences.readingFont === 'opendyslexic'
+              ? 'opens_dyslexic' : profile.preferences.readingFont,
+            font_size: profile.preferences.fontSize === 'extra-large'
+              ? 'x_large' : profile.preferences.fontSize,
+            letter_spacing: profile.preferences.letterSpacing,
+            line_spacing: profile.preferences.lineSpacing,
+            text_to_speech: profile.preferences.textToSpeech,
+            current_line_highlight: profile.preferences.currentLineHighlight,
+            reduced_clutter: profile.preferences.reducedClutter,
+            theme: profile.preferences.theme,
+          },
+        },
+      })
       .pipe(
-        map(() => profile),
+        tap((me) => this.assessmentDone.set(me.assessment_completed)),
+        map((me) => this.fromUser(me)),
         tap((saved) => {
           this.learner.set(saved);
           this.apply(saved);
         }),
       );
+  }
+
+  private fromUser(user: User): LearnerProfile {
+    const profile = user.profile;
+    const preferences = profile?.preferences;
+    return {
+      name: `${user.first_name} ${user.last_name}`.trim(),
+      ageGroup: profile?.age_group ?? '',
+      interests: profile?.interests ?? [],
+      learningGoals: profile?.learning_goal ? [profile.learning_goal] : [],
+      currentFocus: profile?.current_focus ?? [],
+      preferences: preferences ? {
+        readingFont: preferences.reading_font === 'opens_dyslexic'
+          ? 'opendyslexic' : preferences.reading_font,
+        fontSize: preferences.font_size === 'x_large' ? 'extra-large' : preferences.font_size,
+        letterSpacing: preferences.letter_spacing,
+        lineSpacing: preferences.line_spacing,
+        textToSpeech: preferences.text_to_speech,
+        currentLineHighlight: preferences.current_line_highlight,
+        reducedClutter: preferences.reduced_clutter,
+        theme: preferences.theme,
+      } : { ...defaultProfile.preferences },
+    };
   }
 
   apply(profile: LearnerProfile): void {

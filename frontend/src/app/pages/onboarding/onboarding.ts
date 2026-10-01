@@ -20,6 +20,7 @@ export class Onboarding {
   private readonly users = inject(UserService);
   private readonly router = inject(Router);
   readonly step = signal(0);
+  saveError = '';
   readonly goals = [
     'Read faster',
     'Read words with confidence',
@@ -137,7 +138,9 @@ export class Onboarding {
         reducedClutter: values.reducedClutter,
       },
     };
-    this.users.save(profile);
-    void this.router.navigate(['/assessment']);
+    this.users.save(profile).subscribe({
+      next: () => { void this.router.navigate(['/assessment']); },
+      error: () => { this.saveError = 'Could not save your profile. Please try again.'; },
+    });
   }
 }

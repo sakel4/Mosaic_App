@@ -1,4 +1,4 @@
-﻿import { Exercise } from '../models/exercise.model';
+import { Exercise } from '../models/exercise.model';
 import { LearnerProfile } from '../models/learner-profile.model';
 import { Progress } from '../models/progress.model';
 
@@ -16,16 +16,16 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const defaultProfile: LearnerProfile = {
-  name: 'Alex',
-  ageGroup: '16–18',
-  learningGoals: ['Reading faster', 'Understanding texts'],
-  interests: ['Music', 'Stories', 'Space'],
-  currentFocus: 'Reading fluency',
+  name: '',
+  ageGroup: '',
+  learningGoals: [],
+  interests: [],
+  currentFocus: [],
   preferences: {
     readingFont: 'default',
     fontSize: 'comfortable',
     letterSpacing: 'standard',
-    lineSpacing: 'relaxed',
+    lineSpacing: 'standard',
     textToSpeech: false,
     currentLineHighlight: true,
     reducedClutter: false,

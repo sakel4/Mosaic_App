@@ -30,10 +30,11 @@
           <!-- <label class="field">Email<input type="email" [value]="email" disabled /></label> -->
           <label class="field"
             >Age group<select formControlName="ageGroup">
-              <option>Under 12</option>
-              <option>12–15</option>
-              <option>16–18</option>
-              <option>19+</option>
+              <option value="">Choose an age group</option>
+              <option value="under_12">Under 12</option>
+              <option value="12_15">12–15</option>
+              <option value="16_18">16–18</option>
+              <option value="19_plus">19+</option>
             </select></label
           >
         </div>
@@ -49,6 +50,7 @@
         <div class="profile-fields">
           <label class="field"
             >Learning focus<select formControlName="goal">
+              <option value="">Choose a learning focus</option>
               <option>Reading faster</option>
               <option>Reading words with confidence</option>
               <option>Understanding texts</option>
@@ -144,6 +146,7 @@
       </div>
     </section>
     <div class="form-footer">
+      @if (saveError) { <span role="alert">{{ saveError }}</span> }
       @if (saved && !afterAssessment) {
         <span class="save-confirmation" role="status">Your preferences are saved.</span>
       }

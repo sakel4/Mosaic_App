@@ -1,4 +1,9 @@
-﻿import { AccessibilityPreferences } from './accessibility-preferences.model';
+import { AccessibilityPreferences } from './accessibility-preferences.model';
+
+export interface SkillFocus {
+  skill: string;
+  score: number;
+}
 
 export interface LearnerProfile {
   name: string;
@@ -6,5 +11,5 @@ export interface LearnerProfile {
   learningGoals: string[];
   interests: string[];
   preferences: AccessibilityPreferences;
-  currentFocus: string;
+  currentFocus: SkillFocus[];
 }

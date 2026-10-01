@@ -47,10 +47,11 @@
             <label class="field"
               >Age group
               <select formControlName="ageGroup">
-                <option>Under 12</option>
-                <option>12–15</option>
-                <option>16–18</option>
-                <option>19+</option>
+              <option value="">Choose an age group</option>
+                <option value="under_12">Under 12</option>
+                <option value="12_15">12–15</option>
+                <option value="16_18">16–18</option>
+                <option value="19_plus">19+</option>
               </select>
             </label>
           </div>
@@ -161,3 +162,5 @@
     <p class="gentle-note">No labels, no pressure — just learning that adapts to you.</p>
   </section>
 </main>
+
+@if (saveError) { <p role="alert">{{ saveError }}</p> }
