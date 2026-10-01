@@ -2,8 +2,11 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+from .choices import AgeGroup, FontSize, LetterSpacing, LineSpacing, ReadingFont, Role, Theme
 
 
 class TimeStampedModel(models.Model):
@@ -12,11 +15,6 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Role(models.TextChoices):
-    ADMIN = "admin", "Admin"
-    LEARNER = "learner", "Learner"
 
 
 class UserManager(BaseUserManager):
@@ -86,12 +84,33 @@ class User(BaseUser):
         db_table = "users"
 
 
-class Profile(TimeStampedModel):
+# User complementary models
+class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
-    age_years = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0), MaxValueValidator(120)],
-    )
-    avatar = models.ImageField(upload_to="avatars/", blank=True)
-    bio = models.TextField(blank=True)
+    age_group = models.CharField(max_length=10, choices=AgeGroup.choices, blank=True, default="")
+    interests = ArrayField(models.TextField(), blank=True, default=list)
+    learning_goal = models.TextField(blank=True, default="")
+    skills = models.OneToOneField("Skill", on_delete=models.CASCADE, related_name="profile", null=True, blank=True)
+    preferences = models.OneToOneField("Preferences", on_delete=models.CASCADE, related_name="profile", null=True, blank=True)
+
+class Skill(models.Model):
+    phonological_awareness = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    letter_sound_association = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    decoding = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    word_recognition = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    naming_speed = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    reading_fluency = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    spelling = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    comprehension = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    working_memory = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+class Preferences(models.Model):
+    # Add preference fields here
+    reading_font = models.CharField(max_length=100, choices=ReadingFont.choices, default=ReadingFont.DEFAULT)
+    font_size = models.CharField(max_length=100, choices=FontSize.choices, default=FontSize.COMFORTABLE)
+    letter_spacing = models.CharField(max_length=100, choices=LetterSpacing.choices, default=LetterSpacing.STANDARD)
+    line_spacing = models.CharField(max_length=100, choices=LineSpacing.choices, default=LineSpacing.STANDARD)
+    text_to_speech = models.BooleanField(default=False)
+    current_line_highlight = models.BooleanField(default=True)
+    reduced_clutter = models.BooleanField(default=False)
+    theme = models.CharField(max_length=100, choices=Theme.choices, default=Theme.LIGHT)

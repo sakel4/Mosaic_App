@@ -1,37 +1,47 @@
 from rest_framework import serializers
 
-from .models import Profile, User
+from .models import Preferences, Profile, Skill, User
+
+SKILL_FIELDS = [f.name for f in Skill._meta.concrete_fields if f.name != "id"]
 
 
-class ProfileAgeField(serializers.Field):
-    age_field = serializers.IntegerField(min_value=0, max_value=120, allow_null=True)
+class PreferencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Preferences
+        exclude = ("id",)
 
-    def get_attribute(self, instance):
-        return instance
 
-    def to_representation(self, user):
-        profile = getattr(user, "profile", None)
-        return profile.age_years if profile is not None else None
+class ProfileSerializer(serializers.ModelSerializer):
+    preferences = PreferencesSerializer(read_only=True)
+    current_focus = serializers.SerializerMethodField()
 
-    def to_internal_value(self, data):
-        return self.age_field.run_validation(data)
+    class Meta:
+        model = Profile
+        fields = ("age_group", "interests", "learning_goal", "current_focus", "preferences")
+
+    def get_current_focus(self, profile):
+        # Lowest-scoring skills; ties are all returned and a score of 0 counts.
+        skills = profile.skills
+        if skills is None:
+            return []
+        scores = {name: getattr(skills, name) for name in SKILL_FIELDS}
+        scores = {name: score for name, score in scores.items() if score is not None}
+        if not scores:
+            return []
+        lowest = min(scores.values())
+        return [
+            {"skill": name.replace("_", " ").title(), "score": score}
+            for name, score in scores.items()
+            if score == lowest
+        ]
 
 
 class UserSerializer(serializers.ModelSerializer):
-    age_years = ProfileAgeField(required=False)
+    profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = (
-            "id",
-            "email",
-            "first_name",
-            "last_name",
-            "age_years",
-            "role",
-            "assessment_completed",
-            "created_at",
-        )
+        fields = ("id", "email", "first_name", "last_name", "role", "assessment_completed", "created_at", "profile")
         read_only_fields = ("id", "email", "role", "assessment_completed", "created_at")
 
     def update(self, instance, validated_data):

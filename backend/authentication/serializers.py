@@ -4,7 +4,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from user.models import Profile
+from user.models import Preferences, Profile, Skill
+from user.serializers import SKILL_FIELDS
 
 User = get_user_model()
 
@@ -25,7 +26,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Public signup always creates learners; admins are created via admin/createsuperuser.
         user = User.objects.create_user(**validated_data)
-        Profile.objects.create(user=user)
+        skills = Skill.objects.create(**{name: 0 for name in SKILL_FIELDS})
+        Profile.objects.create(user=user, skills=skills, preferences=Preferences.objects.create())
         return user
 
 
