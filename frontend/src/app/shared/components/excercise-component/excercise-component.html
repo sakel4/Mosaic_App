@@ -7,7 +7,7 @@
             @default { A moment to practice }
           }
         </span>
-        @if (users.profile().preferences.textToSpeech) {
+        <!-- @if (users.profile().preferences.textToSpeech) {
           @if (audioSupported) {
             <button class="audio-button" type="button" (click)="readPrompt()" [attr.aria-pressed]="speechSpeaking()">
               {{ speechSpeaking() ? 'Stop listening' : 'Listen' }}
@@ -16,7 +16,7 @@
           } @else {
             <span class="audio-unavailable" role="status">Speech playback is not available in this browser.</span>
           }
-        }
+        } -->
       </div>
       @if (speechStatus()) {
         <p class="speech-status" role="status">{{ speechStatus() }}</p>
@@ -24,7 +24,7 @@
       @if (exercise().content.instruction) {
         <p class="instruction">{{ exercise().content.instruction }}</p>
       }
-      @if (users.profile().preferences.currentLineHighlight) {
+      <!-- @if (users.profile().preferences.currentLineHighlight) {
         <div class="prompt-lines" role="heading" aria-level="2" aria-label="Exercise prompt">
           @for (line of promptLines(); track $index; let i = $index) {
             <button
@@ -49,7 +49,8 @@
         }
       } @else {
         <h2 class="prompt" [style.font-size]="promptFontSize()">{{ exercise().content.prompt }}</h2>
-      }
+      } -->
+        <h2 class="prompt" [style.font-size]="promptFontSize()">{{ exercise().content.prompt }}</h2>
       <div class="answer-list" role="group" aria-label="Choose an answer">
         @for (option of exercise().content.options; track option) {
           <div class="answer-row">
@@ -64,7 +65,7 @@
               <span class="radio-mark" aria-hidden="true"></span>
               <span>{{ option }}</span>
             </button>
-            @if (users.profile().preferences.textToSpeech && audioSupported) {
+            <!-- @if (users.profile().preferences.textToSpeech && audioSupported) {
               <button
                 type="button"
                 class="choice-audio-button"
@@ -72,7 +73,7 @@
                 [attr.aria-pressed]="speakingOption() === option"
                 (click)="readChoice(option)"
               >{{ speakingOption() === option ? '■' : '🔊' }}</button>
-            }
+            } -->
           </div>
         }
       </div>
