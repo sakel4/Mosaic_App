@@ -7,3 +7,4 @@ frontend/node_modules/
 
 # Secrets
 .env
+policy.json
