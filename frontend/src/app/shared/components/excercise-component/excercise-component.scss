@@ -1,0 +1,45 @@
+:host { display: block; }
+    .exercise-card { padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+    .exercise-card.real-world-mode { border-color: #eee5d8; background: #fffdfa; }
+    .exercise-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .mode-label { color: #789180; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .audio-button { display: inline-flex; min-height: 36px; align-items: center; gap: 7px; padding: 0 11px;
+      border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--muted); cursor: pointer; font-size: 11px; }
+    .audio-button:hover { background: var(--hover-surface); }
+    .audio-unavailable { color: #929d95; font-size: 10px; }
+    .speech-status { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
+    .instruction { margin: 22px 0 5px; color: #8a958e; font-size: calc(var(--reader-support-size, 11px) + 1px); }
+    .prompt, .prompt-lines { max-width: 570px; margin: 22px 0 24px; color: #27343b; font-size: var(--reader-prompt-size, clamp(19px, 2.2vw, 25px)); line-height: 1.45; white-space: pre-line; }
+    .instruction + .prompt, .instruction + .prompt-lines { margin-top: 5px; }
+    .prompt-lines { display: grid; justify-items: stretch; gap: 7px; }
+    .prompt-line { width: fit-content; max-width: 100%; padding: 3px 8px; border: 0; border-left: 3px solid transparent;
+      border-radius: 4px; background: transparent; color: inherit; cursor: pointer; font: inherit; line-height: inherit; text-align: left; }
+    .prompt-line:hover { background: var(--hover-surface); }
+    .prompt-line.current-line { border-left-color: var(--selection-control); background: var(--selection-surface); }
+    .line-controls { display: flex; max-width: 570px; align-items: center; justify-content: space-between; gap: 8px; margin: -17px 0 20px; color: #89948c; font-size: 10px; }
+    .line-step { min-height: 32px; padding: 0 7px; border: 0; border-radius: 7px; background: transparent; color: var(--green-dark); cursor: pointer; font: inherit; font-weight: 600; }
+    .line-step:hover:not(:disabled) { background: var(--hover-surface); }
+    .line-step:disabled { color: var(--muted); cursor: not-allowed; }
+    .answer-list { display: grid; gap: 10px; }
+    .answer-row { display: flex; align-items: stretch; gap: 8px; }
+    .answer-option { display: flex; min-height: 51px; align-items: center; gap: 12px; padding: 0 14px;
+      border: 1px solid #e6ebe7; border-radius: 11px; background: #fff; color: #47534b; cursor: pointer;
+      flex: 1; font-size: var(--reader-choice-size, 14px); text-align: left; transition: border-color 140ms ease, background 140ms ease; }
+    .answer-option:hover { border-color: var(--selection-border); background: var(--hover-surface); }
+    .answer-option.selected { border-color: var(--selection-border); background: var(--selection-surface); color: var(--selection-text); }
+    .radio-mark { display: grid; width: 17px; height: 17px; flex: 0 0 auto; place-items: center;
+      border: 1.5px solid #c8d0ca; border-radius: 50%; }
+    .selected .radio-mark { border-color: var(--selection-control); }
+    .selected .radio-mark::after { width: 7px; height: 7px; border-radius: 50%; background: var(--selection-control); content: ''; }
+    .choice-audio-button { width: 46px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 11px;
+      background: var(--paper); color: var(--muted); cursor: pointer; font-size: 15px; }
+    .choice-audio-button:hover { border-color: var(--selection-border); background: var(--hover-surface); }
+    .exercise-actions { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 23px; }
+    .reassurance { margin: 0; color: #98a29b; font-size: var(--reader-support-size, 11px); }
+    .primary-button { flex: 0 0 auto; min-height: 43px; font-size: 12px; }
+    .primary-button:disabled { background: var(--disabled-surface); color: var(--disabled-text); cursor: not-allowed; }
+    @media (max-width: 640px) {
+      .exercise-card { padding: 21px 17px; }
+      .exercise-actions { align-items: stretch; flex-direction: column; }
+      .exercise-actions .primary-button { width: 100%; }
+    }

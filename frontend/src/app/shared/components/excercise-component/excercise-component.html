@@ -1,1 +1,85 @@
-<p>excercise-component works!</p>
+<section class="exercise-card" [class.real-world-mode]="mode() === 'real-world'">
+      <div class="exercise-topline">
+        <span class="mode-label">
+          @switch (mode()) {
+            @case ('assessment') { Getting to know you }
+            @case ('real-world') { Out in the world }
+            @default { A moment to practice }
+          }
+        </span>
+        @if (users.profile().preferences.textToSpeech) {
+          @if (audioSupported) {
+            <button class="audio-button" type="button" (click)="readPrompt()" [attr.aria-pressed]="speechSpeaking()">
+              {{ speechSpeaking() ? 'Stop listening' : 'Listen' }}
+              <span aria-hidden="true">{{ speechSpeaking() ? '■' : '▶' }}</span>
+            </button>
+          } @else {
+            <span class="audio-unavailable" role="status">Speech playback is not available in this browser.</span>
+          }
+        }
+      </div>
+      @if (speechStatus()) {
+        <p class="speech-status" role="status">{{ speechStatus() }}</p>
+      }
+      @if (exercise().content.instruction) {
+        <p class="instruction">{{ exercise().content.instruction }}</p>
+      }
+      @if (users.profile().preferences.currentLineHighlight) {
+        <div class="prompt-lines" role="heading" aria-level="2" aria-label="Exercise prompt">
+          @for (line of promptLines(); track $index; let i = $index) {
+            <button
+              type="button"
+              class="prompt-line"
+              [style.font-size]="promptFontSize()"
+              [class.current-line]="i === currentLine()"
+              [attr.aria-pressed]="i === currentLine()"
+              [attr.aria-label]="'Highlight line ' + (i + 1) + ': ' + line"
+              (click)="currentLine.set(i)"
+            >{{ line }}</button>
+          }
+        </div>
+        @if (promptLines().length > 1) {
+          <div class="line-controls" aria-label="Reading line controls">
+            <button type="button" class="line-step" [disabled]="currentLine() === 0"
+              (click)="moveLine(-1)" aria-label="Highlight previous line">← Previous line</button>
+            <span aria-live="polite">Line {{ currentLine() + 1 }} of {{ promptLines().length }}</span>
+            <button type="button" class="line-step" [disabled]="currentLine() === promptLines().length - 1"
+              (click)="moveLine(1)" aria-label="Highlight next line">Next line →</button>
+          </div>
+        }
+      } @else {
+        <h2 class="prompt" [style.font-size]="promptFontSize()">{{ exercise().content.prompt }}</h2>
+      }
+      <div class="answer-list" role="group" aria-label="Choose an answer">
+        @for (option of exercise().content.options; track option) {
+          <div class="answer-row">
+            <button
+              type="button"
+              class="answer-option"
+              [style.font-size]="choiceFontSize()"
+              [class.selected]="selected() === option"
+              [attr.aria-pressed]="selected() === option"
+              (click)="choose(option)"
+            >
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span>{{ option }}</span>
+            </button>
+            @if (users.profile().preferences.textToSpeech && audioSupported) {
+              <button
+                type="button"
+                class="choice-audio-button"
+                [attr.aria-label]="speakingOption() === option ? 'Stop listening to ' + option : 'Listen to ' + option"
+                [attr.aria-pressed]="speakingOption() === option"
+                (click)="readChoice(option)"
+              >{{ speakingOption() === option ? '■' : '🔊' }}</button>
+            }
+          </div>
+        }
+      </div>
+      <div class="exercise-actions">
+        <p class="reassurance" [style.font-size]="supportFontSize()">There’s no rush. Choose the answer that feels right.</p>
+        <button class="primary-button" type="button" [disabled]="!selected()" (click)="submit()">
+          Check answer <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
