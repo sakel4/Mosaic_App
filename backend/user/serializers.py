@@ -42,14 +42,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-<<<<<<< HEAD
         fields = (
             "id", "email", "first_name", "last_name", "role",
-            "assessment_completed", "on_bording_completed", "created_at", "profile",
+            "onboarding_completed", "assessment_completed", "on_bording_completed",
+            "created_at", "profile",
         )
-=======
-        fields = ("id", "email", "first_name", "last_name", "role", "onboarding_completed", "assessment_completed", "created_at", "profile")
->>>>>>> b742827 (changes :) power fell)
         read_only_fields = ("id", "email", "role", "created_at")
 
     @transaction.atomic
