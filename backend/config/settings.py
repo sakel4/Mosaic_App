@@ -14,8 +14,11 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR.parent / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -91,16 +94,15 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("DB_NAME", "app"),
-        "USER": os.environ.get("DB_USER", "admin"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "admin"),
+        "USER": os.environ.get("DB_USER", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
         "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
         "PORT": os.environ.get("DB_PORT", "5432"),
         "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
-        "OPTIONS": (
-            {"sslmode": os.environ["DB_SSLMODE"]}
-            if os.environ.get("DB_SSLMODE")
-            else {}
-        ),
+        "OPTIONS": {
+            **({"sslmode": os.environ["DB_SSLMODE"]} if os.environ.get("DB_SSLMODE") else {}),
+            **({"sslrootcert": os.environ["DB_SSLROOTCERT"]} if os.environ.get("DB_SSLROOTCERT") else {}),
+        },
     }
 }
 
