@@ -16,7 +16,7 @@ export const routes: Routes = [
     {
         path: '',
         component: AppLayout,
-        // canActivate: [authGuard],
+        canActivate: [authGuard],
         children: [
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
             { path: 'dashboard', component: Dashboard },

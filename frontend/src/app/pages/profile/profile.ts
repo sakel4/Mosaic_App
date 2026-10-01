@@ -7,6 +7,7 @@ import { LearnerProfile } from '../../core/models/learner-profile.model';
 import { ReadingFont } from '../../core/models/reading-font.model';
 import { LEARNER_INTERESTS } from '../../core/models/learner-interest.model';
 import { InterestPickerComponent } from '../../shared/components/interest-picker-component/interest-picker-component';
+import { AuthService } from '../../core/services/auth-service';
 // import { AuthService, UserService } from '../../core/services/onoma.services';
 // import { InterestPickerComponent } from '../../shared/interest-picker.component';
 
@@ -17,7 +18,7 @@ import { InterestPickerComponent } from '../../shared/components/interest-picker
   templateUrl: './profile.html',
 })
 export class Profile {
-  // private readonly auth = inject(AuthService); ( BETTER USE USER )
+  private readonly auth = inject(AuthService);
   // private readonly users = inject(UserService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -145,7 +146,7 @@ export class Profile {
   }
 
   logout(): void {
-    // this.auth.logout();
+    this.auth.logout();
     void this.router.navigate(['/login']);
   }
 }

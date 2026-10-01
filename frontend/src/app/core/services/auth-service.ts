@@ -14,7 +14,7 @@ export interface RegisterPayload extends LoginPayload {
 }
 
 interface AuthResponse {
-  token: string;
+  access: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -34,13 +34,13 @@ export class AuthService {
 
   register(data: RegisterPayload): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/auth/register/', data).pipe(
-      tap((res) => this.saveToken(res.token)),
+      tap((res) => this.saveToken(res.access)),
     );
   }
 
   login(data: LoginPayload): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/auth/login/', data).pipe(
-      tap((res) => this.saveToken(res.token)),
+      tap((res) => this.saveToken(res.access)),
     );
   }
 
