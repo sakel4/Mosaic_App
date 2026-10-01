@@ -79,6 +79,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
 class User(BaseUser):
     assessment_completed = models.BooleanField(default=False)
+    on_bording_completed = models.BooleanField(default=False)
     from django.core.validators import MaxValueValidator, MinValueValidator
     class Meta:
         db_table = "users"

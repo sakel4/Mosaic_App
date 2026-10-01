@@ -42,8 +42,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "email", "first_name", "last_name", "role", "assessment_completed", "created_at", "profile")
-        read_only_fields = ("id", "email", "role", "assessment_completed", "created_at")
+        fields = (
+            "id", "email", "first_name", "last_name", "role",
+            "assessment_completed", "on_bording_completed", "created_at", "profile",
+        )
+        read_only_fields = ("id", "email", "role", "created_at")
 
     @transaction.atomic
     def update(self, instance, validated_data):
