@@ -23,9 +23,9 @@ class PracticeRepository(Protocol):
 
 class DjangoPracticeRepository:
     def get_context(self, user_id: str) -> LearnerContext:
-        profile = Profile.objects.filter(user_id=user_id).only("age_years").first()
-        if profile is None or profile.age_years is None:
-            raise PracticeDataError("Set the learner's age in their profile before requesting practice.")
+        profile = Profile.objects.filter(user_id=user_id).only("age_group").first()
+        if profile is None or not profile.age_group:
+            raise PracticeDataError("Set the learner's age group in their profile before requesting practice.")
 
         skills = {
             baseline.skill: {
@@ -48,7 +48,7 @@ class DjangoPracticeRepository:
         completed_count = PracticeExercise.objects.filter(user_id=user_id).count()
         return LearnerContext.from_mapping(
             {
-                "age_years": profile.age_years,
+                "age_group": profile.age_group,
                 "skills": skills,
                 "completed_practice_count": completed_count,
                 "recent_exercises": exercises,

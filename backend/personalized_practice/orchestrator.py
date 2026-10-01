@@ -6,7 +6,6 @@ from typing import Any, Mapping
 from personalized_practice.bank import load_age_bank, public_content, select_seed, supported_skills
 from personalized_practice.domain import LearnerContext
 from personalized_practice.selection import (
-    age_group_for_age,
     choose_secondary_skill,
     choose_target_skill,
     difficulty_for_score,
@@ -22,7 +21,7 @@ class PracticeOrchestrator:
         context = self.repository.get_context(user_id)
         if not isinstance(context, LearnerContext):
             context = LearnerContext.from_mapping(context)
-        age_group = age_group_for_age(context.age_years)
+        age_group = context.age_group
         age_skills = supported_skills(age_group)
         target_skill = choose_target_skill(context, age_skills)
         secondary_skill = choose_secondary_skill(context, target_skill, age_skills)

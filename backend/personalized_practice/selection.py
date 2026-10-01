@@ -1,7 +1,4 @@
-from personalized_practice.domain import LearnerContext, PracticeDataError, SkillEvidence
-
-
-AGE_GROUPS = ("under_12", "12_15", "16_18", "19_plus")
+from personalized_practice.domain import AGE_GROUPS, LearnerContext, PracticeDataError, SkillEvidence
 
 
 def age_group_for_age(age_years: int) -> str:
