@@ -1,0 +1,34 @@
+.page-header { margin-bottom: 23px; }
+.profile-form { display: grid; gap: 13px; }
+.profile-section { padding: 21px 23px; }
+.profile-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 20px; }
+.profile-icon { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: #eaf2ed; color: #5c816a; font-size: 17px; }
+.profile-icon.warm { background: #f6eee2; color: #a8874f; }
+.profile-icon.lavender { background: #f0edf4; color: #837291; font-size: 13px; font-weight: 700; }
+.profile-heading h2 { margin: 0; color: #37453c; font-size: 15px; }
+.profile-heading p { margin: 2px 0 0; color: #929d95; font-size: 10px; }
+.profile-fields { max-width: 620px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.reading-preview { margin: 0 0 14px; padding: 13px 15px; border: 1px solid #e5ebe6; border-radius: 11px; background: #f9faf8; color: #526057; }
+.reading-preview span { color: #829287; font: 700 9px 'DM Sans', sans-serif; letter-spacing: .1em; }
+.reading-preview p { margin: 7px 0 0; }
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-hint { color: #9ca59e; font-size: 10px; font-weight: 400; }
+.field input:disabled { background: #f7f8f5; color: #a2aaa4; }
+.preference-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 0 15px; border-top: 1px solid #edf0ed; }
+.preference-toggles label { display: flex; min-height: 57px; align-items: center; justify-content: space-between; gap: 9px; border-bottom: 1px solid #edf0ed; cursor: pointer; }
+.preference-toggles label span { display: grid; gap: 1px; }
+.preference-toggles strong { color: #526057; font-size: 11px; }
+.preference-toggles small { color: #9ca59e; font-size: 9px; }
+.preference-toggles input { width: 16px; height: 16px; accent-color: #477e68; }
+.form-footer { display: flex; min-height: 48px; align-items: center; justify-content: flex-end; gap: 14px; }
+.form-footer .primary-button { min-height: 43px; font-size: 12px; }
+.save-confirmation { color: #4e7e5d; font-size: 11px; }
+.logout-row { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; padding: 13px 3px; border-top: 1px solid #e8ece9; color: #929c94; font-size: 11px; }
+.text-button { color: #786d62; font-size: 11px; }
+@media (max-width: 600px) {
+    .profile-section { padding: 17px; }
+    .field-row, .preference-toggles { grid-template-columns: 1fr; gap: 0; }
+    .profile-heading { margin-bottom: 16px; }
+}
