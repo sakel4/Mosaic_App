@@ -7,6 +7,8 @@ import { RealWorld } from './pages/real-world/real-world';
 import { Auth } from './pages/auth/auth';
 import { Profile } from './pages/profile/profile';
 import { authGuard } from './core/guards/auth-guard';
+import { Assessment } from './pages/assessment/assessment';
+import { Onboarding } from './pages/onboarding/onboarding';
 
 
 export const routes: Routes = [
@@ -27,6 +29,8 @@ export const routes: Routes = [
 
     // Outside the layout (rendered directly in app.html's <router-outlet>)
     { path: 'login', component: Auth, data: { mode: 'login' } },
+    { path: 'assessment', component: Assessment },
+    { path: 'onboarding', component: Onboarding},
     { path: 'register', component: Auth, data: { mode: 'register' } },
     { path: 'auth', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: '' },
