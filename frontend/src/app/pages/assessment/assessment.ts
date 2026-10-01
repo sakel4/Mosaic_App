@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import {ExcerciseComponent,} from '../../shared/components/exercise-component/exercise-component';
+import { ExcerciseComponent} from '../../shared/components/exercise-component/exercise-component';
 import { ExerciseAttempt } from '../../core/models/exercise-attempt.model';
 import { AssessmentService } from '../../core/services/assessment-service';
 import { UserService } from '../../core/services/user-service';

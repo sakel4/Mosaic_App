@@ -33,7 +33,7 @@ export const routes: Routes = [
 
     // Outside the layout (rendered directly in app.html's <router-outlet>)
     { path: 'login', component: Auth, data: { mode: 'login'}, canActivate: [guestGuard] },
-    { path: 'assessment', component: Assessment, canActivate: [authGuard, OnboardedGuard]},
+    { path: 'assessment', component: Assessment, canActivate: [authGuard]},
     { path: 'onboarding', component: Onboarding, canActivate: [authGuard]},
     { path: 'register', component: Auth, data: { mode: 'register'}, canActivate: [guestGuard]},
     { path: 'auth', redirectTo: 'login', pathMatch: 'full' },
