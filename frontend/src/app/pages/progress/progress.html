@@ -1,12 +1,32 @@
 <section class="page">
+  <div class="progress-toolbar">
+    <span class="sample-label">Sample progress data</span>
+    <details class="report-menu">
+      <summary>Progress report</summary>
+      <div class="report-options">
+        <h2>For a parent or supporter</h2>
+        <p>Get a detailed report of activity totals, skill accuracy, and daily results.</p>
+        <button type="button" class="secondary-button" [disabled]="reportBusy()" (click)="downloadReport()">Download PDF</button>
+        <form #reportForm="ngForm" (ngSubmit)="downloadReport(true)">
+          <label class="field">Email address
+            <input type="email" name="reportEmail" [(ngModel)]="email" required email maxlength="254" autocomplete="email" placeholder="parent@example.com" />
+          </label>
+          <button type="submit" class="primary-button" [disabled]="reportForm.invalid || reportBusy()">{{ reportBusy() ? 'Preparing PDF…' : 'Prepare PDF + email draft' }}</button>
+        </form>
+        <p>You will need to attach the downloaded PDF to the email yourself.</p>
+        @if (reportStatus()) { <p role="status">{{ reportStatus() }}</p> }
+        @if (draftLink()) { <a class="secondary-button" [href]="draftLink()">Open email draft</a> }
+      </div>
+    </details>
+  </div>
+  @if (isChild()) {
+    <app-kid-progress [progress]="progress()" />
+  } @else {
   <header class="page-header">
     <p class="eyebrow">YOUR PROGRESS</p>
     <h1 class="page-title">Look how far you’ve come.</h1>
     <p class="page-subtitle">Every bit of practice counts. Here’s what you’ve been building.</p>
   </header>
-  <div class="preview-controls">
-    <p>Sample progress data</p>
-  </div>
   <div class="summary-row">
     <article class="summary-card surface-card">
       <span class="summary-symbol" aria-hidden="true">↗</span>
@@ -65,4 +85,5 @@
   <p class="gentle-note">
     Progress looks different for everyone. This is your journey, at your pace.
   </p>
+  }
 </section>

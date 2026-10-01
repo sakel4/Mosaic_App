@@ -24,3 +24,14 @@
 .gentle-note { margin: 25px 0 0; color: #9ba49d; font-size: 10px; text-align: center; }
 @media (max-width: 900px) { .lower-grid { grid-template-columns: 1fr; } .summary-row { grid-template-columns: 1fr 1fr; } .focus-card { grid-column: 1 / -1; } }
 @media (max-width: 600px) { .skill-grid { grid-template-columns: 1fr; } .summary-card { padding: 12px; } }
+.progress-toolbar { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.sample-label { color: var(--muted); font-size: 13px; }
+.report-menu { max-width: 420px; }
+.report-menu summary { cursor: pointer; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); font-weight: 700; }
+.report-menu summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
+.report-options { padding: 20px; margin-top: 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); box-shadow: var(--shadow); }
+.report-options h2 { font-size: 18px; }
+.report-options p { color: var(--muted); font-size: 13px; }
+.report-options form { margin-top: 20px; }
+.report-options button:disabled { cursor: wait; opacity: .6; }
+@media (max-width: 600px) { .progress-toolbar { flex-direction: column; } .report-menu { width: 100%; max-width: none; } }

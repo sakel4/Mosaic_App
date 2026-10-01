@@ -1,0 +1,25 @@
+.adventure-hero { display: flex; align-items: center; gap: 24px; padding: 28px; border-radius: 24px; background: var(--selection-surface); }
+.hero-star { display: grid; place-items: center; flex-shrink: 0; width: 90px; height: 90px; border-radius: 28px; color: #80620b; background: #f7f0d7; font-size: 64px; transform: rotate(-8deg); }
+h1 { margin: 0; font-size: clamp(28px, 4vw, 42px); color: var(--ink); }
+p { color: var(--muted); }
+.adventure-hero p:last-child { margin: 10px 0 0; }
+.adventure-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 22px 0; }
+.adventure-stats article { display: grid; justify-items: center; gap: 8px; padding: 22px 12px; text-align: center; }
+.adventure-stats article > span { color: var(--gold); font-size: 32px; }
+.adventure-stats strong { color: var(--ink); font-size: 24px; }
+.adventure-stats p { margin: 0; }
+.quest { padding: 28px; text-align: center; }
+.quest h2 { margin-bottom: 12px; }
+.star-trail { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 24px 0; }
+.star-trail span { width: 44px; height: 44px; display: grid; place-items: center; border: 2px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 30px; }
+.star-trail span:not(.collected) { filter: grayscale(1); opacity: .55; }
+.star-trail .collected { color: #80620b; background: #f7f0d7; border: 2px solid #d9bd5d; }
+.quest-note { margin: 14px 0 0; font-size: 13px; }
+.badge-section { margin-top: 28px; }
+.badge-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.badge { padding: 24px; text-align: center; }
+.badge > span { display: inline-grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--mosaic-coral); color: var(--mosaic-rose); font-size: 36px; }
+.badge h3 { margin: 14px 0 8px; }
+.badge p { margin: 0; }
+.encouragement { margin: 24px 0 0; text-align: center; }
+@media (max-width: 600px) { .adventure-hero { padding: 20px; gap: 14px; } .hero-star { width: 56px; height: 56px; font-size: 40px; border-radius: 16px; } .adventure-stats { grid-template-columns: 1fr; gap: 10px; } .badge-grid { grid-template-columns: 1fr; } .quest { padding: 22px 16px; } }

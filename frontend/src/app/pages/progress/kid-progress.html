@@ -1,0 +1,46 @@
+<section class="adventure" aria-labelledby="adventure-title">
+  <div class="adventure-hero">
+    <div class="hero-star" aria-hidden="true">&#x1F31F;</div>
+    <div>
+      <p class="eyebrow">YOUR LEARNING ADVENTURE</p>
+      <h1 id="adventure-title">Look at you grow!</h1>
+      <p>Every activity earns a star. Keep exploring, at your own pace.</p>
+    </div>
+  </div>
+  <div class="adventure-stats">
+    <article class="surface-card"><span aria-hidden="true">&#x2B50;</span><strong>{{ progress().exercisesCompleted }}</strong><p>stars collected</p></article>
+    <article class="surface-card"><span aria-hidden="true">&#x1F680;</span><strong>Level {{ level() }}</strong><p>learning explorer</p></article>
+    <article class="surface-card"><span aria-hidden="true">&#x1F31E;</span><strong>{{ progress().currentStreak }} days</strong><p>of learning adventures</p></article>
+  </div>
+  <section class="quest surface-card" aria-labelledby="quest-title">
+    <p class="eyebrow">YOUR NEXT QUEST</p>
+    <h2 id="quest-title">Collect your next 10 stars</h2>
+    <p>Just {{ starsRemaining() }} more {{ starsRemaining() === 1 ? 'activity' : 'activities' }} to reach Level {{ level() + 1 }}!</p>
+    <div class="star-trail" role="img" [attr.aria-label]="levelStars() + ' of 10 stars collected toward your next level'">
+      @for (star of [0,1,2,3,4,5,6,7,8,9]; track star) {
+        <span [class.collected]="star < levelStars()" aria-hidden="true">&#x2B50;</span>
+      }
+    </div>
+    <a routerLink="/practice" class="primary-button">Let's collect a star <span aria-hidden="true">&#x1F680;</span></a>
+    <p class="quest-note">Trying counts! You earn a star even when an answer is tricky.</p>
+  </section>
+  <section class="badge-section" aria-labelledby="badge-title">
+    <h2 id="badge-title">Your treasure shelf</h2>
+    <div class="badge-grid">
+      @for (badge of progress().achievements; track badge.id) {
+        <article class="badge surface-card">
+          <span aria-hidden="true">
+            @switch (badge.id) {
+              @case (1) { &#x1F331; }
+              @case (10) { &#x1F3C5; }
+              @case (50) { &#x1F48E; }
+              @default { &#x1F3C6; }
+            }
+          </span>
+          <h3>{{ badge.id }}-star explorer</h3><p>You kept showing up and trying!</p>
+        </article>
+      } @empty { <p>Your first star unlocks your first treasure. Ready to explore?</p> }
+    </div>
+  </section>
+  <p class="encouragement">Small steps make big adventures. You can take a break whenever you need.</p>
+</section>
