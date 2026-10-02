@@ -51,12 +51,9 @@
           <label class="field"
             >Learning focus<select formControlName="goal">
               <option value="">Choose a learning focus</option>
-              <option>Reading faster</option>
-              <option>Reading words with confidence</option>
-              <option>Understanding texts</option>
-              <option>Spelling</option>
-              <option>General reading support</option>
-              <option>I'm not sure yet</option>
+              @for (goal of goals; track goal) {
+                <option [value]="goal">{{ goal }}</option>
+              }
             </select></label
           >
           <app-interest-picker-component

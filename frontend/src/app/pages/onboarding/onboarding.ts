@@ -6,7 +6,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AccessibilityPreferences } from '../../core/models/accessibility-preferences.model';
 import { LEARNER_INTERESTS } from '../../core/models/learner-interest.model';
 import { LearnerInterest } from '../../core/models/learner-interest.model';
-import { LearnerProfile } from '../../core/models/learner-profile.model';
+import {
+  DEFAULT_LEARNING_GOAL,
+  LEARNING_GOALS,
+  LearnerProfile,
+} from '../../core/models/learner-profile.model';
 import { ReadingFont } from '../../core/models/reading-font.model';
 import { InterestPickerComponent } from '../../shared/components/interest-picker-component/interest-picker-component';
 
@@ -21,14 +25,7 @@ export class Onboarding {
   private readonly router = inject(Router);
   readonly step = signal(0);
   saveError = '';
-  readonly goals = [
-    'Read faster',
-    'Read words with confidence',
-    'Understand what I read',
-    'Spelling',
-    'General reading support',
-    'I’m not sure yet',
-  ];
+  readonly goals = LEARNING_GOALS;
   readonly interestOptions = LEARNER_INTERESTS;
   readonly form = new FormGroup({
     name: new FormControl(this.users.profile().name, {
@@ -39,7 +36,7 @@ export class Onboarding {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    goal: new FormControl(this.users.profile().learningGoals[0] ?? '', {
+    goal: new FormControl(this.users.profile().learningGoals[0] ?? DEFAULT_LEARNING_GOAL, {
       nonNullable: true,
       validators: [Validators.required],
     }),
