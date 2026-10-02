@@ -71,6 +71,10 @@ body {
   margin: 0;
 }
 
+body .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
 body {
   background: var(--canvas);
   color: var(--ink);
@@ -250,10 +254,6 @@ html[data-font-size='extra-large'] {
 body,
 body * {
   font-family: var(--reading-font-family) !important;
-}
-
-body .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
 }
 
 html[data-letter-spacing='wide'] {
