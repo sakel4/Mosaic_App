@@ -1,4 +1,8 @@
-import { provideRouter } from '@angular/router';
+import { vi } from 'vitest';
+import { UserService } from '../../core/services/user-service';
+import { User } from '../../core/models/user.model';
+import { of } from 'rxjs';
+import { Router, provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Assessment } from './assessment';
 import { provideHttpClient } from '@angular/common/http';
@@ -46,4 +50,18 @@ describe('Assessment', () => {
     expect(fixture.nativeElement.textContent).toContain('moon');
     expect(fixture.nativeElement.textContent).toContain('Activity 2 of 7');
   });
+  it('removes feedback before clearing the final attempt while navigation is pending', async () => {
+    vi.spyOn(TestBed.inject(UserService), 'completeAssessment').mockReturnValue(of({} as User));
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockReturnValue(new Promise<boolean>(() => {}));
+    component.index.set(component.exercises.length - 1);
+    component.onCompleted({ exerciseId: 'last', answer: '7 1 4', correct: true, responseTime: 100 });
+    await fixture.whenStable();
+    component.nextExercise();
+    fixture.detectChanges();
+    expect(component.lastAttempt()).toBeNull();
+    expect(component.feedback()).toBe(false);
+    expect(fixture.nativeElement.querySelector('app-exercise-feedback-component')).toBeNull();
+    expect(fixture.nativeElement.querySelector('app-excercise-component')).toBeNull();
+  });
+
 });

@@ -18,6 +18,7 @@ export class Assessment {
   private readonly assessmentService = inject(AssessmentService);
   private readonly users = inject(UserService);
   private readonly router = inject(Router);
+  private readonly answers = new Map<string | number, ExerciseAttempt>();
   private readonly loadedExercises = signal<AssessmentExercise[]>([]);
   get exercises(): AssessmentExercise[] { return this.loadedExercises(); }
   readonly estimatedMinutes = this.assessmentService.estimatedMinutes;
@@ -46,6 +47,7 @@ export class Assessment {
 
   onCompleted(attempt: ExerciseAttempt): void {
     if (!this.exercise()) return;
+    this.answers.set(attempt.exerciseId, structuredClone(attempt));
     this.lastAttempt.set({ exerciseId: attempt.exerciseId, answer: '', correct: attempt.correct,
       evaluated: attempt.evaluated, responseTime: attempt.responseTime });
     this.feedback.set(true);
@@ -54,10 +56,11 @@ export class Assessment {
   nextExercise(): void {
     if (!this.feedback() || this.saving()) return;
     if (this.index() === this.exercises.length - 1) {
+      this.assessmentService.finishAssessment([...this.answers.values()]);
       this.saving.set(true);
       this.saveError.set('');
       this.users.completeAssessment().subscribe({
-        next: () => { this.lastAttempt.set(null); void this.router.navigate(['/dashboard']); },
+        next: () => { this.answers.clear(); this.feedback.set(false); this.lastAttempt.set(null); void this.router.navigate(['/dashboard']); },
         error: () => {
           this.saving.set(false);
           this.saveError.set('Could not save your assessment. Please try again.');

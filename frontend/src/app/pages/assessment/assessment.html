@@ -37,12 +37,14 @@
     </div>
     <div class="assessment-skill"><span class="skill-dot"></span>{{ exercise().skill }}</div>
     @if (feedback()) {
+      @if (lastAttempt(); as attempt) {
       <app-exercise-feedback-component
-        [attempt]="lastAttempt()!"
+        [attempt]="attempt"
         [exercise]="exercise()"
         (continued)="nextExercise()"
       />
-    } @else {
+      }
+    } @else if (!saving()) {
       <app-excercise-component
         [exercise]="exercise()"
         mode="assessment"
