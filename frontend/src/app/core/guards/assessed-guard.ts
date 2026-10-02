@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { UserService } from '../services/user-service';
+import { guardErrorResult } from './guard-error';
 
 export const AssessedGuard: CanActivateFn = () => {
   const users = inject(UserService);
@@ -13,6 +14,6 @@ export const AssessedGuard: CanActivateFn = () => {
       if (!users.onboardingCompleted()) return router.createUrlTree(['/onboarding']);
       return router.createUrlTree(['/assessment']);
     }),
-    catchError(() => of(router.createUrlTree(['/login']))),
+    catchError((err) => of(guardErrorResult(err, router))),
   );
 };
