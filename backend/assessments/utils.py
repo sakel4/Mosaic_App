@@ -15,16 +15,13 @@ SKILL_MAP = {
     "decoding_and_word_recognition": Skill.DECODING.value,
     "visual_retrieval_speed": Skill.NAMING_SPEED.value,
 }
-RESPONSE_TYPE_MAP = {
-    "typed_text": ResponseType.SPELLING.value,
-}
 
 
 class InvalidAssessmentError(ValueError):
     pass
 
 
-def insert_assessment(data: Mapping[str, Any]) -> Assessment:
+def insert_assessment(data: Mapping[str, Any], user=None) -> Assessment:
     """Insert an Assessment and its exercises from a structure_*.json-shaped dict.
 
     Accepts either {"assessment": {...}} or the inner assessment object.
@@ -44,6 +41,7 @@ def insert_assessment(data: Mapping[str, Any]) -> Assessment:
         estimated_duration_seconds=data.get("estimated_duration_seconds"),
         estimated_voice_duration_seconds=data.get("estimated_voice_duration_seconds"),
         assessment_type=data.get("assessment_type", ""),
+        user=user,
     )
     exercises = [_build_exercise(assessment, ex) for ex in data["excercises"]]
 
@@ -66,7 +64,7 @@ def _build_exercise(assessment: Assessment, ex: Mapping[str, Any]) -> Assessment
 
     kind = ex.get("kind", "")
     skill = SKILL_MAP.get(ex.get("skill"), ex.get("skill", ""))
-    response_type = RESPONSE_TYPE_MAP.get(ex.get("response_type"), ex.get("response_type", ""))
+    response_type = ex.get("response_type", "")
 
     for label, value, valid in (
         ("kind", kind, Kind.values),

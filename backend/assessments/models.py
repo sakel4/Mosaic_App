@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
@@ -16,6 +17,14 @@ class Assessment(models.Model):
     estimated_duration_seconds = models.IntegerField(blank=True, null=True)
     estimated_voice_duration_seconds = models.IntegerField(blank=True, null=True)
     assessment_type = models.CharField(max_length=100, choices=AssessmentType.choices, blank=True, default="")
+    # Set for per-learner generated types (exercise, real_life); null for the shared default assessments.
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="generated_assessments",
+        null=True,
+        blank=True,
+    )
     
     class Meta:
         db_table = "assessments"
