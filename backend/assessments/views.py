@@ -1,4 +1,5 @@
 from django.db.models import Prefetch
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,8 +7,8 @@ from rest_framework.views import APIView
 from user.models import Profile
 
 from .choices import AssessmentType
-from .models import Assessment, AssessmentExcercise
-from .serializers import AssessmentSerializer
+from .models import Assessment, AssessmentEvaluation, AssessmentExcercise
+from .serializers import AssessmentSerializer, EvaluateAssessmentSerializer
 
 
 class InitialAssessmentsView(APIView):
@@ -32,3 +33,27 @@ class InitialAssessmentsView(APIView):
             .order_by("-created_at")
         )
         return Response(AssessmentSerializer(assessments, many=True).data)
+
+
+class EvaluateAssessmentView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        serializer = EvaluateAssessmentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        assessment = get_object_or_404(Assessment, pk=data["assessment_id"])
+        evaluation = AssessmentEvaluation.objects.create(
+            assessment=assessment,
+            user_id=request.user,
+            answers=data["answers"],
+        )
+
+        # TODO 1: request the evaluation from the LLM, sending the assessment exercises
+        #         and the learner's answers (data["is_initial"] tells whether this is the baseline).
+        # TODO 2: parse the LLM response, create a SkillHistory with the updated skill scores,
+        #         set evaluation.updated_skills and evaluation.error_types, then save.
+        # TODO 3: update the user's current skill scores from the new SkillHistory.
+
+        return Response({"id": evaluation.pk}, status=status.HTTP_201_CREATED)
