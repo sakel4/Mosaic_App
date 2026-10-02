@@ -47,12 +47,15 @@
             <label class="field"
               >Age group
               <select formControlName="ageGroup">
-              <option value="">Choose an age group</option>
+                <option value="">Choose an age group</option>
                 <option value="under_12">Under 12</option>
                 <option value="12_15">12–15</option>
                 <option value="16_18">16–18</option>
                 <option value="19_plus">19+</option>
               </select>
+              @if (form.controls.ageGroup.touched && form.controls.ageGroup.invalid) {
+                <small class="field-error">Choose an age group to continue.</small>
+              }
             </label>
           </div>
         }
@@ -66,6 +69,9 @@
               </label>
             }
           </div>
+          @if (form.controls.goal.touched && form.controls.goal.invalid) {
+            <small class="field-error">Choose a learning goal to continue.</small>
+          }
         }
         @case (2) {
           <app-interest-picker-component

@@ -35,9 +35,13 @@ export class Onboarding {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    ageGroup: new FormControl(this.users.profile().ageGroup, { nonNullable: true }),
-    goal: new FormControl(this.users.profile().learningGoals[0] ?? this.goals[0], {
+    ageGroup: new FormControl(this.users.profile().ageGroup, {
       nonNullable: true,
+      validators: [Validators.required],
+    }),
+    goal: new FormControl(this.users.profile().learningGoals[0] ?? '', {
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     interests: new FormControl<LearnerInterest[]>(
       normalizeLearnerInterests(this.users.profile().interests),
@@ -106,8 +110,13 @@ export class Onboarding {
   }
 
   next(): void {
-    if (this.step() === 0 && !this.form.controls.name.valid) {
+    if (this.step() === 0 && (!this.form.controls.name.valid || !this.form.controls.ageGroup.valid)) {
       this.form.controls.name.markAsTouched();
+      this.form.controls.ageGroup.markAsTouched();
+      return;
+    }
+    if (this.step() === 1 && !this.form.controls.goal.valid) {
+      this.form.controls.goal.markAsTouched();
       return;
     }
     if (this.step() < 3) {
