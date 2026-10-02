@@ -57,3 +57,35 @@ class EvaluateAssessmentView(APIView):
         # TODO 3: update the user's current skill scores from the new SkillHistory.
 
         return Response({"id": evaluation.pk}, status=status.HTTP_201_CREATED)
+
+
+class GenerateAssessmentView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    assessment_type = None
+
+    def post(self, request):
+        user = request.user
+        if not (user.on_bording_completed and user.assessment_completed):
+            return Response(
+                {"detail": "Complete onboarding and the initial assessment before generating assessments."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        profile = Profile.objects.select_related("skills").filter(user_id=user.pk).first()
+        if profile is None:
+            return Response({"detail": "Learner profile not found."}, status=status.HTTP_409_CONFLICT)
+        skills = profile.skills
+
+        # TODO a: generate the assessment of self.assessment_type with the LLM using the user's current skills.
+        # TODO b: save the generated assessment (e.g. with insert_assessment).
+        # TODO c: return the saved assessment serialized with AssessmentSerializer.
+
+        return Response({"detail": "Not implemented."}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+
+class GenerateExerciseView(GenerateAssessmentView):
+    assessment_type = AssessmentType.EXCERCISE
+
+
+class GenerateRealLifeView(GenerateAssessmentView):
+    assessment_type = AssessmentType.REAL_LIFE
