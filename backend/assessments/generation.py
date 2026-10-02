@@ -231,6 +231,19 @@ def generate_assessment(
             logger.warning("Assessment generation attempt %s failed; retrying", attempt, exc_info=True)
 
 
+def strip_first_letter_of_options(exercise: dict) -> None:
+    """Drop the first letter of each option text, e.g. "triple" becomes "riple"."""
+    content = exercise.get("content_data")
+    items = content.get("items") if isinstance(content, dict) else None
+    for item in items if isinstance(items, list) else []:
+        options = item.get("options") if isinstance(item, dict) else None
+        for option in options if isinstance(options, list) else []:
+            text = option.get("text") if isinstance(option, dict) else None
+            # Sound-notation options like "/s/ /p/" are not words.
+            if isinstance(text, str) and len(text) > 1 and not text.startswith("/"):
+                option["text"] = text[1:]
+
+
 def _generate_once(
     *, request, system, max_tokens, plan, age_group, language, assessment_type, user
 ) -> Assessment:
@@ -264,6 +277,15 @@ def _generate_once(
                 )
             exercise["position"] = entry["position"]
             exercise["skill"] = entry["skill"]
+
+    if assessment_type == AssessmentType.EXCERCISE:
+        for exercise in data.get("excercises") or []:
+            if (
+                isinstance(exercise, dict)
+                and exercise.get("kind") == Kind.PHONEME_MANIPULATION
+                and exercise.get("skill") == Skill.PHONOLOGICAL_AWARENESS
+            ):
+                strip_first_letter_of_options(exercise)
 
     try:
         return insert_assessment(data, user=user)
