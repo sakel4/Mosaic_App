@@ -1,60 +1,80 @@
 <section class="page">
   @if (isChild()) {
-    <header class="kid-welcome">
-      <span class="kid-mascot" aria-hidden="true">&#x1F31F;</span>
-      <div><p class="eyebrow">YOUR LEARNING ADVENTURE</p>
-        <h1 class="page-title">Ready to explore, {{ firstName }}?</h1>
-        <p class="page-subtitle">Try something new and collect a star. Every try counts!</p>
-      </div>
-    </header>
-    <p class="sample-note">Sample progress data</p>
-    <div class="kid-stats" aria-label="Your adventure so far">
-      <article class="surface-card"><span aria-hidden="true">&#x2B50;</span><strong>{{ progress().exercisesCompleted }}</strong><p>stars collected</p></article>
-      <article class="surface-card"><span aria-hidden="true">&#x1F680;</span><strong>Level {{ level() }}</strong><p>learning explorer</p></article>
-      <article class="surface-card"><span aria-hidden="true">&#x1F31E;</span><strong>{{ progress().currentStreak }} days</strong><p>of adventures</p></article>
+  <header class="kid-welcome">
+    <span class="kid-mascot" aria-hidden="true">&#x1F31F;</span>
+    <div>
+      <p class="eyebrow">YOUR LEARNING ADVENTURE</p>
+      <h1 class="page-title">Ready to explore, {{ firstName }}?</h1>
+      <p class="page-subtitle">Try something new and collect a star. Every try counts!</p>
     </div>
-    <div class="dashboard-grid kid-grid">
-      <article class="next-activity surface-card">
-        <p class="eyebrow">YOUR NEXT QUEST</p>
-        @if (!assessmentCompleted) {
-          <h2>Discover your super skills</h2>
-          <p>Try a few activities to find your starting point. Take your time!</p>
-          <a class="primary-button" routerLink="/assessment">Start exploring <span aria-hidden="true">&#x1F680;</span></a>
-        } @else {
-          <h2>{{ activity.title }}</h2>
-          <p>{{ activity.description }}</p>
-          <p>One little activity. One shiny star. Ready?</p>
-          <a class="primary-button" [routerLink]="activity.type === 'real-world' ? '/real-world' : '/practice'">Let's play <span aria-hidden="true">&#x1F680;</span></a>
+  </header>
+  <p class="sample-note">Sample progress data</p>
+  <div class="kid-stats" aria-label="Your adventure so far">
+    <article class="surface-card"><span aria-hidden="true">&#x2B50;</span><strong>{{ progress().exercisesCompleted
+        }}</strong>
+      <p>stars collected</p>
+    </article>
+    <article class="surface-card"><span aria-hidden="true">&#x1F680;</span><strong>Level {{ level() }}</strong>
+      <p>learning explorer</p>
+    </article>
+    <article class="surface-card"><span aria-hidden="true">&#x1F31E;</span><strong>{{ progress().currentStreak }}
+        days</strong>
+      <p>of adventures</p>
+    </article>
+  </div>
+  <div class="dashboard-grid kid-grid">
+    <article class="next-activity surface-card">
+      <p class="eyebrow">YOUR NEXT QUEST</p>
+      @if (!assessmentCompleted) {
+      <h2>Discover your super skills</h2>
+      <p>Try a few activities to find your starting point. Take your time!</p>
+      <a class="primary-button" routerLink="/assessment">Start exploring <span aria-hidden="true">&#x1F680;</span></a>
+      } @else {
+      <h2>{{ activity.title }}</h2>
+      <p>{{ activity.description }}</p>
+      <p>One little activity. One shiny star. Ready?</p>
+      <a class="primary-button" [routerLink]="activity.type === 'real-world' ? '/real-world' : '/practice'">Let's play
+        <span aria-hidden="true">&#x1F680;</span></a>
+      }
+    </article>
+    <section class="progress-card surface-card" aria-labelledby="kid-progress-heading">
+      <p class="eyebrow">STAR COLLECTOR</p>
+      <h2 id="kid-progress-heading">Your next level is waiting!</h2>
+      <p>{{ 10 - levelStars() }} more {{ 10 - levelStars() === 1 ? 'activity' : 'activities' }} to reach Level {{
+        level() + 1 }}.</p>
+      <div class="kid-star-trail" role="img"
+        [attr.aria-label]="levelStars() + ' of 10 stars collected toward your next level'">
+        @for (star of [0,1,2,3,4,5,6,7,8,9]; track star) {
+        <span [class.collected]="star < levelStars()" aria-hidden="true">&#x2B50;</span>
         }
-      </article>
-      <section class="progress-card surface-card" aria-labelledby="kid-progress-heading">
-        <p class="eyebrow">STAR COLLECTOR</p>
-        <h2 id="kid-progress-heading">Your next level is waiting!</h2>
-        <p>{{ 10 - levelStars() }} more {{ 10 - levelStars() === 1 ? 'activity' : 'activities' }} to reach Level {{ level() + 1 }}.</p>
-        <div class="kid-star-trail" role="img" [attr.aria-label]="levelStars() + ' of 10 stars collected toward your next level'">
-          @for (star of [0,1,2,3,4,5,6,7,8,9]; track star) {
-            <span [class.collected]="star < levelStars()" aria-hidden="true">&#x2B50;</span>
-          }
-        </div>
-        <a class="secondary-button" routerLink="/progress">See your treasure shelf <span aria-hidden="true">&#x1F3C6;</span></a>
-      </section>
-    </div>
-    <nav class="kid-options" aria-label="Choose an adventure">
-      <a class="surface-card" routerLink="/practice"><span aria-hidden="true">&#x1F3AE;</span><strong>Play and practice</strong><p>Collect a star with your next activity.</p></a>
-      <a class="surface-card" routerLink="/real-world"><span aria-hidden="true">&#x1F30D;</span><strong>Everyday adventures</strong><p>Explore words you meet in real life.</p></a>
-    </nav>
-    <p class="gentle-note">Trying earns stars, even when an answer is tricky. Take a break whenever you need.</p>
+      </div>
+      <a class="secondary-button" routerLink="/progress">See your treasure shelf <span
+          aria-hidden="true">&#x1F3C6;</span></a>
+    </section>
+  </div>
+  <nav class="kid-options" ria-label="Choose an adventure">
+    <a class="surface-card" routerLink="/practice"><span aria-hidden="true">&#x1F3AE;</span><strong>Play and
+        practice</strong>
+      <p>Collect a star with your next activity.</p>
+    </a>
+    <a class="surface-card" routerLink="/real-world"><span aria-hidden="true">&#x1F30D;</span><strong>Everyday
+        adventures</strong>
+      <p>Explore words you meet in real life.</p>
+    </a>
+  </nav>
+  <p class="gentle-note">Trying earns stars, even when an answer is tricky. Take a break whenever you need.</p>
   } @else {
   <header class="welcome">
     <div>
-      <p class="eyebrow">SUNDAY, SEPTEMBER 27</p>
+      <p class="eyebrow">
+        {{ currentDate | date:'EEEE, MMMM d' | uppercase }}
+      </p>
+
       <h1 class="page-title">Good afternoon, {{ firstName }} <span aria-hidden="true">✳</span></h1>
       <p class="page-subtitle">A little practice today can take you a long way.</p>
     </div>
     @if (!assessmentCompleted) {
-      <a class="assessment-link" routerLink="/assessment"
-        ><span aria-hidden="true">＋</span> Start an assessment</a
-      >
+    <a class="assessment-link" routerLink="/assessment"><span aria-hidden="true">＋</span> Start an assessment</a>
     }
   </header>
 
@@ -64,11 +84,8 @@
       <h2>{{ activity.title }}</h2>
       <p>{{ activity.description }}</p>
       <p>{{ activity.reason }}</p>
-      <a
-        class="primary-button"
-        [routerLink]="activity.type === 'real-world' ? '/real-world' : '/practice'"
-        >Start activity</a
-      >
+      <a class="primary-button" [routerLink]="activity.type === 'real-world' ? '/real-world' : '/practice'">Start
+        activity</a>
     </article>
     <section class="progress-card surface-card" aria-labelledby="progress-heading">
       <div class="section-heading">
@@ -80,28 +97,20 @@
       </div>
       <div class="skill-list">
         @for (skill of progress().skills.slice(0, 3); track skill.id) {
-          <div class="skill-row">
-            <div class="skill-label">
-              <span>{{ skill.name }}</span
-              ><strong>{{ skill.progress }}%</strong>
-            </div>
-            <div
-              class="progress-track"
-              role="progressbar"
-              [attr.aria-valuenow]="skill.progress"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              [attr.aria-label]="skill.name"
-            >
-              <div class="progress-fill" [style.width.%]="skill.progress"></div>
-            </div>
-            <small>↑ {{ skill.change }}% since you started</small>
+        <div class="skill-row">
+          <div class="skill-label">
+            <span>{{ skill.name }}</span><strong>{{ skill.progress }}%</strong>
           </div>
+          <div class="progress-track" role="progressbar" [attr.aria-valuenow]="skill.progress" aria-valuemin="0"
+            aria-valuemax="100" [attr.aria-label]="skill.name">
+            <div class="progress-fill" [style.width.%]="skill.progress"></div>
+          </div>
+          <small>↑ {{ skill.change }}% since you started</small>
+        </div>
         }
       </div>
-      <a class="text-button progress-link" routerLink="/progress"
-        >Explore your progress <span aria-hidden="true">→</span></a
-      >
+      <a class="text-button progress-link" routerLink="/progress">Explore your progress <span
+          aria-hidden="true">→</span></a>
     </section>
   </div>
 
@@ -109,8 +118,7 @@
     <article class="stat-card surface-card">
       <span class="stat-icon warm" aria-hidden="true">↗</span>
       <div>
-        <strong>{{ progress().exercisesCompleted }}</strong
-        ><span>activities completed</span>
+        <strong>{{ progress().exercisesCompleted }}</strong><span>activities completed</span>
       </div>
     </article>
     <article class="stat-card surface-card">

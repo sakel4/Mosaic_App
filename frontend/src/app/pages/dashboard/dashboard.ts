@@ -4,9 +4,10 @@ import { UserService } from '../../core/services/user-service';
 import { ExerciseService } from '../../core/services/exercise-service';
 import { ProgressService } from '../../core/services/progress-service';
 import { computed } from '@angular/core';
+import { DatePipe, UpperCasePipe } from '@angular/common'
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, DatePipe, UpperCasePipe],
   selector: 'app-dashboard',
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
@@ -20,6 +21,8 @@ export class Dashboard {
   readonly isChild = computed(() => this.users.profile().ageGroup === 'under_12');
   readonly level = computed(() => Math.floor(this.progress().exercisesCompleted / 10) + 1);
   readonly levelStars = computed(() => this.progress().exercisesCompleted % 10);
+
+  currentDate = new Date();
 
   get assessmentCompleted(): boolean {
     return this.users.assessmentCompleted();
