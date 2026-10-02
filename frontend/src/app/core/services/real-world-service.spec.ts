@@ -19,20 +19,17 @@ describe('RealWorldService authenticated requests', () => {
     service = TestBed.inject(RealWorldService);
   });
   afterEach(() => http.verify());
-  it('requests a generated real-life set with the user token', () => {
-    service.getSet().subscribe();
-    const request = http.expectOne(`${environment.apiUrl}/real_life_set/`);
-    expect(request.request.method).toBe('POST');
-    expect(request.request.headers.get('Authorization')).toBe('Bearer learner-token');
-    request.flush({ id: 'set-1', category: 'Money', age_group: { '12_15': [] } });
-  });
-
-  it('sends the per-exercise results to the evaluation endpoint', () => {
-    service.evaluate('set-1', { 'set-1_01': true, 'set-1_02': false }).subscribe();
-    const request = http.expectOne(`${environment.apiUrl}/real_life_set/evaluate/`);
-    expect(request.request.method).toBe('POST');
-    expect(request.request.headers.get('Authorization')).toBe('Bearer learner-token');
-    expect(request.request.body).toEqual({ real_life_set_id: 'set-1', answers: { 'set-1_01': true, 'set-1_02': false } });
-    request.flush({ id: 'eval-1', correct: 1, total: 2 });
+  it('fetches the current user daily status and sends chosen answers to the API', () => {
+    service.getDailyExercises().subscribe();
+    const daily = http.expectOne(`${environment.apiUrl}/assessments/real_life/daily/`);
+    expect(daily.request.method).toBe('GET');
+    expect(daily.request.headers.get('Authorization')).toBe('Bearer learner-token');
+    daily.flush({ exercises: [] });
+    service.completeExercise('attempt-1', 'Get ready to leave').subscribe();
+    const complete = http.expectOne(`${environment.apiUrl}/assessments/real_life/attempt-1/complete/`);
+    expect(complete.request.headers.get('Authorization')).toBe('Bearer learner-token');
+    expect(complete.request.method).toBe('POST');
+    expect(complete.request.body).toEqual({ answer: 'Get ready to leave' });
+    complete.flush({ completed_at: '2026-10-02T10:00:00Z', correct: true });
   });
 });

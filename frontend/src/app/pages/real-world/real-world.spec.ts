@@ -3,27 +3,30 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { RealWorld } from './real-world';
-import { RealLifeSet } from '../../core/models/real-life-set.model';
+import { DailyRealLife, DailyRealLifeAttempt } from '../../core/models/daily-real-life.model';
+import { ProgressService } from '../../core/services/progress-service';
 import { ExcerciseComponent } from '../../shared/components/exercise-component/exercise-component';
 
-const setUrl = '/real_life_set/';
-const evaluateUrl = '/real_life_set/evaluate/';
-const realLifeSet = (): RealLifeSet => ({
-  id: 'set-1', category: 'Getting ready',
-  age_group: { '12_15': [1, 2, 3].map(index => ({
-    id: `set-1_0${index}`, title: `Getting ready ${index}`, context: 'GETTING READY',
-    information: ['Leave home at 3:30 PM.'], question: 'What should you do now?', options: ['Get ready', 'Go to bed'],
-    correct_answer: ['Get ready'],
-  })) },
+const dailyUrl = '/assessments/real_life/daily/';
+const scenario = (index: number, completed = false): DailyRealLifeAttempt => ({
+  attempt_id: `attempt-${index}`,
+  exercise: { id: `scenario-${index}`, title: `Getting ready ${index}`, context: 'GETTING READY',
+    information: ['Leave home at 3:30 PM.'], question: 'What should you do now?', options: ['Get ready', 'Go to bed'] },
+  completed_at: completed ? '2026-10-02T10:00:00Z' : null,
+  answer: completed ? 'Get ready' : null, correct: completed ? true : null,
+  correct_answer: completed ? 'Get ready' : null,
+});
+const daily = (count = 0): DailyRealLife => ({
+  date: '2026-10-02', daily_limit: 3, completed: count, remaining: 3 - count, locked: count === 3,
+  next_available_at: '2026-10-03T00:00:00+03:00', exercises: [1, 2, 3].map(index => scenario(index, index <= count)),
 });
 
-describe('RealWorld real-life set integration', () => {
+describe('RealWorld daily API integration', () => {
   let fixture: ComponentFixture<RealWorld>;
   let http: HttpTestingController;
   let page: RealWorld;
   beforeEach(() => {
-    localStorage.removeItem('mosaic.realWorld.completedAt');
-    TestBed.configureTestingModule({ imports: [RealWorld], providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({ imports: [RealWorld], providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ProgressService, useValue: { refresh: vi.fn() } }] });
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(RealWorld);
     page = fixture.componentInstance;
@@ -31,70 +34,88 @@ describe('RealWorld real-life set integration', () => {
   });
   afterEach(() => http.verify());
 
-  it('loads a generated set and shows the first scenario', () => {
-    expect(fixture.nativeElement.textContent).toContain('Loading your scenarios');
-    const request = http.expectOne(setUrl);
-    expect(request.request.method).toBe('POST');
-    request.flush(realLifeSet());
+  it('loads saved completion status and skips completed scenarios', () => {
+    expect(fixture.nativeElement.textContent).toContain('Loading your daily scenarios');
+    http.expectOne(dailyUrl).flush(daily(1));
     fixture.detectChanges();
-    expect(page.active()?.id).toBe('set-1_01');
-    expect(fixture.nativeElement.textContent).toContain('0 of 3 completed');
-    expect(fixture.nativeElement.querySelectorAll('.board-line')).toHaveLength(1);
+    expect(page.active()?.attempt_id).toBe('attempt-2');
+    expect(fixture.nativeElement.textContent).toContain('1 of 3 completed today');
+    expect(fixture.nativeElement.querySelectorAll('.daily-scenarios .completed')).toHaveLength(1);
+    expect(page.exercise()?.content_data.items?.[0].correct_option_id).toBeUndefined();
   });
 
-  it('shows feedback after each answer and evaluates the set after the last one', () => {
-    http.expectOne(setUrl).flush(realLifeSet());
+  it('submits the chosen option and uses backend correctness after saving', () => {
+    http.expectOne(dailyUrl).flush(daily());
     fixture.detectChanges();
-    const choices = ['Get ready', 'Go to bed', 'Get ready'];
-    ['set-1_01', 'set-1_02', 'set-1_03'].forEach((id, position) => {
-      const child = fixture.debugElement.query(By.directive(ExcerciseComponent)).componentInstance as ExcerciseComponent;
-      child.selected.set(choices[position]);
-      child.submit();
-      fixture.detectChanges();
-      expect(page.results()[id]).toBe(choices[position] === 'Get ready');
-      expect(fixture.nativeElement.querySelector('app-exercise-feedback-component')).not.toBeNull();
-      expect(fixture.nativeElement.querySelector('app-excercise-component')).toBeNull();
-      page.next();
-      fixture.detectChanges();
-    });
-    const evaluate = http.expectOne(`${evaluateUrl}`);
-    expect(evaluate.request.body).toEqual({
-      real_life_set_id: 'set-1', answers: { 'set-1_01': true, 'set-1_02': false, 'set-1_03': true },
-    });
-    evaluate.flush({ id: 'eval-1', correct: 2, total: 3 });
-    fixture.detectChanges();
-    expect(page.finished()).toBe(true);
-    expect(fixture.nativeElement.textContent).toContain('You got 2 of 3 right.');
-  });
-
-  it('lets the learner retry saving results after an evaluation error', () => {
-    http.expectOne(setUrl).flush(realLifeSet());
-    fixture.detectChanges();
-    for (let position = 0; position < 3; position++) {
-      page.onCompleted({ exerciseId: `set-1_0${position + 1}`, answer: 'Get ready', correct: true, responseTime: 1 });
-      page.next();
-    }
-    http.expectOne(evaluateUrl).flush({}, { status: 503, statusText: 'Unavailable' });
-    expect(page.evaluateError()).toContain('Please try again');
-    page.submitEvaluation();
-    http.expectOne(evaluateUrl).flush({ id: 'eval-1', correct: 3, total: 3 });
-    expect(page.evaluation()?.correct).toBe(3);
-    expect(page.evaluateError()).toBe('');
-  });
-
-  it('ignores answers for a different exercise', () => {
-    http.expectOne(setUrl).flush(realLifeSet());
-    page.onCompleted({ exerciseId: 'other', answer: 'Get ready', correct: false, responseTime: 1 });
+    const child = fixture.debugElement.query(By.directive(ExcerciseComponent)).componentInstance as ExcerciseComponent;
+    child.selected.set('Get ready');
+    child.submit();
+    expect(page.saving()).toBe(true);
     expect(page.feedback()).toBe(false);
-    expect(page.results()).toEqual({});
+    const record = vi.spyOn(TestBed.inject(ProgressService), 'refresh');
+    const request = http.expectOne('/assessments/real_life/attempt-1/complete/');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ answer: 'Get ready' });
+    request.flush(scenario(1, true));
+    fixture.detectChanges();
+    expect(page.lastAttempt()?.correct).toBe(true);
+    expect(record).toHaveBeenCalledTimes(1);
+    expect(fixture.nativeElement.textContent).toContain('Nice work!');
+    expect(fixture.nativeElement.querySelector('app-excercise-component')).toBeNull();
+    page.onCompleted({ exerciseId: 'attempt-1', answer: 'Go to bed', correct: false, responseTime: 1 });
+    http.expectNone('/assessments/real_life/attempt-1/complete/');
+    page.tryAnother();
+    http.expectOne(dailyUrl).flush(daily(1));
+    expect(page.active()?.attempt_id).toBe('attempt-2');
   });
 
-  it('recovers from load errors and requests a new set', () => {
-    http.expectOne(setUrl).flush({}, { status: 503, statusText: 'Unavailable' });
+  it('preserves pending answers and retries saving without counting failed requests', () => {
+    http.expectOne(dailyUrl).flush(daily());
+    const record = vi.spyOn(TestBed.inject(ProgressService), 'refresh');
+    page.onCompleted({ exerciseId: 'attempt-1', answer: 'Go to bed', correct: true, responseTime: 100 });
+    page.onCompleted({ exerciseId: 'attempt-1', answer: 'Get ready', correct: true, responseTime: 100 });
+    http.expectOne('/assessments/real_life/attempt-1/complete/').flush({}, { status: 503, statusText: 'Unavailable' });
+    fixture.detectChanges();
+    expect(record).not.toHaveBeenCalled();
+    expect(page.daily()?.completed).toBe(0);
+    expect(fixture.nativeElement.querySelector('app-excercise-component')).toBeNull();
+    page.saveCompletion();
+    const retry = http.expectOne('/assessments/real_life/attempt-1/complete/');
+    expect(retry.request.body).toEqual({ answer: 'Go to bed' });
+    retry.flush({ ...scenario(1, true), answer: 'Go to bed', correct: false });
+    expect(page.lastAttempt()?.correct).toBe(false);
+    expect(record).toHaveBeenCalledTimes(1);
+    expect(page.daily()?.completed).toBe(1);
+  });
+
+  it('does not allow another scenario once all three are complete, including on reload', () => {
+    http.expectOne(dailyUrl).flush(daily(2));
+    page.onCompleted({ exerciseId: 'attempt-3', answer: 'Get ready', correct: false, responseTime: 100 });
+    http.expectOne('/assessments/real_life/attempt-3/complete/').flush(scenario(3, true));
+    expect(page.daily()?.locked).toBe(true);
+    page.tryAnother();
+    http.expectOne(dailyUrl).flush(daily(3));
+    fixture.detectChanges();
+    expect(page.active()).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain("You've completed all your real-life scenarios for today");
+    expect(fixture.nativeElement.querySelector('app-excercise-component')).toBeNull();
+    page.onCompleted({ exerciseId: 'attempt-3', answer: 'Get ready', correct: true, responseTime: 100 });
+    http.expectNone('/assessments/real_life/attempt-3/complete/');
+  });
+
+  it('recovers from load errors and expired scenarios', () => {
+    http.expectOne(dailyUrl).flush({}, { status: 503, statusText: 'Unavailable' });
     expect(page.loadError()).toContain('Please try again');
-    page.loadSet();
-    http.expectOne(setUrl).flush(realLifeSet());
-    expect(page.loadError()).toBe('');
-    expect(page.exercises()).toHaveLength(3);
+    page.loadDaily();
+    http.expectOne(dailyUrl).flush(daily());
+    page.onCompleted({ exerciseId: 'attempt-1', answer: 'Get ready', correct: false, responseTime: 100 });
+    http.expectOne('/assessments/real_life/attempt-1/complete/').flush({}, { status: 409, statusText: 'Conflict' });
+    expect(page.expired()).toBe(true);
+    page.saveCompletion();
+    http.expectNone('/assessments/real_life/attempt-1/complete/');
+    page.loadDaily();
+    http.expectOne(dailyUrl).flush({ ...daily(), date: '2026-10-03' });
+    expect(page.pendingAttempt()).toBeNull();
+    expect(page.expired()).toBe(false);
   });
 });
