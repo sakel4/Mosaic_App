@@ -9,32 +9,27 @@
       <div class="scenario-heading">
         <span class="scenario-icon" aria-hidden="true">⌖</span>
         <div>
-          <span class="eyebrow">GETTING AROUND</span>
-          <h2>A bus to the city</h2>
+          <span class="eyebrow">{{ scenario.context }}</span>
+          <h2>{{ scenario.title }}</h2>
         </div>
       </div>
-      <article class="travel-board" aria-label="Bus departure information">
-        <div class="board-top"><strong>LIVE DEPARTURES</strong><span>● ON TIME</span></div>
-        <div class="route-name">
-          <span class="route-number">12</span><span>City Centre</span
-          ><span class="route-arrow" aria-hidden="true">→</span>
+      <article class="travel-board" [attr.aria-label]="scenario.title">
+        <div class="board-top"><strong>{{ scenario.context }}</strong></div>
+        <div class="board-lines">
+          @for (line of scenario.information; track $index) {
+            <p class="board-line">{{ line }}</p>
+          }
         </div>
-        <div class="travel-details">
-          <div><small>DEPARTURE</small><strong>08:35</strong></div>
-          <div><small>PLATFORM</small><strong>4</strong></div>
-          <div><small>DESTINATION</small><strong>City Centre</strong></div>
-        </div>
-        <div class="board-footer">Next bus · 09:05 &nbsp; Platform 2</div>
       </article>
       @if (feedback()) {
         <app-exercise-feedback-component
           [attempt]="lastAttempt()!"
-          [exercise]="exercise"
+          [exercise]="scenario.exercise"
           (continued)="tryAnother()"
         />
       } @else {
         <app-excercise-component
-          [exercise]="exercise"
+          [exercise]="scenario.exercise"
           mode="real-world"
           (completed)="onCompleted($event)"
         />
@@ -42,8 +37,8 @@
     </div>
     <aside class="real-life-aside">
       <span class="aside-label">A REAL-WORLD MOMENT</span>
-      <h3>Plans for the morning</h3>
-      <p>You’re heading into town and checking the departure board before you go.</p>
+      <h3>{{ scenario.title }}</h3>
+      <p>Read the information carefully, then choose your answer.</p>
       <div class="aside-divider"></div>
       <p class="kind-note">
         Real life gives us lots of chances to use reading skills. Take this one at your own pace.
