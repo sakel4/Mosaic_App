@@ -2,61 +2,62 @@
   <header class="page-header">
     <p class="eyebrow">REAL LIFE</p>
     <h1 class="page-title">Reading for the everyday</h1>
-    <p class="page-subtitle">Three small reading moments each day. Take them at your own pace.</p>
+    <p class="page-subtitle">Three small reading moments. Take them at your own pace.</p>
   </header>
-  @if (loading()) {
-    <section class="daily-state surface-card" role="status"><h2>Getting your day ready</h2><p>Loading your daily scenarios...</p></section>
+  @if (locked()) {
+    <section class="daily-state surface-card" role="status"><p class="eyebrow">ALL DONE FOR TODAY</p><h2>Your next set is coming soon</h2><p>You can start a new set of 3 in about {{ hoursLeft() }} {{ hoursLeft() === 1 ? 'hour' : 'hours' }}.</p></section>
+  } @else if (loading()) {
+    <section class="daily-state surface-card" role="status"><h2>Getting your scenarios ready</h2><p>Loading your scenarios...</p></section>
   } @else if (loadError()) {
-    <section class="daily-state surface-card" role="alert"><p>{{ loadError() }}</p><button class="primary-button" (click)="loadDaily()">Try again</button></section>
-  } @else if (daily(); as day) {
+    <section class="daily-state surface-card" role="alert"><p>{{ loadError() }}</p><button class="primary-button" (click)="loadSet()">Try again</button></section>
+  } @else if (set()) {
     <div class="daily-overview surface-card">
-      <strong>{{ day.completed }} of {{ day.daily_limit }} completed today</strong>
-      <ul class="daily-scenarios" aria-label="Today's scenarios">
-        @for (item of day.exercises; track item.attempt_id) {
-          <li [class.completed]="item.completed_at"><span>{{ item.exercise.title }}</span><span class="scenario-status">{{ item.completed_at ? 'Completed' : 'Ready to practice' }}</span></li>
+      <strong>{{ index() }} of {{ exercises().length }} completed</strong>
+      <ul class="daily-scenarios" aria-label="Your scenarios">
+        @for (item of exercises(); track item.id; let i = $index) {
+          <li [class.completed]="i < index()"><span>{{ item.title }}</span><span class="scenario-status">{{ i < index() ? 'Completed' : 'Ready to practice' }}</span></li>
         }
       </ul>
     </div>
-    @if (feedback()) {
-      @if (exercise(); as currentExercise) {
-        <app-exercise-feedback-component [attempt]="lastAttempt()!" [exercise]="currentExercise"
-          [continueLabel]="day.locked ? 'Finish for today' : 'Next scenario'" (continued)="tryAnother()" />
-      }
-    } @else if (day.locked) {
+    @if (finished()) {
       <section class="daily-state surface-card" role="status">
-        <p class="eyebrow">TODAY'S PRACTICE COMPLETE</p><h2>Three small wins. Nicely done.</h2>
-        <p>You've completed all your real-life scenarios for today.</p>
-        <p>Your next set unlocks {{ day.next_available_at | date:'MMM d, h:mm a' }}.</p>
-        <button class="secondary-button" (click)="loadDaily()">Check today's scenarios</button>
+        <p class="eyebrow">PRACTICE COMPLETE</p><h2>Three small wins. Nicely done.</h2>
+        @if (evaluating()) {
+          <p>Saving your results...</p>
+        } @else if (evaluateError()) {
+          <p role="alert">{{ evaluateError() }}</p>
+          <button class="primary-button" (click)="submitEvaluation()">Retry saving results</button>
+        } @else if (evaluation(); as result) {
+          <p>You got {{ result.correct }} of {{ result.total }} right.</p>
+          <p>Come back in 24 hours for your next set.</p>
+        }
       </section>
     } @else if (active(); as scenario) {
-      @if (saving()) {
-        <section class="daily-state surface-card" role="status"><h2>Saving your answer</h2><p>Just a moment...</p></section>
-      } @else if (saveError()) {
-        <section class="daily-state surface-card" role="alert"><p>{{ saveError() }}</p>
-          @if (expired()) { <button class="primary-button" (click)="loadDaily()">Load today's scenarios</button> }
-          @else { <button class="primary-button" (click)="saveCompletion()">Retry saving answer</button> }
-        </section>
-      } @else if (exercise(); as currentExercise) {
+      @if (exercise(); as currentExercise) {
         <div class="scenario-layout">
           <div>
             <div class="scenario-heading"><span class="scenario-icon" aria-hidden="true">&#8982;</span>
-              <div><span class="eyebrow">{{ scenario.exercise.context }}</span><h2>{{ scenario.exercise.title }}</h2></div>
+              <div><span class="eyebrow">{{ scenario.context }}</span><h2>{{ scenario.title }}</h2></div>
             </div>
-            <article class="travel-board" [attr.aria-label]="scenario.exercise.title">
-              <div class="board-top"><strong>{{ scenario.exercise.context }}</strong></div>
-              <div class="board-lines">@for (line of scenario.exercise.information; track $index) { <p class="board-line">{{ line }}</p> }</div>
+            <article class="travel-board" [attr.aria-label]="scenario.title">
+              <div class="board-top"><strong>{{ scenario.context }}</strong></div>
+              <div class="board-lines">@for (line of scenario.information; track $index) { <p class="board-line">{{ line }}</p> }</div>
             </article>
-            <app-excercise-component [exercise]="currentExercise" mode="real-world" (completed)="onCompleted($event)" />
+            @if (feedback()) {
+              <app-exercise-feedback-component [attempt]="lastAttempt()!" [exercise]="currentExercise"
+                [continueLabel]="index() + 1 >= exercises().length ? 'Finish' : 'Next scenario'" (continued)="next()" />
+            } @else {
+              <app-excercise-component [exercise]="currentExercise" mode="real-world" (completed)="onCompleted($event)" />
+            }
           </div>
-          <aside class="real-life-aside"><span class="aside-label">A REAL-WORLD MOMENT</span><h3>{{ scenario.exercise.title }}</h3>
+          <aside class="real-life-aside"><span class="aside-label">A REAL-WORLD MOMENT</span><h3>{{ scenario.title }}</h3>
             <p>Read the information carefully, then choose your answer.</p><div class="aside-divider"></div>
-            <p class="kind-note">Every try counts. Once you finish this scenario, it stays completed for today.</p>
+            <p class="kind-note">Every try counts. Take your time.</p>
           </aside>
         </div>
       }
     } @else {
-      <section class="daily-state surface-card"><p>No scenarios are available right now.</p><button class="secondary-button" (click)="loadDaily()">Refresh scenarios</button></section>
+      <section class="daily-state surface-card"><p>No scenarios are available right now.</p><button class="secondary-button" (click)="loadSet()">Refresh scenarios</button></section>
     }
   }
 </section>
