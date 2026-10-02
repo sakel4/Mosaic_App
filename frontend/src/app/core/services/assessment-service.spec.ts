@@ -51,21 +51,22 @@ describe('AssessmentService HTTP integration', () => {
       .toEqual(['single_choice_set', 'single_choice_set', 'spoken', 'spoken', 'spelling', 'single_choice_set', 'sequence']);
   });
 
-  it('creates the completed assessment object with its ID and every answer shape', () => {
+  it('wraps each correctness result in an answer object', () => {
     service.getAssessment().subscribe();
     http.expectOne(`${environment.apiUrl}/assessments/initial/`).flush(suppliedFixture);
     expect(service.completedAssessment()).toBeNull();
     service.finishAssessment([
       { exerciseId: 'choice', answer: '1', itemAnswers: { a: '1' }, correct: true, responseTime: 1 },
       { exerciseId: 'spoken', answer: 'Maya found a box', correct: true, responseTime: 1 },
-      { exerciseId: 'sequence', answer: '7 1 4', itemAnswers: { b: ['7', '1', '4'] }, correct: true, responseTime: 1 },
+      { exerciseId: 'sequence', answer: '7 1 4', itemAnswers: { b: ['7', '1', '4'] }, correct: false, responseTime: 1 },
     ]);
     expect(service.completedAssessment()).toEqual({
       assessment_id: suppliedFixture[0].id,
+      is_initial: true,
       answers: [
-        { exercise_id: 'choice', answers: { a: '1' } },
-        { exercise_id: 'spoken', answers: { answer: 'Maya found a box' } },
-        { exercise_id: 'sequence', answers: { b: ['7', '1', '4'] } },
+        { choice: { answer: true } },
+        { spoken: { answer: true } },
+        { sequence: { answer: false } },
       ],
     });
     service.getAssessment().subscribe();

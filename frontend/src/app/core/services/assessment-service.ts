@@ -7,7 +7,7 @@ import { AssessmentExercise, AssessmentResponse, assessmentExercises } from '../
 export interface CompletedAssessment {
   assessment_id: string | null;
   is_initial: boolean;
-  answers: Record<string, boolean>[];
+  answers: Record<string, { answer: boolean }>[];
 }
 @Injectable({ providedIn: 'root' })
 export class AssessmentService {
@@ -42,7 +42,7 @@ export class AssessmentService {
         const exercise = this.exercises.find((e) => String(e.id ?? e.position) === String(attempt.exerciseId));
         const itemId = exercise?.content_data.items?.[0]?.id;
         const key = itemId ? `${attempt.exerciseId}_${itemId}` : String(attempt.exerciseId);
-        return { [key]: attempt.correct };
+        return { [key]: { answer: attempt.correct } };
       }),
     });
     console.log('Completed assessment:', this.completedAssessment());
