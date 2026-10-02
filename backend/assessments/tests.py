@@ -1,3 +1,4 @@
+import copy
 import json
 from pathlib import Path
 
@@ -225,3 +226,51 @@ class ExercisePlanTests(TestCase):
                     assessment_type="exercise", age_group="19_plus", skills={"comprehension": 30}
                 )
         self.assertEqual(Assessment.objects.count(), 0)
+
+
+class PhonemeOptionsTests(TestCase):
+    def _generate(self, kind, skill, assessment_type="exercise"):
+        from unittest.mock import patch
+
+        from . import generation
+
+        exercise = {
+            "position": 1,
+            "kind": kind,
+            "skill": skill,
+            "difficulty": 3,
+            "response_type": "single_choice_set",
+            "instruction": "x",
+            "content_data": {
+                "items": [
+                    {
+                        "id": "a",
+                        "audio_prompt": "Say triple in your head. Remove the first /t/ sound.",
+                        "options": [{"id": "1", "text": "triple"}, {"id": "2", "text": "/t/ /r/ /i/"}],
+                    }
+                ]
+            },
+            "answers": {"a": "1"},
+        }
+        reply = {"assessment": {"age_group": "19_plus", "excercises": [copy.deepcopy(exercise) for _ in range(7)]}}
+        with patch.object(generation, "_reference_assessments", return_value=[{}]), patch.object(
+            generation, "converse_json", return_value=reply
+        ), patch.object(generation, "build_exercise_plan", return_value=[
+            {"position": n, "skill": skill, "role": "weakest"} for n in range(1, 8)
+        ]):
+            assessment = generation.generate_assessment(
+                assessment_type=assessment_type, age_group="19_plus", skills={skill: 30}
+            )
+        return assessment.excercises.order_by("position").first().content_data["items"][0]["options"]
+
+    def test_first_letter_is_removed_for_phoneme_manipulation_of_phonological_awareness(self):
+        options = self._generate("phoneme_manipulation", "phonological_awareness")
+        self.assertEqual([o["text"] for o in options], ["riple", "/t/ /r/ /i/"])
+
+    def test_other_kinds_and_skills_are_left_alone(self):
+        options = self._generate("spelling", "spelling")
+        self.assertEqual(options[0]["text"], "triple")
+
+    def test_other_assessment_types_are_left_alone(self):
+        options = self._generate("phoneme_manipulation", "phonological_awareness", assessment_type="real_life")
+        self.assertEqual(options[0]["text"], "triple")

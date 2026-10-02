@@ -5,7 +5,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccessibilityPreferences } from '../../core/models/accessibility-preferences.model';
 import { LearnerInterest } from '../../core/models/learner-interest.model';
-import { LearnerProfile } from '../../core/models/learner-profile.model';
+import {
+  DEFAULT_LEARNING_GOAL,
+  LEARNING_GOALS,
+  LearnerProfile,
+} from '../../core/models/learner-profile.model';
 import { ReadingFont } from '../../core/models/reading-font.model';
 import { LEARNER_INTERESTS } from '../../core/models/learner-interest.model';
 import { InterestPickerComponent } from '../../shared/components/interest-picker-component/interest-picker-component';
@@ -24,6 +28,7 @@ export class Profile {
   private readonly route = inject(ActivatedRoute);
   readonly afterAssessment = this.route.snapshot.queryParamMap.get('afterAssessment') === 'true';
   readonly interestOptions = LEARNER_INTERESTS;
+  readonly goals = LEARNING_GOALS;
   saved = false;
   saveError = '';
   readonly form = new FormGroup({
@@ -32,7 +37,7 @@ export class Profile {
       validators: [Validators.required],
     }),
     ageGroup: new FormControl(this.users.profile().ageGroup, { nonNullable: true }),
-    goal: new FormControl(this.users.profile().learningGoals[0] ?? 'General reading support', {
+    goal: new FormControl(this.users.profile().learningGoals[0] ?? DEFAULT_LEARNING_GOAL, {
       nonNullable: true,
     }),
     interests: new FormControl<LearnerInterest[]>(
@@ -76,7 +81,7 @@ export class Profile {
       this.form.patchValue({
         name: profile.name,
         ageGroup: profile.ageGroup,
-        goal: profile.learningGoals[0] ?? '',
+        goal: profile.learningGoals[0] ?? DEFAULT_LEARNING_GOAL,
         interests: normalizeLearnerInterests(profile.interests),
         ...profile.preferences,
       });
