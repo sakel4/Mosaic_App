@@ -7,7 +7,7 @@ from bedrock import BedrockNotConfigured
 from user.models import Profile, Skill, User
 
 from . import generation
-from .models import RealLifeSet, RealLifeSetExercise
+from .models import RealLifeSet, RealLifeSetEvaluation, RealLifeSetExercise
 
 
 def exercise(**overrides):
@@ -57,7 +57,10 @@ class RealLifeSetViewTests(TestCase):
         self.assertEqual((list(body["age_group"]), body["category"]), (["12_15"], "Money & Shopping"))
         exercises = body["age_group"]["12_15"]
         self.assertEqual(len(exercises), 3)
-        self.assertEqual(list(exercises[0]), ["id", "title", "context", "information", "question", "options"])
+        self.assertEqual(
+            list(exercises[0]), ["id", "title", "context", "information", "question", "options", "correct_answer"]
+        )
+        self.assertEqual(exercises[0]["correct_answer"], ["£3.50"])
         self.assertEqual(RealLifeSet.objects.count(), 1)
         saved = RealLifeSetExercise.objects.first()
         self.assertEqual(saved.correct_answer, ["£3.50"])
@@ -106,3 +109,44 @@ class RealLifeGenerationTests(TestCase):
             real_life_set = generation.generate_real_life_set(age_group="16_18")
         self.assertEqual(mocked.call_count, 2)
         self.assertEqual(real_life_set.exercises.count(), 3)
+
+
+class EvaluateRealLifeSetViewTests(TestCase):
+    URL = "/api/real_life_set/evaluate/"
+
+    def setUp(self):
+        self.user = User.objects.create_user(email="ev@example.com", password="pw")
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+        self.set = RealLifeSet.objects.create(id="set1", age_group="12_15", category="Money")
+        for n in (1, 2, 3):
+            RealLifeSetExercise.objects.create(
+                id=f"set1_0{n}", real_life_set=self.set, title="t", context="c", question="q", options=["a", "b"]
+            )
+
+    def post(self, body):
+        return self.client.post(self.URL, body, format="json")
+
+    def test_requires_authentication(self):
+        self.assertEqual(APIClient().post(self.URL, {}, format="json").status_code, 401)
+
+    def test_saves_the_evaluation_and_returns_the_score(self):
+        answers = {"set1_01": True, "set1_02": False, "set1_03": True}
+        response = self.post({"real_life_set_id": "set1", "answers": answers})
+
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertEqual((response.json()["correct"], response.json()["total"]), (2, 3))
+        saved = RealLifeSetEvaluation.objects.get(pk=response.json()["id"])
+        self.assertEqual((saved.user, saved.real_life_set, saved.answers), (self.user, self.set, answers))
+
+    def test_unknown_set_is_404(self):
+        self.assertEqual(self.post({"real_life_set_id": "nope", "answers": {"x": True}}).status_code, 404)
+
+    def test_exercise_from_another_set_is_rejected(self):
+        response = self.post({"real_life_set_id": "set1", "answers": {"other_01": True}})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(RealLifeSetEvaluation.objects.count(), 0)
+
+    def test_non_boolean_or_empty_answers_are_rejected(self):
+        self.assertEqual(self.post({"real_life_set_id": "set1", "answers": {"set1_01": "maybe"}}).status_code, 400)
+        self.assertEqual(self.post({"real_life_set_id": "set1", "answers": {}}).status_code, 400)
