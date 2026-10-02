@@ -7,7 +7,7 @@ import { AssessmentExercise, AssessmentResponse, assessmentExercises } from '../
 export interface CompletedAssessment {
   assessment_id: string | null;
   is_initial: boolean;
-  answers: Record<string, { answer: boolean }>[];
+  answers: Record<string, { answer: boolean }>;
 }
 @Injectable({ providedIn: 'root' })
 export class AssessmentService {
@@ -34,17 +34,17 @@ export class AssessmentService {
       }),
     );
   }
-  finishAssessment(attempts: ExerciseAttempt[]): void {
+  finishAssessment(attempts: ExerciseAttempt[]): Observable<{ id: string | number }> {
     this.result.set({
       assessment_id: this.assessmentId,
       is_initial: true,
-      answers: attempts.map((attempt) => {
+      answers: Object.fromEntries(attempts.map((attempt) => {
         const exercise = this.exercises.find((e) => String(e.id ?? e.position) === String(attempt.exerciseId));
         const itemId = exercise?.content_data.items?.[0]?.id;
         const key = itemId ? `${attempt.exerciseId}_${itemId}` : String(attempt.exerciseId);
-        return { [key]: { answer: attempt.correct } };
-      }),
+        return [key, { answer: attempt.correct }];
+      })),
     });
-    console.log('Completed assessment:', this.completedAssessment());
+    return this.http.post<{ id: string | number }>('/assessments/evaluate/', this.completedAssessment()!);
   }
 }

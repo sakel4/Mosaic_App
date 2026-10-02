@@ -59,16 +59,21 @@ describe('AssessmentService HTTP integration', () => {
       { exerciseId: 'choice', answer: '1', itemAnswers: { a: '1' }, correct: true, responseTime: 1 },
       { exerciseId: 'spoken', answer: 'Maya found a box', correct: true, responseTime: 1 },
       { exerciseId: 'sequence', answer: '7 1 4', itemAnswers: { b: ['7', '1', '4'] }, correct: false, responseTime: 1 },
-    ]);
+    ]).subscribe();
     expect(service.completedAssessment()).toEqual({
       assessment_id: suppliedFixture[0].id,
       is_initial: true,
-      answers: [
-        { choice: { answer: true } },
-        { spoken: { answer: true } },
-        { sequence: { answer: false } },
-      ],
+      answers: {
+        choice: { answer: true },
+        spoken: { answer: true },
+        sequence: { answer: false },
+      },
     });
+    const evaluation = http.expectOne(`${environment.apiUrl}/assessments/evaluate/`);
+    expect(evaluation.request.method).toBe('POST');
+    expect(evaluation.request.headers.get('Authorization')).toBe('Bearer test-user-token');
+    expect(evaluation.request.body).toEqual(service.completedAssessment());
+    evaluation.flush({ id: 'evaluation-id' });
     service.getAssessment().subscribe();
     http.expectOne(`${environment.apiUrl}/assessments/initial/`).flush(suppliedFixture);
     expect(service.completedAssessment()).toBeNull();

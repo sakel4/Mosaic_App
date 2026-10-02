@@ -57,11 +57,32 @@ describe('Assessment', () => {
     component.onCompleted({ exerciseId: 'last', answer: '7 1 4', correct: true, responseTime: 100 });
     await fixture.whenStable();
     component.nextExercise();
+    TestBed.inject(HttpTestingController).expectOne('/assessments/evaluate/').flush({ id: 'evaluation-id' });
     fixture.detectChanges();
     expect(component.lastAttempt()).toBeNull();
     expect(component.feedback()).toBe(false);
     expect(fixture.nativeElement.querySelector('app-exercise-feedback-component')).toBeNull();
     expect(fixture.nativeElement.querySelector('app-excercise-component')).toBeNull();
+  });
+
+  it('keeps the answers available for retry when evaluation fails', () => {
+    const complete = vi.spyOn(TestBed.inject(UserService), 'completeAssessment');
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate');
+    component.index.set(component.exercises.length - 1);
+    component.onCompleted({ exerciseId: 'last', answer: '7 1 4', correct: false, responseTime: 100 });
+    component.nextExercise();
+    const request = TestBed.inject(HttpTestingController).expectOne('/assessments/evaluate/');
+    const payload = request.request.body;
+    request.flush({ detail: 'Unavailable' }, { status: 503, statusText: 'Service Unavailable' });
+    expect(complete).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(component.saving()).toBe(false);
+    expect(component.saveError()).toContain('Please try again');
+    expect(component.feedback()).toBe(true);
+    component.nextExercise();
+    const retry = TestBed.inject(HttpTestingController).expectOne('/assessments/evaluate/');
+    expect(retry.request.body).toEqual(payload);
+    retry.flush({}, { status: 503, statusText: 'Service Unavailable' });
   });
 
 });

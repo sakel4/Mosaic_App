@@ -6,11 +6,26 @@
   </header>
   <div class="practice-layout">
     <div>
-      @if (setComplete()) {
+      @if (loading()) {
+        <section class="practice-loading surface-card" role="status" aria-live="polite">
+          <div class="loading-mosaic" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <p class="eyebrow">A LITTLE MOMENT TO GET READY</p>
+          <h2>Preparing your next small win</h2>
+          <p class="loading-description">Loading your practice activities, chosen for your learning journey.</p>
+          <div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p class="loading-note">Take a breath. You can go at your own pace.</p>
+        </section>
+      } @else if (loadError()) {
+        <section class="surface-card" role="alert"><p>{{ loadError() }}</p>
+          <button class="primary-button" type="button" (click)="loadPractice()">Try again</button>
+        </section>
+      } @else if (setComplete()) {
         <section class="set-complete surface-card" aria-live="polite">
           <span class="complete-icon" aria-hidden="true">✓</span>
           <p class="eyebrow">PRACTICE SET COMPLETE</p>
-          <h2>That’s six activities done.</h2>
+          <h2>You completed {{ sessionSize() }} activities.</h2>
           <p>You can finish here or start another set whenever you’re ready.</p>
           <div class="complete-actions">
             <a class="secondary-button" routerLink="/dashboard">Finish for now</a>
@@ -19,13 +34,16 @@
             </button>
           </div>
         </section>
-      } @else {
+      } @else if (exercise(); as currentExercise) {
         <div class="exercise-meta">
           <span class="round-icon" aria-hidden="true">Aa</span>
           <div>
-            <strong>{{ exercise().skill }}</strong
-            ><small>Activity {{ completedInSet() + 1 }} of {{ sessionSize }}</small>
+            <strong>{{ skillLabel() }}</strong
+            ><small>Activity {{ completedInSet() + 1 }} of {{ sessionSize() }}</small>
           </div>
+          @if (showDifficulty() && currentExercise.difficulty != null) {
+            <span class="difficulty-badge">Difficulty <strong>{{ currentExercise.difficulty }}</strong></span>
+          }
           <span class="session-count"
             >{{ progress().exercisesCompleted }} activities<br />completed</span
           >
@@ -33,13 +51,13 @@
         @if (feedback()) {
           <app-exercise-feedback-component
             [attempt]="lastAttempt()!"
-            [exercise]="exercise()"
-            [continueLabel]="completedInSet() === sessionSize ? 'Finish this set' : 'Next activity'"
+            [exercise]="currentExercise"
+            [continueLabel]="completedInSet() === sessionSize() ? 'Finish this set' : 'Next activity'"
             (continued)="continuePractice()"
           />
         } @else {
           <app-excercise-component
-            [exercise]="exercise()"
+            [exercise]="currentExercise"
             mode="practice"
             (completed)="onCompleted($event)"
           />

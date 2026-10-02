@@ -1,10 +1,19 @@
 ﻿import { Injectable } from '@angular/core';
 import { Exercise } from '../models/exercise.model';
+import { inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+import { AssessmentExercise, AssessmentResponse, assessmentExercises } from '../models/assessment.model';
 import { Activity } from '../models/activity.model';
 import { exercises, realWorldExercise } from './dummy_data';
 
 @Injectable({ providedIn: 'root' })
 export class ExerciseService {
+  private readonly http = inject(HttpClient);
+
+  getPracticeExercises(): Observable<AssessmentExercise[]> {
+    return this.http.post<AssessmentResponse>('/assessments/exercise/', {}).pipe(map(assessmentExercises));
+  }
   private index = 0;
 
   nextExercise(): Exercise {

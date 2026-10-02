@@ -7,6 +7,7 @@ import { UserService } from '../../core/services/user-service';
 import { ExerciseFeedbackComponent } from '../../shared/components/exercise-feedback-component/exercise-feedback-component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AssessmentExercise } from '../../core/models/assessment.model';
+import { switchMap } from 'rxjs';
 
 @Component({
   imports: [ExcerciseComponent, ExerciseFeedbackComponent, RouterLink],
@@ -56,10 +57,11 @@ export class Assessment {
   nextExercise(): void {
     if (!this.feedback() || this.saving()) return;
     if (this.index() === this.exercises.length - 1) {
-      this.assessmentService.finishAssessment([...this.answers.values()]);
       this.saving.set(true);
       this.saveError.set('');
-      this.users.completeAssessment().subscribe({
+      this.assessmentService.finishAssessment([...this.answers.values()]).pipe(
+        switchMap(() => this.users.completeAssessment()),
+      ).subscribe({
         next: () => { this.answers.clear(); this.feedback.set(false); this.lastAttempt.set(null); void this.router.navigate(['/dashboard']); },
         error: () => {
           this.saving.set(false);
