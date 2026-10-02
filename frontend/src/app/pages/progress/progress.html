@@ -7,15 +7,14 @@
         <h2>For a parent or supporter</h2>
         <p>Get a detailed report of activity totals, skill accuracy, and daily results.</p>
         <button type="button" class="secondary-button" [disabled]="reportBusy()" (click)="downloadReport()">Download PDF</button>
-        <form #reportForm="ngForm" (ngSubmit)="downloadReport(true)">
+        <form #reportForm="ngForm" (ngSubmit)="reportForm.valid && downloadReport(true)">
           <label class="field">Email address
             <input type="email" name="reportEmail" [(ngModel)]="email" required email maxlength="254" autocomplete="email" placeholder="parent@example.com" />
           </label>
-          <button type="submit" class="primary-button" [disabled]="reportForm.invalid || reportBusy()">{{ reportBusy() ? 'Preparing PDF…' : 'Prepare PDF + email draft' }}</button>
+          <button type="submit" class="primary-button" [disabled]="reportForm.invalid || reportBusy()">{{ reportBusy() ? 'Preparing report...' : 'Email PDF report' }}</button>
         </form>
-        <p>You will need to attach the downloaded PDF to the email yourself.</p>
+        <p>The PDF will be attached automatically. This report currently contains sample data.</p>
         @if (reportStatus()) { <p role="status">{{ reportStatus() }}</p> }
-        @if (draftLink()) { <a class="secondary-button" [href]="draftLink()">Open email draft</a> }
       </div>
     </details>
   </div>

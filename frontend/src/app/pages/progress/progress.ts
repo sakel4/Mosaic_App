@@ -4,7 +4,10 @@ import { ProgressService } from '../../core/services/progress-service';
 import { computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KidProgress } from './kid-progress';
-import { downloadProgressReport, progressEmailDraft } from '../../core/services/progress-report';
+import { createProgressReport, downloadProgressReport } from '../../core/services/progress-report';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   AchievementComponent,
   ProgressChartComponent,
@@ -24,22 +27,35 @@ export class Progress {
   readonly isChild = computed(() => this.users.profile().ageGroup === 'under_12');
   readonly reportBusy = signal(false);
   readonly reportStatus = signal('');
-  readonly draftLink = signal('');
+  private readonly http = inject(HttpClient);
+  private readonly snackBar = inject(MatSnackBar);
   email = '';
 
-  async downloadReport(prepareEmail = false): Promise<void> {
+  async downloadReport(sendEmail = false): Promise<void> {
     if (this.reportBusy()) return;
     this.reportBusy.set(true);
     this.reportStatus.set('');
-    this.draftLink.set('');
+    const recipient = this.email.trim();
     try {
-      await downloadProgressReport(structuredClone(this.progress()));
-      if (prepareEmail) this.draftLink.set(progressEmailDraft(this.email.trim()));
-      this.reportStatus.set(prepareEmail
-        ? 'PDF downloaded. Open your email draft below, then attach the PDF before sending.'
-        : 'Your sample progress PDF has been downloaded.');
+      const progress = structuredClone(this.progress());
+      if (sendEmail) {
+        const doc = await createProgressReport(progress);
+        const payload = new FormData();
+        payload.append('email', recipient);
+        payload.append('pdf', doc.output('blob'), 'mosaic-progress-sample.pdf');
+        await firstValueFrom(this.http.post('/users/progress/email/', payload));
+        this.reportStatus.set(`Progress report sent to ${recipient}.`);
+        this.snackBar.open(this.reportStatus(), 'Dismiss', {
+          duration: 5000,
+          panelClass: ['success-snackbar'],
+          verticalPosition: 'bottom',
+        });
+      } else {
+        await downloadProgressReport(progress);
+        this.reportStatus.set('Your sample progress PDF has been downloaded.');
+      }
     } catch {
-      this.reportStatus.set('The PDF could not be downloaded. Please try again.');
+      this.reportStatus.set(sendEmail ? 'The report could not be emailed. Please try again.' : 'The PDF could not be downloaded. Please try again.');
     } finally {
       this.reportBusy.set(false);
     }

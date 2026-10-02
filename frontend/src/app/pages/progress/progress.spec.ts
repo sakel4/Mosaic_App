@@ -5,7 +5,9 @@ import { Progress } from './progress';
 import { UserService } from '../../core/services/user-service';
 import { ProgressService } from '../../core/services/progress-service';
 import { createProgressPreview } from '../../core/services/progress-preview';
-import { progressEmailDraft } from '../../core/services/progress-report';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { vi } from 'vitest';
 
 describe('Age-appropriate progress', () => {
   const profile = signal({ ageGroup: 'under_12', currentFocus: [] });
@@ -15,6 +17,7 @@ describe('Age-appropriate progress', () => {
       imports: [Progress],
       providers: [
         provideRouter([]),
+        provideHttpClient(), provideHttpClientTesting(),
         { provide: UserService, useValue: { profile } },
         { provide: ProgressService, useValue: { progress: signal({ ...createProgressPreview(), history: [] }) } },
       ],
@@ -34,10 +37,21 @@ describe('Age-appropriate progress', () => {
     expect(fixture.nativeElement.querySelector('app-progress-chart')).toBeTruthy();
   });
 
-  it('keeps an email address from injecting extra draft fields', () => {
-    const uri = progressEmailDraft('parent+report@example.com&bcc=other@example.com');
-    expect(uri).toContain('%26bcc%3D');
-    expect(uri).not.toContain('&bcc=');
-    expect(decodeURIComponent(uri)).toContain('Attach the downloaded mosaic-progress-sample.pdf before sending.');
+  it('uploads the PDF and email together and waits for confirmation', async () => {
+    const page = TestBed.createComponent(Progress).componentInstance;
+    page.email = ' parent@example.com ';
+    const pending = page.downloadReport(true);
+    const http = TestBed.inject(HttpTestingController);
+    const request = await vi.waitFor(() => http.expectOne('/users/progress/email/'));
+    expect(page.reportBusy()).toBe(true);
+    expect(page.reportStatus()).toBe('');
+    expect(request.request.body.get('email')).toBe('parent@example.com');
+    expect(request.request.body.get('pdf').type).toBe('application/pdf');
+    expect(request.request.headers.has('Content-Type')).toBe(false);
+    request.flush({ detail: 'Progress report submitted to the email backend.' });
+    await pending;
+    expect(page.reportStatus()).toContain('sent to parent@example.com');
+    expect(page.reportBusy()).toBe(false);
+    http.verify();
   });
 });

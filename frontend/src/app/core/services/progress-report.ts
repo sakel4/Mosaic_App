@@ -1,10 +1,6 @@
 import { Progress } from '../models/progress.model';
 
-export function progressEmailDraft(email: string): string {
-  return `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent('Mosaic progress report (sample data)')}&body=${encodeURIComponent('Hello,\n\nPlease find the Mosaic progress report attached. This report currently contains sample data.\n\nAttach the downloaded mosaic-progress-sample.pdf before sending.\n')}`;
-}
-
-export async function downloadProgressReport(progress: Progress): Promise<void> {
+export async function createProgressReport(progress: Progress) {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF();
   let y = 22;
@@ -34,5 +30,10 @@ export async function downloadProgressReport(progress: Progress): Promise<void> 
   for (const day of progress.history ?? []) {
     line(`${day.date} / ${day.completed} / ${day.accuracy === null ? 'No practice' : `${day.accuracy}%`}`);
   }
+  return doc;
+}
+
+export async function downloadProgressReport(progress: Progress): Promise<void> {
+  const doc = await createProgressReport(progress);
   await doc.save('mosaic-progress-sample.pdf', { returnPromise: true });
 }

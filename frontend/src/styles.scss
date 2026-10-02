@@ -1002,6 +1002,32 @@ html[data-theme='dark'] .interest-option:focus-within {
 }
 
 // Snack bars render in the global overlay, outside component styles.
+.mat-mdc-snack-bar-container.success-snackbar {
+  --mat-snack-bar-container-color: var(--green-pale);
+  --mat-snack-bar-supporting-text-color: var(--ink);
+  --mat-snack-bar-button-color: var(--green-dark);
+  --mat-snack-bar-container-shape: 14px;
+  --mat-snack-bar-supporting-text-size: 1rem;
+  --mat-snack-bar-supporting-text-line-height: 1.6;
+  --mat-snack-bar-supporting-text-weight: 500;
+  padding-bottom: 5vh;
+}
+
+.success-snackbar .mat-mdc-snackbar-surface {
+  border: 1px solid var(--selection-border);
+  border-inline-start: 4px solid var(--green);
+}
+
+.success-snackbar .mat-mdc-snack-bar-label {
+  overflow-wrap: anywhere;
+}
+
+.success-snackbar .mat-mdc-snack-bar-action {
+  min-height: 44px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
 .mat-mdc-snack-bar-container.error-snackbar {
   --mat-snack-bar-container-color: #fff1ed;
   --mat-snack-bar-supporting-text-color: #792f2b;
@@ -1041,11 +1067,11 @@ html[data-theme='dark'] .error-snackbar .mat-mdc-snackbar-surface {
 }
 
 @media (max-width: 480px) {
-  .error-snackbar .mat-mdc-simple-snack-bar {
+  :is(.error-snackbar, .success-snackbar) .mat-mdc-simple-snack-bar {
     flex-wrap: wrap;
   }
 
-  .error-snackbar .mat-mdc-snack-bar-actions {
+  :is(.error-snackbar, .success-snackbar) .mat-mdc-snack-bar-actions {
     margin-inline-start: auto;
   }
 }
