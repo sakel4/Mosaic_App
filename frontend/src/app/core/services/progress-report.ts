@@ -14,13 +14,12 @@ export async function createProgressReport(progress: Progress) {
     }
   };
   line('Mosaic - Progress report', 20);
-  line('SAMPLE DATA - demonstration only', 12);
   line(`Generated: ${new Date().toLocaleDateString('en-GB')}`);
   line(`Activities completed: ${progress.exercisesCompleted}`);
   line(`Current practice streak: ${progress.currentStreak} days`);
   y += 6;
-  line('Skill accuracy', 15);
-  for (const skill of progress.skills) line(`${skill.name}: ${skill.progress}% correct; latest change: ${skill.change > 0 ? '+' : ''}${skill.change} percentage points`);
+  line('Skill results', 15);
+  for (const skill of progress.skills) line(`${skill.name}: ${skill.progress}% (${skill.metric === 'score' ? 'skill score' : 'practice accuracy'}); latest change: ${skill.change > 0 ? '+' : ''}${skill.change} points`);
   y += 6;
   line('Milestones', 15);
   for (const badge of progress.achievements) line(badge.title);
@@ -28,12 +27,12 @@ export async function createProgressReport(progress: Progress) {
   line('Daily results - last six weeks', 15);
   line('Date / Activities completed / Correct answers (%)');
   for (const day of progress.history ?? []) {
-    line(`${day.date} / ${day.completed} / ${day.accuracy === null ? 'No practice' : `${day.accuracy}%`}`);
+    line(`${day.date} / ${day.completed} / ${day.accuracy === null ? 'Not scored' : `${day.accuracy}%`}`);
   }
   return doc;
 }
 
 export async function downloadProgressReport(progress: Progress): Promise<void> {
   const doc = await createProgressReport(progress);
-  await doc.save('mosaic-progress-sample.pdf', { returnPromise: true });
+  await doc.save('mosaic-progress.pdf', { returnPromise: true });
 }

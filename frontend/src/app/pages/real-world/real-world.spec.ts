@@ -26,7 +26,7 @@ describe('RealWorld daily API integration', () => {
   let http: HttpTestingController;
   let page: RealWorld;
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [RealWorld], providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({ imports: [RealWorld], providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ProgressService, useValue: { refresh: vi.fn() } }] });
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(RealWorld);
     page = fixture.componentInstance;
@@ -52,7 +52,7 @@ describe('RealWorld daily API integration', () => {
     child.submit();
     expect(page.saving()).toBe(true);
     expect(page.feedback()).toBe(false);
-    const record = vi.spyOn(TestBed.inject(ProgressService), 'recordAttempt');
+    const record = vi.spyOn(TestBed.inject(ProgressService), 'refresh');
     const request = http.expectOne('/assessments/real_life/attempt-1/complete/');
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual({ answer: 'Get ready' });
@@ -71,7 +71,7 @@ describe('RealWorld daily API integration', () => {
 
   it('preserves pending answers and retries saving without counting failed requests', () => {
     http.expectOne(dailyUrl).flush(daily());
-    const record = vi.spyOn(TestBed.inject(ProgressService), 'recordAttempt');
+    const record = vi.spyOn(TestBed.inject(ProgressService), 'refresh');
     page.onCompleted({ exerciseId: 'attempt-1', answer: 'Go to bed', correct: true, responseTime: 100 });
     page.onCompleted({ exerciseId: 'attempt-1', answer: 'Get ready', correct: true, responseTime: 100 });
     http.expectOne('/assessments/real_life/attempt-1/complete/').flush({}, { status: 503, statusText: 'Unavailable' });

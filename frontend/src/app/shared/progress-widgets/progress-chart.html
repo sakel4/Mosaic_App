@@ -1,24 +1,40 @@
 <div class="chart-wrap">
   <div class="chart-heading">
-    <div><span class="eyebrow">LAST SIX WEEKS</span><h3>Your practice over time</h3></div>
-    <span class="chart-key"><i></i> Daily accuracy</span>
+    <div><span class="eyebrow">{{ periodLabel() }}</span><h3>Your practice over time</h3></div>
+    <span class="chart-key"><i></i> {{ isHourly() ? 'Hourly' : 'Daily' }} accuracy</span>
   </div>
-  @if (progress().exercisesCompleted > 0) {
-    <div class="chart-canvas"><canvas #chart role="img" aria-label="Daily exercise accuracy over six weeks. Exact values are in the table below."></canvas></div>
+  @if (hourlyDates().length) {
+    <div class="chart-controls" aria-label="Chart time period">
+      <button type="button" class="secondary-button" [attr.aria-pressed]="!isHourly()" (click)="view.set('daily')">Daily</button>
+      <button type="button" class="secondary-button" [attr.aria-pressed]="isHourly()" (click)="view.set('hourly')">Hourly</button>
+      @if (isHourly()) {
+        <label>Day <select [value]="hourlyDate()" (change)="selectedDate.set($any($event.target).value)">
+          @for (date of hourlyDates(); track date) { <option [value]="date">{{ date }}</option> }
+        </select></label>
+        <small>Times in {{ progress().timeZone || 'Europe/Athens' }}</small>
+      }
+    </div>
+  }
+  @if (history().length > 0) {
+    @if (hasAccuracy()) {
+      <div class="chart-canvas"><canvas #chart role="img" [attr.aria-label]="'Exercise accuracy: ' + periodLabel().toLowerCase() + '. Exact values are in the table below.'"></canvas></div>
+    } @else {
+      <p class="chart-empty">Your activities are saved. Accuracy will appear when answers are scored.</p>
+    }
     <details>
-      <summary>View daily results</summary>
+      <summary>View {{ isHourly() ? 'hourly' : 'daily' }} results</summary>
       <table>
-        <caption>Practice results for the last six weeks</caption>
-        <thead><tr><th scope="col">Date</th><th scope="col">Activities</th><th scope="col">Accuracy</th></tr></thead>
+        <caption>Practice results: {{ periodLabel().toLowerCase() }}</caption>
+        <thead><tr><th scope="col">{{ isHourly() ? 'Hour' : 'Date' }}</th><th scope="col">Activities</th><th scope="col">Accuracy</th></tr></thead>
         <tbody>
-          @for (day of progress().history; track day.date) {
+          @for (day of chartRows(); track day.tableLabel) {
             @if (day.completed > 0) {
-              <tr><th scope="row">{{ day.date }}</th><td>{{ day.completed }}</td><td>{{ day.accuracy }}%</td></tr>
+              <tr><th scope="row">{{ day.tableLabel }}</th><td>{{ day.completed }}</td><td>{{ day.accuracy === null ? 'Not scored' : day.accuracy + '%' }}</td></tr>
             }
           }
         </tbody>
       </table>
     </details>
-  } @else { <p class="chart-empty">Complete an activity to start your progress chart.</p> }
-  <p class="chart-note">Accuracy is the percentage of correct answers each day. Days without practice have no score.</p>
+  } @else { <p class="chart-empty">No recent activities yet. Complete an activity to start your progress chart.</p> }
+  <p class="chart-note">Accuracy uses scored answers only. Unscored activities still count toward your totals.</p>
 </div>

@@ -1,40 +1,71 @@
-import { Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { concatMap, concatWith, EMPTY, finalize, from, ignoreElements, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Progress } from '../models/progress.model';
 import { ExerciseAttempt } from '../models/exercise-attempt.model';
-import { createProgressPreview } from './progress-preview';
+import { AuthService } from './auth-service';
+
+const emptyProgress = (): Progress => ({ exercisesCompleted: 0, currentStreak: 0, skills: [], achievements: [], history: [] });
+interface ProgressSubmission {
+  client_id: string;
+  exercise_id: string;
+  skill: string;
+  correct: boolean | null;
+  response_time: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ProgressService {
-  private readonly currentProgress = signal<Progress>(createProgressPreview());
+  private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly currentProgress = signal<Progress>(emptyProgress());
   readonly progress = this.currentProgress.asReadonly();
-  private readonly skillResults = new Map(
-    this.progress().skills.map((skill) => [skill.name, { completed: 100, correct: skill.progress }]),
-  );
+  readonly loading = signal(false);
+  readonly error = signal('');
+  private token: string | null | undefined;
+  private readonly pending = new Map<string, ProgressSubmission>();
 
-  // Keep the demo interactive until the progress endpoint is available.
-  recordAttempt(attempt: ExerciseAttempt, skill: string): void {
-    const results = this.skillResults.get(skill) ?? { completed: 0, correct: 0 };
-    results.completed++;
-    results.correct += attempt.correct ? 1 : 0;
-    this.skillResults.set(skill, results);
-    const skillAccuracy = Math.round(results.correct / results.completed * 100);
-    this.currentProgress.update((progress) => {
-      const now = new Date();
-      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-      const history = [...(progress.history ?? [])];
-      const index = history.findIndex((day) => day.date === today);
-      const previous = index >= 0 ? history[index] : { date: today, completed: 0, accuracy: null };
-      const completed = previous.completed + 1;
-      const accuracy = Math.round(((previous.accuracy ?? 0) * previous.completed + (attempt.correct ? 100 : 0)) / completed);
-      const day = { date: today, completed, accuracy };
-      if (index >= 0) history[index] = day;
-      else history.push(day);
-      const skills = progress.skills.map((item) => item.name === skill
-        ? { ...item, progress: skillAccuracy, change: skillAccuracy - item.progress } : item);
-      if (!skills.some((item) => item.name === skill)) {
-        skills.push({ id: Math.max(0, ...skills.map((item) => item.id)) + 1, name: skill, progress: attempt.correct ? 100 : 0, change: 0 });
-      }
-      return { ...progress, exercisesCompleted: progress.exercisesCompleted + 1, skills, history: history.slice(-42) };
+  private checkUser(): void {
+    if (this.token !== this.auth.token()) {
+      this.token = this.auth.token();
+      this.pending.clear();
+      this.currentProgress.set(emptyProgress());
+    }
+  }
+
+  refresh(): void {
+    this.checkUser();
+    if (this.loading()) return;
+    const token = this.token;
+    this.loading.set(true);
+    this.error.set('');
+    from([...this.pending.values()]).pipe(
+      concatMap(submission => this.auth.token() !== token ? EMPTY : this.http.post<Progress>('/practice/progress/', submission).pipe(
+        tap(() => this.pending.delete(submission.client_id)),
+      )),
+      ignoreElements(),
+      concatWith(this.http.get<Progress>('/practice/progress/')),
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => {
+        this.loading.set(false);
+        if (!this.destroyRef.destroyed && (this.auth.token() !== token || (!this.error() && this.pending.size))) this.refresh();
+      }),
+    ).subscribe({
+      next: progress => { if (this.auth.token() === token) this.currentProgress.set(progress); },
+      error: () => { if (this.auth.token() === token) this.error.set('Could not load or save your progress. Please try again.'); },
     });
+  }
+
+  recordAttempt(attempt: ExerciseAttempt, skill: string): void {
+    this.checkUser();
+    const clientId = crypto.randomUUID();
+    this.pending.set(clientId, {
+      client_id: clientId, exercise_id: String(attempt.exerciseId), skill,
+      correct: attempt.evaluated === false ? null : attempt.correct,
+      response_time: Math.max(0, Math.min(2147483647, Math.round(attempt.responseTime))),
+    });
+    this.refresh();
   }
 }

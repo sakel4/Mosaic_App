@@ -96,10 +96,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
    "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "app"),
-        "USER": os.environ.get("DB_USER", "admin"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "admin"),
-        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
+        "NAME": os.environ.get("DB_NAME", "postgres"),
+        "USER": os.environ.get("DB_USER", "postgres"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "46#!rNg9giFC-!C3F8"),
+        "HOST": os.environ.get("DB_HOST", "django-rest-database-1.cd8gs88643oq.eu-north-1.rds.amazonaws.com"),
         "PORT": os.environ.get("DB_PORT", "5432"),
         "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
         "OPTIONS": {

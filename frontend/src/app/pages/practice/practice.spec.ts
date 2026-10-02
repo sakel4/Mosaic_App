@@ -33,6 +33,12 @@ describe('Practice API integration', () => {
     expect(fixture.nativeElement.textContent).toContain('Which option shows the sounds in fish');
     for (let i = 0; i < page.sessionSize(); i++) {
       page.onCompleted({ exerciseId: page.exercise()!.id!, answer: '1', correct: true, responseTime: 100 });
+      const submission = http.expectOne('/practice/progress/');
+      expect(submission.request.method).toBe('POST');
+      expect(submission.request.body.exercise_id).toBe(String(page.exercise()!.id));
+      const savedProgress = { exercisesCompleted: i + 1, currentStreak: 1, skills: [], achievements: [], history: [] };
+      submission.flush(savedProgress);
+      http.expectOne('/practice/progress/').flush(savedProgress);
       page.continuePractice();
     }
     fixture.detectChanges();

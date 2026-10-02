@@ -1,4 +1,9 @@
 <section class="page">
+  @if (progressLoading()) {
+    <section class="surface-card" style="padding: 28px" role="status">Loading your progress...</section>
+  } @else if (progressError()) {
+    <section class="surface-card" style="padding: 28px" role="alert"><p>{{ progressError() }}</p><button class="primary-button" (click)="retryProgress()">Try again</button></section>
+  } @else {
   @if (isChild()) {
   <header class="kid-welcome">
     <span class="kid-mascot" aria-hidden="true">&#x1F31F;</span>
@@ -8,7 +13,7 @@
       <p class="page-subtitle">Try something new and collect a star. Every try counts!</p>
     </div>
   </header>
-  <p class="sample-note">Sample progress data</p>
+
   <div class="kid-stats" aria-label="Your adventure so far">
     <article class="surface-card"><span aria-hidden="true">&#x2B50;</span><strong>{{ progress().exercisesCompleted
         }}</strong>
@@ -109,8 +114,10 @@
             aria-valuemax="100" [attr.aria-label]="skill.name">
             <div class="progress-fill" [style.width.%]="skill.progress"></div>
           </div>
-          <small>↑ {{ skill.change }}% since you started</small>
+          <small>{{ skill.metric === 'score' ? 'Skill score' : 'Practice accuracy' }} · {{ skill.change > 0 ? '+' : '' }}{{ skill.change }} points since your previous result</small>
         </div>
+        } @empty {
+          <p>Complete an assessment or activity to see your skills here.</p>
         }
       </div>
       <a class="text-button progress-link" routerLink="/progress">Explore your progress <span
@@ -145,5 +152,6 @@
   <p class="gentle-note">
     <span aria-hidden="true">✳</span> Your path is your own. Mosaic adapts learning to you.
   </p>
+  }
   }
 </section>

@@ -87,7 +87,7 @@ export class RealWorld {
           this.active.set(saved);
           const result = { ...pending, answer: saved.answer ?? pending.answer, correct: saved.correct === true, evaluated: true };
           this.lastAttempt.set(result);
-          this.progress.recordAttempt(result, 'Everyday reading');
+          this.progress.refresh();
           this.daily.update(daily => {
             if (!daily) return daily;
             const exercises = daily.exercises.map(item => item.attempt_id === saved.attempt_id ? saved : item);

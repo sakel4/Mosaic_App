@@ -13,7 +13,7 @@ class ProgressAttempt(models.Model):
     client_id = models.UUIDField()
     exercise_id = models.CharField(max_length=100)
     skill = models.CharField(max_length=100)
-    correct = models.BooleanField()
+    correct = models.BooleanField(null=True, blank=True)
     response_time = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 

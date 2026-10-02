@@ -1,16 +1,34 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone as dt_timezone
 from types import SimpleNamespace
 from unittest.mock import patch
 from uuid import uuid4
 
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, override_settings
 from django.utils import timezone
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from .progress import ProgressView, progress_for
 
 
+@override_settings(REAL_LIFE_TIME_ZONE="Europe/Athens")
 class ProgressTests(SimpleTestCase):
+    def setUp(self):
+        real_life = patch("personalized_practice.progress.RealLifeExerciseAttempt.objects")
+        self.real_life = real_life.start()
+        self.real_life.filter.return_value = []
+        self.addCleanup(real_life.stop)
+        profile = patch("personalized_practice.progress.Profile.objects")
+        self.profiles = profile.start()
+        self.profiles.select_related.return_value.filter.return_value.first.return_value = None
+        self.addCleanup(profile.stop)
+        histories = patch("personalized_practice.progress.SkillHistory.objects")
+        self.histories = histories.start()
+        self.histories.filter.return_value.order_by.return_value = []
+        self.addCleanup(histories.stop)
+        baselines = patch("personalized_practice.progress.LearnerSkillBaseline.objects")
+        self.baselines = baselines.start()
+        self.baselines.filter.return_value = []
+        self.addCleanup(baselines.stop)
     def summarize(self, attempts):
         with patch("personalized_practice.progress.ProgressAttempt.objects") as objects:
             objects.filter.return_value.order_by.return_value = attempts
@@ -63,3 +81,49 @@ class ProgressTests(SimpleTestCase):
     def test_progress_requires_authentication(self):
         response = ProgressView.as_view()(APIRequestFactory().get("/api/practice/progress/"))
         self.assertEqual(response.status_code, 401)
+
+    def test_real_life_is_counted_without_frontend_progress_submission(self):
+        self.real_life.filter.return_value = [SimpleNamespace(completed_at=timezone.now(), correct=True)]
+        progress = self.summarize([self.attempt(0, False)])
+        self.assertEqual(progress["exercisesCompleted"], 2)
+        self.assertEqual(progress["history"][-1]["accuracy"], 50)
+        self.assertEqual({row["name"] for row in progress["skills"]}, {"Everyday reading", "Reading fluency"})
+
+    def test_unscored_completions_earn_stars_without_lowering_accuracy(self):
+        progress = self.summarize([self.attempt(0, None), self.attempt(0, True)])
+        self.assertEqual(progress["exercisesCompleted"], 2)
+        self.assertEqual(progress["history"][-1]["accuracy"], 100)
+        progress = self.summarize([self.attempt(0, None)])
+        self.assertEqual(progress["exercisesCompleted"], 1)
+        self.assertIsNone(progress["history"][-1]["accuracy"])
+        self.assertEqual(progress["skills"], [])
+
+    def test_saved_evaluation_scores_and_previous_history_are_displayed(self):
+        from .progress import SKILL_FIELDS
+        values = {field: None for field in SKILL_FIELDS}
+        values["reading_fluency"] = 72
+        self.profiles.select_related.return_value.filter.return_value.first.return_value = SimpleNamespace(skills=SimpleNamespace(**values))
+        self.histories.filter.return_value.order_by.return_value = [SimpleNamespace(**values), SimpleNamespace(**(values | {"reading_fluency": 65}))]
+        progress = self.summarize([])
+        self.assertEqual(progress["skills"], [{"id": 1, "name": "Reading fluency", "progress": 72, "change": 7, "metric": "score"}])
+        self.assertEqual(progress["exercisesCompleted"], 0)
+
+    def test_midnight_uses_the_same_timezone_as_real_life(self):
+        now = datetime(2026, 10, 2, 21, 5, tzinfo=dt_timezone.utc)
+        with patch("personalized_practice.progress.timezone.now", return_value=now):
+            progress = self.summarize([SimpleNamespace(created_at=now, skill="reading_fluency", correct=True)])
+        self.assertEqual(progress["history"][-1]["date"], "2026-10-03")
+        self.assertEqual(progress["history"][-1]["completed"], 1)
+
+    def test_hourly_buckets_use_local_time_and_exclude_unscored_accuracy(self):
+        now = datetime(2026, 10, 2, 12, tzinfo=dt_timezone.utc)
+        events = [SimpleNamespace(created_at=now, skill="spelling", correct=True),
+                  SimpleNamespace(created_at=now + timedelta(minutes=10), skill="spelling", correct=None),
+                  SimpleNamespace(created_at=now + timedelta(hours=2), skill="spelling", correct=False)]
+        with patch("personalized_practice.progress.timezone.now", return_value=now + timedelta(hours=3)):
+            progress = self.summarize(events)
+        self.assertEqual(progress["hourlyHistory"], [
+            {"date": "2026-10-02", "hour": 15, "completed": 2, "accuracy": 100},
+            {"date": "2026-10-02", "hour": 17, "completed": 1, "accuracy": 0},
+        ])
+        self.assertEqual(progress["timeZone"], "Europe/Athens")

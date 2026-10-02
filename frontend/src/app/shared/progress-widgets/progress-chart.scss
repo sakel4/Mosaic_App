@@ -1,4 +1,4 @@
-﻿.chart-wrap {
+.chart-wrap {
   padding: 21px 20px 13px;
   min-width: 0;
   border: 1px solid var(--line);
@@ -70,3 +70,10 @@ circle {
   stroke: var(--paper);
   stroke-width: 2;
 }
+
+.chart-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 16px 0; }
+.chart-controls button { padding: 7px 12px; }
+.chart-controls button[aria-pressed='true'] { background: var(--selection-surface); color: var(--selection-text); border-color: var(--selection-border); }
+.chart-controls label { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 12px; }
+.chart-controls select { padding: 7px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); }
+.chart-controls small { color: var(--muted); }

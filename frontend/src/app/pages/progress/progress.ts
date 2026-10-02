@@ -23,6 +23,10 @@ import {
 export class Progress {
   private readonly progressService = inject(ProgressService);
   readonly progress = this.progressService.progress;
+  readonly progressLoading = this.progressService.loading;
+  readonly progressError = this.progressService.error;
+  constructor() { this.progressService.refresh(); }
+  retryProgress(): void { this.progressService.refresh(); }
   private readonly users = inject(UserService);
   readonly isChild = computed(() => this.users.profile().ageGroup === 'under_12');
   readonly reportBusy = signal(false);
@@ -32,7 +36,7 @@ export class Progress {
   email = '';
 
   async downloadReport(sendEmail = false): Promise<void> {
-    if (this.reportBusy()) return;
+    if (this.reportBusy() || this.progressLoading() || this.progressError()) return;
     this.reportBusy.set(true);
     this.reportStatus.set('');
     const recipient = this.email.trim();
@@ -42,7 +46,7 @@ export class Progress {
         const doc = await createProgressReport(progress);
         const payload = new FormData();
         payload.append('email', recipient);
-        payload.append('pdf', doc.output('blob'), 'mosaic-progress-sample.pdf');
+        payload.append('pdf', doc.output('blob'), 'mosaic-progress.pdf');
         await firstValueFrom(this.http.post('/users/progress/email/', payload));
         this.reportStatus.set(`Progress report sent to ${recipient}.`);
         this.snackBar.open(this.reportStatus(), 'Dismiss', {
@@ -52,7 +56,7 @@ export class Progress {
         });
       } else {
         await downloadProgressReport(progress);
-        this.reportStatus.set('Your sample progress PDF has been downloaded.');
+        this.reportStatus.set('Your progress PDF has been downloaded.');
       }
     } catch {
       this.reportStatus.set(sendEmail ? 'The report could not be emailed. Please try again.' : 'The PDF could not be downloaded. Please try again.');
@@ -61,6 +65,7 @@ export class Progress {
     }
   }
   get focus(): string {
-    return this.users.profile().currentFocus.map((focus) => focus.skill).join(', ') || 'Reading fluency, Comprehension';
+    return this.users.profile().currentFocus.map((focus) => focus.skill.replace(/_/g, ' ')).join(', ')
+      || [...this.progress().skills].sort((a, b) => a.progress - b.progress)[0]?.name || 'Start with an activity';
   }
 }

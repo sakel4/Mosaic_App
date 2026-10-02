@@ -1,24 +1,28 @@
 <section class="page">
   <div class="progress-toolbar">
-    <span class="sample-label">Sample progress data</span>
+    <span class="sample-label">Your saved progress</span>
     <details class="report-menu">
       <summary>Progress report</summary>
       <div class="report-options">
         <h2>For a parent or supporter</h2>
         <p>Get a detailed report of activity totals, skill accuracy, and daily results.</p>
-        <button type="button" class="secondary-button" [disabled]="reportBusy()" (click)="downloadReport()">Download PDF</button>
+        <button type="button" class="secondary-button" [disabled]="reportBusy() || progressLoading() || !!progressError()" (click)="downloadReport()">Download PDF</button>
         <form #reportForm="ngForm" (ngSubmit)="reportForm.valid && downloadReport(true)">
           <label class="field">Email address
             <input type="email" name="reportEmail" [(ngModel)]="email" required email maxlength="254" autocomplete="email" placeholder="parent@example.com" />
           </label>
-          <button type="submit" class="primary-button" [disabled]="reportForm.invalid || reportBusy()">{{ reportBusy() ? 'Preparing report...' : 'Email PDF report' }}</button>
+          <button type="submit" class="primary-button" [disabled]="reportForm.invalid || reportBusy() || progressLoading() || !!progressError()">{{ reportBusy() ? 'Preparing report...' : 'Email PDF report' }}</button>
         </form>
-        <p>The PDF will be attached automatically. This report currently contains sample data.</p>
+        <p>The PDF will be attached automatically and includes your saved progress.</p>
         @if (reportStatus()) { <p role="status">{{ reportStatus() }}</p> }
       </div>
     </details>
   </div>
-  @if (isChild()) {
+  @if (progressLoading()) {
+    <section class="surface-card" style="padding: 28px" role="status">Loading your progress...</section>
+  } @else if (progressError()) {
+    <section class="surface-card" style="padding: 28px" role="alert"><p>{{ progressError() }}</p><button class="primary-button" (click)="retryProgress()">Try again</button></section>
+  } @else if (isChild()) {
     <app-kid-progress [progress]="progress()" />
   } @else {
   <header class="page-header">
@@ -42,7 +46,7 @@
     </article>
     <article class="focus-card">
       <span class="focus-label">CURRENT FOCUS</span><strong>{{ focus }}</strong
-      ><span>You’re making steady progress here.</span>
+      ><span>Take your next step at your own pace.</span>
     </article>
   </div>
   <section class="section-block">
@@ -51,13 +55,13 @@
         <p class="eyebrow">SKILLS YOU’RE GROWING</p>
         <h2>Your progress, in many ways</h2>
       </div>
-      <span>Only skills with activity are shown</span>
+      <span>Saved skill scores and practice results</span>
     </div>
     <div class="skill-grid">
       @for (skill of progress().skills; track skill.id) {
         <app-skill-card [skill]="skill" />
       } @empty {
-        <p>Complete an activity to see your skill accuracy here.</p>
+        <p>Complete an assessment or activity to see your skills here.</p>
       }
     </div>
   </section>

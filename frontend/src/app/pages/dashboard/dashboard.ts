@@ -18,6 +18,10 @@ export class Dashboard {
   private readonly progressService = inject(ProgressService);
   private readonly exerciseService = inject(ExerciseService);
   readonly progress = this.progressService.progress;
+  readonly progressLoading = this.progressService.loading;
+  readonly progressError = this.progressService.error;
+  constructor() { this.progressService.refresh(); }
+  retryProgress(): void { this.progressService.refresh(); }
   readonly activity = this.exerciseService.nextActivity();
   readonly isChild = computed(() => this.users.profile().ageGroup === 'under_12');
   readonly level = computed(() => Math.floor(this.progress().exercisesCompleted / 10) + 1);
