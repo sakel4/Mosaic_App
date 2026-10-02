@@ -35,6 +35,13 @@ class AssessmentExcerciseSerializer(serializers.ModelSerializer):
         return data
 
 
+class EvaluateAssessmentSerializer(serializers.Serializer):
+    assessment_id = serializers.UUIDField()
+    is_initial = serializers.BooleanField()
+    # Keyed by id, e.g. {"id": {"answer": true}}.
+    answers = serializers.DictField(child=serializers.DictField())
+
+
 class AssessmentSerializer(serializers.ModelSerializer):
     excercises = AssessmentExcerciseSerializer(many=True, read_only=True)
 
