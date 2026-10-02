@@ -1,0 +1,53 @@
+{
+    "exercise_id": "d82f6877-c354-4d06-8b9c-0f87eede519e",
+    "age_group": "19_plus",
+    "target_skill": "comprehension",
+    "secondary_skill": null,
+    "difficulty": 4,
+    "response_type": "single_choice_set",
+    "exercise": {
+        "title": "The Digital Divide",
+        "instructions": "Read the passage below carefully. Based on the information provided, answer the two questions that follow.",
+        "prompt": "A 2023 research study on technology access in urban centers reveals that while smartphone ownership has reached near saturation rates, significant disparities remain in high-speed broadband internet availability. The report indicates that low-income neighborhoods face approximately 15% fewer fiber optic infrastructure projects compared to affluent districts. This digital gap leads to unequal educational opportunities, as remote learning and digital job applications are inaccessible to those without reliable connections. Furthermore, the study highlights a growing reliance on mobile data plans for essential services, such as telehealth and government benefits, which often suffer from data caps and poor service quality in underserved areas.",
+        "content_data": {
+            "items": [
+                {
+                    "id": "item_201",
+                    "prompt": "According to the passage, what is one specific consequence of the lack of high-speed broadband in low-income neighborhoods?",
+                    "options": [
+                        {
+                            "id": "opt_1",
+                            "text": "A decrease in the overall number of smartphones owned by residents."
+                        },
+                        {
+                            "id": "opt_2",
+                            "text": "Unequal access to remote learning and digital employment opportunities."
+                        },
+                        {
+                            "id": "opt_3",
+                            "text": "A reduction in the number of fiber optic infrastructure projects in the city."
+                        }
+                    ]
+                },
+                {
+                    "id": "item_202",
+                    "prompt": "Why might residents of underserved areas be forced to rely on mobile data plans for essential services?",
+                    "options": [
+                        {
+                            "id": "opt_4",
+                            "text": "Mobile data plans are more cost-effective than fixed broadband subscriptions."
+                        },
+                        {
+                            "id": "opt_5",
+                            "text": "Fixed broadband infrastructure is physically unavailable in these neighborhoods."
+                        },
+                        {
+                            "id": "opt_6",
+                            "text": "Essential services have been designed exclusively to function on mobile networks."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
