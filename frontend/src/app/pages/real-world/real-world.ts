@@ -5,7 +5,6 @@ import { ExerciseAttempt } from '../../core/models/exercise-attempt.model';
 import { AssessmentExercise } from '../../core/models/assessment.model';
 import { RealLifeEvaluation, RealLifeExercise, RealLifeSet } from '../../core/models/real-life-set.model';
 import { RealWorldService } from '../../core/services/real-world-service';
-import { ProgressService } from '../../core/services/progress-service';
 import { ExerciseFeedbackComponent } from '../../shared/components/exercise-feedback-component/exercise-feedback-component';
 
 const COMPLETED_AT_KEY = 'mosaic.realWorld.completedAt';
@@ -19,7 +18,6 @@ const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 })
 export class RealWorld {
   private readonly realWorld = inject(RealWorldService);
-  private readonly progress = inject(ProgressService);
   private readonly destroyRef = inject(DestroyRef);
   readonly set = signal<RealLifeSet | null>(null);
   readonly index = signal(0);
@@ -87,9 +85,7 @@ export class RealWorld {
     if (!active || this.feedback() || String(attempt.exerciseId) !== active.id || typeof attempt.answer !== 'string') return;
     const correct = active.correct_answer.includes(attempt.answer);
     this.results.update(results => ({ ...results, [active.id]: correct }));
-    const scored = { ...attempt, correct, evaluated: true };
-    this.lastAttempt.set(scored);
-    this.progress.recordAttempt(scored, 'Everyday reading');
+    this.lastAttempt.set({ ...attempt, correct, evaluated: true });
     this.feedback.set(true);
   }
 
