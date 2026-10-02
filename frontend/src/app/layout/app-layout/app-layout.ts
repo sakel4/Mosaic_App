@@ -1,15 +1,18 @@
 import { UserService } from '../../core/services/user-service';
+import { AuthService } from '../../core/services/auth-service';
 import { Component, inject } from '@angular/core';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [RouterLink, RouterOutlet, RouterLinkActive],
+  imports: [RouterLink, RouterOutlet, RouterLinkActive, MatMenuModule],
   selector: 'app-app-layout',
   styleUrl: './app-layout.scss',
   templateUrl: './app-layout.html',
 })
 export class AppLayout {
   private readonly users = inject(UserService);
+  private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   readonly navItems = [
     { label: 'Home', path: '/dashboard', icon: '⌂' },
@@ -41,5 +44,9 @@ export class AppLayout {
 
   goToProfile(): void {
     void this.router.navigate(['/profile']);
+  }
+
+  logout(): void {
+    this.auth.logout();
   }
 }

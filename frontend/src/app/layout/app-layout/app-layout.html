@@ -32,11 +32,15 @@
         <span class="status-dot" aria-hidden="true"></span>
         A little progress, every day
       </div>
-      <button class="topbar-user" type="button" (click)="goToProfile()">
+      <button class="topbar-user" type="button" [matMenuTriggerFor]="userMenu" aria-label="Account menu">
         <span class="avatar avatar-small">{{ initials }}</span>
         <span>{{ name }}</span>
         <span aria-hidden="true">⌄</span>
       </button>
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <button mat-menu-item type="button" (click)="goToProfile()">Profile</button>
+        <button mat-menu-item type="button" (click)="logout()">Log out</button>
+      </mat-menu>
     </header>
     <main class="main-content">
       <router-outlet />
