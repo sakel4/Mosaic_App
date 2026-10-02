@@ -10,7 +10,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { Assessment } from './pages/assessment/assessment';
 import { Onboarding } from './pages/onboarding/onboarding';
 import { AssessedGuard } from './core/guards/assessed-guard';
-import { OnboardedGuard } from './core/guards/onboarded-guard';
+import { initialAssessmentGuard, initialOnboardingGuard } from './core/guards/initial-flow-guard';
 import { guestGuard } from './core/guards/guest-guard';
 
 
@@ -33,8 +33,8 @@ export const routes: Routes = [
 
     // Outside the layout (rendered directly in app.html's <router-outlet>)
     { path: 'login', component: Auth, data: { mode: 'login'}, canActivate: [guestGuard] },
-    { path: 'assessment', component: Assessment, canActivate: [authGuard]},
-    { path: 'onboarding', component: Onboarding, canActivate: [authGuard]},
+    { path: 'assessment', component: Assessment, canActivate: [authGuard, initialAssessmentGuard]},
+    { path: 'onboarding', component: Onboarding, canActivate: [authGuard, initialOnboardingGuard]},
     { path: 'register', component: Auth, data: { mode: 'register'}, canActivate: [guestGuard]},
     { path: 'auth', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: '' },

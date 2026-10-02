@@ -9,8 +9,9 @@ export const AssessedGuard: CanActivateFn = () => {
 
   return users.load().pipe(
     map(() => {
+      if (users.assessmentCompleted()) return true;
       if (!users.onboardingCompleted()) return router.createUrlTree(['/onboarding']);
-      return users.assessmentCompleted() ? true : router.createUrlTree(['/assessment']);
+      return router.createUrlTree(['/assessment']);
     }),
     catchError(() => of(router.createUrlTree(['/login']))),
   );
