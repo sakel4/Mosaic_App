@@ -22,6 +22,7 @@ class Assessment(models.Model):
 
 class AssessmentExcercise(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    exercise_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="excercises")
     position = models.IntegerField()
     kind = models.CharField(max_length=100, choices=Kind.choices, blank=True, default="")
