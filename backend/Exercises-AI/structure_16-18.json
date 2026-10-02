@@ -1,0 +1,468 @@
+{
+    "assessment": {
+        "age_group": "16_18",
+        "language": "en",
+        "estimated_duration_seconds": 540,
+        "estimated_voice_duration_seconds": 75,
+        "assessment_type": "assessment",
+        "excercises": [
+            {
+                "position": 1,
+                "kind": "phoneme_manipulation",
+                "skill": "phonological_awareness",
+                "difficulty": 4,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "audio_prompt": "Say strain in your head. Remove the /t/ sound. Which answer matches?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "srain"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "train"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "strain"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "b",
+                            "audio_prompt": "Say glow in your head. Replace /g/ with /f/. Which word do you get?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "flow"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "glow"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "slow"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "c",
+                            "audio_prompt": "Which option gives the sounds in scripts in the correct order?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "/s/ /k/ /r/ /i/ /p/ /t/ /s/"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "/s/ /r/ /k/ /i/ /p/ /t/ /s/"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "/s/ /k/ /r/ /i/ /t/ /p/ /s/"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "d",
+                            "audio_prompt": "Say clasp in your head. Remove the /k/ sound. Which answer is left?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "lasp"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "clasp"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "lapse"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "1",
+                    "b": "1",
+                    "c": "1",
+                    "d": "1"
+                },
+                "confidence": 84
+            },
+            {
+                "position": 2,
+                "kind": "letter_sound",
+                "skill": "letter_sound",
+                "difficulty": 4,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to or read each prompt and choose the matching word. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "grapheme": "cious",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "precious"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "process"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "precise"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "b",
+                            "grapheme": "ough",
+                            "target_sound": "as in though",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "though"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "rough"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "thought"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "c",
+                            "grapheme": "que",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "unique"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "queen"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "quiet"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "d",
+                            "grapheme": "sion",
+                            "target_sound": "as in vision",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "vision"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "mission"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "season"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "e",
+                            "grapheme": "ture",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "future"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "turn"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "tune"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "f",
+                            "grapheme": "gue",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "league"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "guide"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "giant"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_supported": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "1",
+                    "b": "1",
+                    "c": "1",
+                    "d": "1",
+                    "e": "1",
+                    "f": "1"
+                },
+                "confidence": 88
+            },
+            {
+                "position": 3,
+                "kind": "word_reading_sample",
+                "skill": "decoding_and_word_recognition",
+                "difficulty": 4,
+                "response_type": "spoken",
+                "instruction": "This is one of only two short speaking parts. Read the words aloud from left to right.",
+                "content_data": {
+                    "sections": [
+                        {
+                            "id": "pseudowords",
+                            "label": "Made-up words",
+                            "items": [
+                                "transhable",
+                                "premonist",
+                                "clorative",
+                                "strenical",
+                                "unvession"
+                            ]
+                        },
+                        {
+                            "id": "real_words",
+                            "label": "Real words",
+                            "items": [
+                                "sufficient",
+                                "hierarchy",
+                                "conscience",
+                                "privilege"
+                            ]
+                        }
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 35
+                },
+                "confidence": 86
+            },
+            {
+                "position": 4,
+                "kind": "reading_fluency",
+                "skill": "reading_fluency",
+                "difficulty": 4,
+                "response_type": "spoken",
+                "instruction": "This is the second and final speaking part. Read the short passage aloud at a comfortable pace.",
+                "content_data": {
+                    "passage_lines": [
+                        "The college introduced a new booking system for study rooms.",
+                        "Students can reserve a space online up to seven days in advance.",
+                        "A reservation is cancelled automatically if nobody checks in within fifteen",
+                        "minutes of the start time, allowing another student to use the room.",
+                        "During the first week, staff noticed fewer empty rooms and shorter queues at the",
+                        "help desk."
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 40
+                },
+                "confidence": 86
+            },
+            {
+                "position": 5,
+                "kind": "spelling",
+                "skill": "spelling",
+                "difficulty": 4,
+                "response_type": "typed_text",
+                "instruction": "Listen to each dictated word and type it. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "word": "accommodation",
+                            "sentence": "The course includes accommodation near the campus."
+                        },
+                        {
+                            "id": "b",
+                            "word": "definitely",
+                            "sentence": "I will definitely send the form today."
+                        },
+                        {
+                            "id": "c",
+                            "word": "occurrence",
+                            "sentence": "The second occurrence was recorded carefully."
+                        },
+                        {
+                            "id": "d",
+                            "word": "relevant",
+                            "sentence": "Include only information that is relevant."
+                        },
+                        {
+                            "id": "e",
+                            "word": "independent",
+                            "sentence": "The project requires independent research."
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "accommodation",
+                    "b": "definitely",
+                    "c": "occurrence",
+                    "d": "relevant",
+                    "e": "independent"
+                },
+                "confidence": 82
+            },
+            {
+                "position": 6,
+                "kind": "comprehension",
+                "skill": "comprehension",
+                "difficulty": 4,
+                "response_type": "single_choice_set",
+                "instruction": "Read the passage silently and answer both questions. No speaking is needed.",
+                "content_data": {
+                    "passage": [
+                        "A sixth-form student planned to use a quiet room for an online interview at 2:00",
+                        "p.m.",
+                        "The booking email said the room would be released if the student did not check in",
+                        "within fifteen minutes.",
+                        "At 2:12 p.m., the student was still outside the building because a bus had been",
+                        "delayed.",
+                        "The student opened the booking page on a phone and saw that the reservation was",
+                        "still active."
+                    ],
+                    "items": [
+                        {
+                            "id": "q1",
+                            "prompt": "At what time would the room be released if the student still had not checked in?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "2:12 p.m."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "2:15 p.m."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "2:30 p.m."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "q2",
+                            "prompt": "What is the most useful action for the student at 2:12 p.m.?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "Reach the room and check in before 2:15 p.m."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "Wait until the reservation disappears."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "Book the same room for 2:00 p.m. again."
+                                }
+                            ]
+                        }
+                    ],
+                    "microphone_required": false
+                },
+                "answers": {
+                    "q1": "b",
+                    "q2": "a"
+                },
+                "confidence": 86
+            },
+            {
+                "position": 7,
+                "kind": "working_memory",
+                "skill": "working_memory",
+                "difficulty": 3,
+                "response_type": "sequence",
+                "instruction": "Watch or listen to each short sequence. When it disappears, enter it in the requested order. No speaking is needed.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "direction": "forward",
+                            "sequence": [
+                                "7",
+                                "2",
+                                "9",
+                                "4",
+                                "1"
+                            ]
+                        },
+                        {
+                            "id": "b",
+                            "direction": "reverse",
+                            "sequence": [
+                                "6",
+                                "3",
+                                "8",
+                                "1"
+                            ]
+                        }
+                    ],
+                    "display_ms_per_digit": 800,
+                    "microphone_required": false,
+                    "audio_supported": true
+                },
+                "answers": {
+                    "a": [
+                        "7",
+                        "2",
+                        "9",
+                        "4",
+                        "1"
+                    ],
+                    "b": [
+                        "1",
+                        "8",
+                        "3",
+                        "6"
+                    ]
+                },
+                "confidence": 82
+            }
+        ],
+        "created_at": "2024-06-05T12:00:00Z"
+    }
+}

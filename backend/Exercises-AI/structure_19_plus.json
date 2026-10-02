@@ -1,0 +1,466 @@
+{
+    "assessment": {
+        "age_group": "19_plus",
+        "language": "en",
+        "estimated_duration_seconds": 540,
+        "estimated_voice_duration_seconds": 75,
+        "assessment_type": "assessment",
+        "excercises": [
+            {
+                "position": 1,
+                "kind": "phoneme_manipulation",
+                "skill": "phonological_awareness",
+                "difficulty": 4,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "audio_prompt": "Say street in your head. Remove the /t/ sound. Which answer matches?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "sreet"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "street"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "seat"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "b",
+                            "audio_prompt": "Say crate in your head. Replace /k/ with /g/. Which word do you get?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "grate"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "crate"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "great"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "c",
+                            "audio_prompt": "Which option gives the sounds in prompts in the correct order?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "/p/ /r/ /o/ /m/ /p/ /t/ /s/"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "/p/ /o/ /r/ /m/ /p/ /t/ /s/"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "/p/ /r/ /o/ /m/ /t/ /p/ /s/"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "d",
+                            "audio_prompt": "Say blend in your head. Remove the first /b/ sound. Which answer is left?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "lend"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "blend"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "bend"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "1",
+                    "b": "1",
+                    "c": "1",
+                    "d": "1"
+                },
+                "confidence": 84
+            },
+            {
+                "position": 2,
+                "kind": "letter_sound",
+                "skill": "letter_sound",
+                "difficulty": 4,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to or read each prompt and choose the matching word. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "grapheme": "ough",
+                            "target_sound": "as in although",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "although"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "rough"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "thought"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "b",
+                            "grapheme": "ph",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "telephone"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "hope"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "open"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "c",
+                            "grapheme": "tion",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "information"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "nationwide"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "tonight"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "d",
+                            "grapheme": "sion",
+                            "target_sound": "as in decision",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "decision"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "mission"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "season"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "e",
+                            "grapheme": "gue",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "colleague"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "guide"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "garage"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "f",
+                            "grapheme": "ei",
+                            "target_sound": "long e",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "receive"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "height"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "their"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_supported": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "1",
+                    "b": "1",
+                    "c": "1",
+                    "d": "1",
+                    "e": "1",
+                    "f": "1"
+                },
+                "confidence": 88
+            },
+            {
+                "position": 3,
+                "kind": "word_reading_sample",
+                "skill": "decoding_and_word_recognition",
+                "difficulty": 4,
+                "response_type": "spoken",
+                "instruction": "This is one of only two short speaking parts. Read the words aloud from left to right.",
+                "content_data": {
+                    "sections": [
+                        {
+                            "id": "pseudowords",
+                            "label": "Made-up words",
+                            "items": [
+                                "relvicate",
+                                "monestral",
+                                "preficient",
+                                "clostering",
+                                "subrenity"
+                            ]
+                        },
+                        {
+                            "id": "real_words",
+                            "label": "Real words",
+                            "items": [
+                                "receipt",
+                                "maintenance",
+                                "schedule",
+                                "colleague"
+                            ]
+                        }
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 35
+                },
+                "confidence": 86
+            },
+            {
+                "position": 4,
+                "kind": "reading_fluency",
+                "skill": "reading_fluency",
+                "difficulty": 4,
+                "response_type": "spoken",
+                "instruction": "This is the second and final speaking part. Read the short passage aloud at a comfortable pace.",
+                "content_data": {
+                    "passage_lines": [
+                        "Your appointment has been moved to Thursday at 10:30 a.m.",
+                        "Please arrive ten minutes early and bring photo identification.",
+                        "If you need to change the booking, use the confirmation link in your email before",
+                        "5 p.m.",
+                        "on Wednesday.",
+                        "Changes requested after that time may require a phone call and could result in a",
+                        "later appointment date."
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 40
+                },
+                "confidence": 86
+            },
+            {
+                "position": 5,
+                "kind": "spelling",
+                "skill": "spelling",
+                "difficulty": 4,
+                "response_type": "typed_text",
+                "instruction": "Listen to each dictated word and type it. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "word": "necessary",
+                            "sentence": "Photo identification is necessary for entry."
+                        },
+                        {
+                            "id": "b",
+                            "word": "available",
+                            "sentence": "The next available appointment is on Monday."
+                        },
+                        {
+                            "id": "c",
+                            "word": "maintenance",
+                            "sentence": "The lift is closed for maintenance."
+                        },
+                        {
+                            "id": "d",
+                            "word": "receipt",
+                            "sentence": "Please keep your receipt."
+                        },
+                        {
+                            "id": "e",
+                            "word": "recommendation",
+                            "sentence": "The report includes a recommendation."
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "necessary",
+                    "b": "available",
+                    "c": "maintenance",
+                    "d": "receipt",
+                    "e": "recommendation"
+                },
+                "confidence": 82
+            },
+            {
+                "position": 6,
+                "kind": "comprehension",
+                "skill": "comprehension",
+                "difficulty": 4,
+                "response_type": "single_choice_set",
+                "instruction": "Read the passage silently and answer both questions. No speaking is needed.",
+                "content_data": {
+                    "passage": [
+                        "A workplace training session begins at 9:00 a.m.",
+                        "on Monday.",
+                        "The confirmation message asks participants to join the video call five minutes",
+                        "early and says that anyone who cannot attend should notify the organiser by 4:00",
+                        "p.m.",
+                        "on Friday.",
+                        "Priya learns on Friday morning that she has a medical appointment at the same time",
+                        "as the training."
+                    ],
+                    "items": [
+                        {
+                            "id": "q1",
+                            "prompt": "By when should Priya notify the organiser?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "Before 4:00 p.m. on Friday."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "At 9:00 a.m. on Monday."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "After the training session."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "q2",
+                            "prompt": "Why is Friday morning a useful time for Priya to act?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "She is still before the notification deadline."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "The training has already ended."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "The organiser only reads messages on Friday morning."
+                                }
+                            ]
+                        }
+                    ],
+                    "microphone_required": false
+                },
+                "confidence": 86
+            },
+            {
+                "position": 7,
+                "kind": "working_memory",
+                "skill": "working_memory",
+                "difficulty": 3,
+                "response_type": "sequence",
+                "instruction": "Watch or listen to each short sequence. When it disappears, enter it in the requested order. No speaking is needed.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "direction": "forward",
+                            "sequence": [
+                                "4",
+                                "9",
+                                "1",
+                                "7",
+                                "3"
+                            ]
+                        },
+                        {
+                            "id": "b",
+                            "direction": "reverse",
+                            "sequence": [
+                                "8",
+                                "2",
+                                "6",
+                                "5"
+                            ]
+                        }
+                    ],
+                    "display_ms_per_digit": 800,
+                    "microphone_required": false,
+                    "audio_supported": true
+                },
+                "answers": {
+                    "a": [
+                        "4",
+                        "9",
+                        "1",
+                        "7",
+                        "3"
+                    ],
+                    "b": [
+                        "5",
+                        "6",
+                        "2",
+                        "8"
+                    ]
+                },
+                "confidence": 82
+            }
+        ],
+        "created_at": "2024-06-05T12:00:00Z"
+    }
+}

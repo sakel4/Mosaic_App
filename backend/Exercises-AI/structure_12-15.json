@@ -1,0 +1,462 @@
+{
+    "assessment": {
+        "age_group": "12_15",
+        "language": "en",
+        "estimated_duration_seconds": 540,
+        "estimated_voice_duration_seconds": 75,
+        "assessment_type": "assessment",
+        "excercises": [
+            {
+                "position": 1,
+                "kind": "phoneme_manipulation",
+                "skill": "phonological_awareness",
+                "difficulty": 3,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "audio_prompt": "Say smile in your head. Remove the first /s/ sound. Which answer is left?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "mile"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "smile"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "style"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "b",
+                            "audio_prompt": "Say coast in your head. Replace the first /k/ sound with /t/. Which word do you get?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "toast"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "coast"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "most"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "c",
+                            "audio_prompt": "Which option gives the sounds in splash in the correct order?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "/s/ /p/ /l/ /a/ /sh/"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "/s/ /l/ /p/ /a/ /sh/"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "/sh/ /p/ /l/ /a/ /s/"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "d",
+                            "audio_prompt": "Say planned in your head. Remove the first /p/ sound. Which answer is left?",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "lanned"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "planned"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "land"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "1",
+                    "b": "1",
+                    "c": "1",
+                    "d": "1"
+                },
+                "confidence": 84
+            },
+            {
+                "position": 2,
+                "kind": "letter_sound",
+                "skill": "letter_sound",
+                "difficulty": 3,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to or read each prompt and choose the matching word. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "grapheme": "tion",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "station"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "stone"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "stamp"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "b",
+                            "grapheme": "igh",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "night"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "neat"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "net"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "c",
+                            "grapheme": "ea",
+                            "target_sound": "long e",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "team"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "head"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "break"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "d",
+                            "grapheme": "ph",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "phone"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "hope"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "pony"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "e",
+                            "grapheme": "ous",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "famous"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "mouse"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "music"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        },
+                        {
+                            "id": "f",
+                            "grapheme": "dge",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "bridge"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "bright"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "bring"
+                                }
+                            ],
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_supported": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "1",
+                    "b": "1",
+                    "c": "1",
+                    "d": "1",
+                    "e": "1",
+                    "f": "1"
+                },
+                "confidence": 88
+            },
+            {
+                "position": 3,
+                "kind": "word_reading_sample",
+                "skill": "decoding_and_word_recognition",
+                "difficulty": 3,
+                "response_type": "spoken",
+                "instruction": "This is one of only two short speaking parts. Read the words aloud from left to right.",
+                "content_data": {
+                    "sections": [
+                        {
+                            "id": "pseudowords",
+                            "label": "Made-up words",
+                            "items": [
+                                "plinder",
+                                "strome",
+                                "narpish",
+                                "frelment",
+                                "chostive"
+                            ]
+                        },
+                        {
+                            "id": "real_words",
+                            "label": "Real words",
+                            "items": [
+                                "enough",
+                                "though",
+                                "knowledge",
+                                "separate"
+                            ]
+                        }
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 35
+                },
+                "confidence": 86
+            },
+            {
+                "position": 4,
+                "kind": "reading_fluency",
+                "skill": "reading_fluency",
+                "difficulty": 3,
+                "response_type": "spoken",
+                "instruction": "This is the second and final speaking part. Read the short passage aloud at a comfortable pace.",
+                "content_data": {
+                    "passage_lines": [
+                        "The science club planned to watch the night sky from the school field.",
+                        "Clouds covered the horizon at first, but the weather cleared before the",
+                        "observation began.",
+                        "Students recorded what they saw and compared their notes the next morning.",
+                        "Several groups noticed that the same bright object appeared in slightly different",
+                        "positions as time passed."
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 40
+                },
+                "confidence": 86
+            },
+            {
+                "position": 5,
+                "kind": "spelling",
+                "skill": "spelling",
+                "difficulty": 3,
+                "response_type": "typed_text",
+                "instruction": "Listen to each dictated word and type it. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "word": "separate",
+                            "sentence": "Please keep the two samples separate."
+                        },
+                        {
+                            "id": "b",
+                            "word": "decision",
+                            "sentence": "The group made a decision before lunch."
+                        },
+                        {
+                            "id": "c",
+                            "word": "necessary",
+                            "sentence": "A password is necessary to sign in."
+                        },
+                        {
+                            "id": "d",
+                            "word": "environment",
+                            "sentence": "The project studies the local environment."
+                        },
+                        {
+                            "id": "e",
+                            "word": "immediately",
+                            "sentence": "The message was answered immediately."
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "answers": {
+                    "a": "separate",
+                    "b": "decision",
+                    "c": "necessary",
+                    "d": "environment",
+                    "e": "immediately"
+                },
+                "confidence": 82
+            },
+            {
+                "position": 6,
+                "kind": "comprehension",
+                "skill": "comprehension",
+                "difficulty": 3,
+                "response_type": "single_choice_set",
+                "instruction": "Read the passage silently and answer both questions. No speaking is needed.",
+                "content_data": {
+                    "passage": [
+                        "A school media club publishes a short online magazine every Friday.",
+                        "This week, the editor asked each team to submit its article by Wednesday afternoon",
+                        "so there would be enough time to check facts and correct mistakes.",
+                        "One team finished on Thursday morning.",
+                        "Their article was good, but it could not be included in Friday's edition."
+                    ],
+                    "items": [
+                        {
+                            "id": "q1",
+                            "prompt": "Why was the Thursday article not included on Friday?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "It was too short."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "It missed the Wednesday deadline."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "The facts were all wrong."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "q2",
+                            "prompt": "What can the team do to improve its chance of appearing next time?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "Submit before the stated deadline."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "Make the article longer."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "Wait until Friday morning."
+                                }
+                            ]
+                        }
+                    ],
+                    "microphone_required": false
+                },
+                "answers": {
+                    "q1": "b",
+                    "q2": "a"
+                },
+                "confidence": 86
+            },
+            {
+                "position": 7,
+                "kind": "working_memory",
+                "skill": "working_memory",
+                "difficulty": 2,
+                "response_type": "sequence",
+                "instruction": "Watch or listen to each short sequence. When it disappears, enter it in the requested order. No speaking is needed.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "direction": "forward",
+                            "sequence": [
+                                "8",
+                                "3",
+                                "1",
+                                "6"
+                            ]
+                        },
+                        {
+                            "id": "b",
+                            "direction": "reverse",
+                            "sequence": [
+                                "5",
+                                "2",
+                                "9",
+                                "4"
+                            ]
+                        }
+                    ],
+                    "display_ms_per_digit": 800,
+                    "microphone_required": false,
+                    "audio_supported": true
+                },
+                "answers": {
+                    "a": [
+                        "8",
+                        "3",
+                        "1",
+                        "6"
+                    ],
+                    "b": [
+                        "4",
+                        "9",
+                        "2",
+                        "5"
+                    ]
+                },
+                "confidence": 82
+            }
+        ],
+        "created_at": "2024-06-05T12:00:00Z"
+    }
+}
