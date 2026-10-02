@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+import suppliedFixture from '../../../core/data/assessment-under-12.json';
 import { exercises } from '../../../core/services/dummy_data';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExcerciseComponent } from './exercise-component';
@@ -56,5 +58,156 @@ describe('ExcerciseComponent', () => {
         response_type: 'single_choice_set', instruction: 'Listen.', content_data: { items: [] } }],
     } });
     expect(exercises[0].language).toBe('en');
+  });
+  async function loadSupplied(index: number) {
+    const activities = assessmentExercises(suppliedFixture as Parameters<typeof assessmentExercises>[0]);
+    fixture.componentRef.setInput('exercise', activities[index]);
+    fixture.componentRef.setInput('mode', 'assessment');
+    await fixture.whenStable();
+  }
+
+  it('renders graphemes and leaves answers without a key unevaluated', async () => {
+    await loadSupplied(1);
+    expect(component.content().prompt).toBe('m');
+    const emitted = vi.fn();
+    component.completed.subscribe(emitted);
+    component.choose('1');
+    component.submit();
+    expect(emitted).toHaveBeenCalledWith(expect.objectContaining({
+      exerciseId: suppliedFixture[0].excercises[1].id, evaluated: false, itemAnswers: { a: '1' },
+    }));
+  });
+
+  it('renders both spoken content shapes without requiring items', async () => {
+    await loadSupplied(2);
+    expect(fixture.nativeElement.textContent).not.toContain('Made-up words');
+    expect(fixture.nativeElement.textContent).not.toContain('Real words');
+    expect(fixture.nativeElement.textContent).toContain('froat');
+    expect(component.canSubmit()).toBe(false);
+    await loadSupplied(3);
+    expect(fixture.nativeElement.textContent).toContain('Maya found a small box');
+    expect(fixture.nativeElement.textContent).toContain('Speech recognition is not available');
+  });
+
+  it('accepts typed spelling without exposing the dictated word', async () => {
+    await loadSupplied(4);
+    expect(fixture.nativeElement.querySelector('input')).toBeTruthy();
+    expect(fixture.nativeElement.textContent).not.toContain('ship');
+    const emitted = vi.fn();
+    component.completed.subscribe(emitted);
+    component.choose('ship');
+    component.submit();
+    expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ correct: true, itemAnswers: { a: 'ship' } }));
+  });
+
+  it('shows the comprehension passage and question', async () => {
+    await loadSupplied(5);
+    expect(fixture.nativeElement.textContent).toContain('Leo was getting ready');
+    expect(fixture.nativeElement.textContent).toContain('Why did Leo take an umbrella?');
+  });
+
+  it('hides the timed sequence before accepting its reverse', async () => {
+    await loadSupplied(6);
+    vi.useFakeTimers();
+    try {
+      component.startSequence();
+      expect(component.sequenceVisible()).toBe('4');
+      component.choose('7 1 4');
+      expect(component.canSubmit()).toBe(false);
+      vi.advanceTimersByTime(2700);
+      expect(component.sequenceVisible()).toBeNull();
+      expect(component.canSubmit()).toBe(true);
+      const emitted = vi.fn();
+      component.completed.subscribe(emitted);
+      component.submit();
+      expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ correct: true }));
+    } finally { vi.useRealTimers(); }
+  });
+
+  it('transcribes reading and matches text regardless of punctuation, case, or line breaks', async () => {
+    await loadSupplied(3);
+    let recognition: any;
+    class RecognitionMock {
+      lang = '';
+      continuous = false;
+      interimResults = false;
+      onresult: any;
+      onend: any;
+      onerror: any;
+      constructor() { recognition = this; }
+      start() {}
+      stop() { this.onend(); }
+      abort = vi.fn();
+    }
+    vi.stubGlobal('SpeechRecognition', RecognitionMock);
+    try {
+      component.startTranscription();
+      expect(component.listening()).toBe(true);
+      expect(recognition.lang).toBe('en');
+      const text = component.spokenTarget().toUpperCase().replace(/[.,]/g, '');
+      recognition.onresult({ results: [{ isFinal: true, 0: { transcript: text } }] });
+      expect(component.canSubmit()).toBe(false);
+      component.stopTranscription();
+      expect(component.canSubmit()).toBe(true);
+      const emitted = vi.fn();
+      component.completed.subscribe(emitted);
+      component.submit();
+      expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ evaluated: true, correct: true, answer: text }));
+      expect(emitted.mock.calls[0][0]).not.toHaveProperty('audio');
+    } finally { vi.unstubAllGlobals(); }
+  });
+
+  it('marks an incomplete spoken passage incorrect', async () => {
+    await loadSupplied(3);
+    component.transcript.set('Maya found a small box');
+    const emitted = vi.fn();
+    component.completed.subscribe(emitted);
+    component.submit();
+    expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ evaluated: true, correct: false }));
+  });
+
+  it('matches spoken section words without requiring the section label', async () => {
+    await loadSupplied(2);
+    component.transcript.set('lat mip shen plim froat');
+    const emitted = vi.fn();
+    component.completed.subscribe(emitted);
+    component.submit();
+    expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ evaluated: true, correct: true }));
+  });
+
+  it('accepts 80% word accuracy but rejects less than 80% and excessive extra words', async () => {
+    await loadSupplied(2);
+    const emitted = vi.fn();
+    component.completed.subscribe(emitted);
+    component.transcript.set('lat mip shen plim wrong');
+    component.submit();
+    expect(emitted.mock.lastCall![0].correct).toBe(true);
+    component.transcript.set('lat mip shen wrong wrong');
+    component.submit();
+    expect(emitted.mock.lastCall![0].correct).toBe(false);
+    component.transcript.set('lat mip shen plim froat extra extra');
+    component.submit();
+    expect(emitted.mock.lastCall![0].correct).toBe(false);
+  });
+
+  it('offers speech playback for choices even when the preference is disabled', async () => {
+    const speak = vi.fn();
+    vi.stubGlobal('speechSynthesis', { cancel: vi.fn(), speak });
+    vi.stubGlobal('SpeechSynthesisUtterance', class { constructor(public text: string) {} });
+    try {
+      const audioFixture = TestBed.createComponent(ExcerciseComponent);
+      audioFixture.componentRef.setInput('exercise', exercises[0]);
+      audioFixture.componentRef.setInput('mode', 'practice');
+      const audioComponent = audioFixture.componentInstance;
+      const profile = audioComponent.users.profile();
+      vi.spyOn(audioComponent.users, 'profile').mockReturnValue({ ...profile, preferences: { ...profile.preferences, textToSpeech: false } });
+      await audioFixture.whenStable();
+      const button = audioFixture.nativeElement.querySelector('.choice-audio-button');
+      expect(button).toBeTruthy();
+      button.click();
+      expect(speak).toHaveBeenCalledWith(expect.objectContaining({ text: exercises[0].content.options[0] }));
+      expect(audioComponent.selected()).toBeNull();
+      audioFixture.destroy();
+    } finally { vi.unstubAllGlobals(); }
   });
 });

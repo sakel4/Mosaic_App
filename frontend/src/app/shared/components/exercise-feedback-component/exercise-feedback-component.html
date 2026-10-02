@@ -1,19 +1,14 @@
 <section class="feedback-card" [class.encouraging]="attempt().correct" aria-live="polite">
-    <span class="feedback-icon" aria-hidden="true">{{ attempt().correct ? '✓' : '↗' }}</span>
-    <div class="feedback-copy">
-        <h2>{{ attempt().correct ? 'Nice work!' : 'Not quite — keep exploring' }}</h2>
-        <p>
-            {{
-            attempt().correct
-            ? content().explanation
-            : 'The answer was “' +
-            content().correctAnswer +
-            '”. ' +
-            content().explanation
-            }}
-        </p>
-    </div>
-    <button class="primary-button" type="button" (click)="continued.emit()">
-        {{ continueLabel() }} <span aria-hidden="true">→</span>
-    </button>
+  <span class="feedback-icon" aria-hidden="true">{{ attempt().correct ? '?' : '?' }}</span>
+  <div class="feedback-copy">
+    <h2>{{ attempt().correct ? 'Nice work!' : 'Not quite ? keep exploring' }}</h2>
+    @if (attempt().correct) {
+      <p>{{ content().explanation }}</p>
+    } @else if (content().correctAnswer) {
+      <p>The correct answer is ?{{ content().correctAnswer }}?.</p>
+    }
+  </div>
+  <button class="primary-button" type="button" (click)="continued.emit()">
+    {{ continueLabel() }} <span aria-hidden="true">?</span>
+  </button>
 </section>

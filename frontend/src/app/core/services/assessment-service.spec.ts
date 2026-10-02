@@ -1,0 +1,62 @@
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { vi } from 'vitest';
+import { AssessmentService } from './assessment-service';
+import { AuthService } from './auth-service';
+import { httpInterceptor } from '../interceptors/http-interceptor';
+import { tokenInterceptor } from '../interceptors/token-interceptor';
+import { environment } from '../../../environments/environment';
+import assessmentFixture from '../data/assessment-12-15.json';
+import suppliedFixture from '../data/assessment-under-12.json';
+
+describe('AssessmentService HTTP integration', () => {
+  let http: HttpTestingController;
+  let service: AssessmentService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [
+      provideHttpClient(withInterceptors([httpInterceptor, tokenInterceptor])),
+      provideHttpClientTesting(),
+      { provide: AuthService, useValue: { token: () => 'test-user-token', logout: vi.fn() } },
+    ] });
+    http = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(AssessmentService);
+  });
+
+  afterEach(() => http.verify());
+
+  it('loads assessment using the current user Bearer token and maps the response', () => {
+    const received = vi.fn();
+    service.getAssessment().subscribe(received);
+    const request = http.expectOne(`${environment.apiUrl}/assessments/initial/`);
+    expect(request.request.method).toBe('GET');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer test-user-token');
+    expect(request.request.params.keys()).toHaveLength(0);
+    request.flush(assessmentFixture);
+    expect(received).toHaveBeenCalledWith(expect.arrayContaining([
+      expect.objectContaining({ position: 1, language: 'en', skill: 'phonological_awareness' }),
+    ]));
+    expect(received.mock.calls[0][0]).toHaveLength(8);
+  });
+
+  it('accepts the supplied array and preserves UUIDs and all response types', () => {
+    const received = vi.fn();
+    service.getAssessment().subscribe(received);
+    http.expectOne(`${environment.apiUrl}/assessments/initial/`).flush(suppliedFixture);
+    const activities = received.mock.calls[0][0];
+    expect(activities).toHaveLength(7);
+    expect(activities[0]).toMatchObject({ id: suppliedFixture[0].excercises[0].id, difficulty: 2, language: 'en' });
+    expect(activities.map((activity: { response_type: string }) => activity.response_type))
+      .toEqual(['single_choice_set', 'single_choice_set', 'spoken', 'spoken', 'spelling', 'single_choice_set', 'sequence']);
+  });
+
+  it('passes HTTP failures to the subscriber', () => {
+    const failed = vi.fn();
+    service.getAssessment().subscribe({ error: failed });
+    http.expectOne(`${environment.apiUrl}/assessments/initial/`).flush(
+      { detail: 'Unavailable' }, { status: 503, statusText: 'Service Unavailable' },
+    );
+    expect(failed).toHaveBeenCalledWith(expect.objectContaining({ status: 503 }));
+  });
+});

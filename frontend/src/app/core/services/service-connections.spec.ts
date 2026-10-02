@@ -27,7 +27,7 @@ describe('Page service connections', () => {
 
   const attempt = (exercise: Exercise | AssessmentExercise) => ({
     exerciseId: exercise.id ?? ('position' in exercise ? exercise.position : 0),
-    answer: 'content' in exercise ? exercise.content.correctAnswer : exercise.content_data.items[0].correct_option_id,
+    answer: 'content' in exercise ? exercise.content.correctAnswer : (exercise.content_data.items?.[0]?.correct_option_id ?? ''),
     correct: true,
     responseTime: 1000,
   });
