@@ -1,0 +1,10 @@
+from assessments.models import AssessmentExcercise
+
+exercises = AssessmentExcercise.objects.filter(
+    assessment__age_group='19_plus'
+).order_by('position').values('position', 'kind', 'exercise_id')
+
+print("\n✅ Exercise IDs for 19_plus Assessment:\n")
+for ex in exercises:
+    print(f"  {ex['position']}: {ex['kind']:25} -> {ex['exercise_id']}")
+print()

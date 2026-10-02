@@ -74,7 +74,7 @@ class InsertAssessmentTests(TestCase):
                 assessment = insert_assessment(payload)
                 self.assertEqual(
                     assessment.excercises.count(),
-                    len(payload.get("assessment", payload)["excercises"]),
+                    len(payload["assessment"]["excercises"]),
                 )
 
 

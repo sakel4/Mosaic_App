@@ -49,7 +49,7 @@ class Assessment(models.Model):
     estimated_duration_seconds = models.IntegerField(blank=True, null=True)
     estimated_voice_duration_seconds = models.IntegerField(blank=True, null=True)
     assessment_type = models.CharField(max_length=100, choices=AssessmentType.choices, blank=True, default="")
-    # Set for per-learner generated assessments (exercise); null for the shared default assessments.
+    # Set for per-learner generated types (exercise, real_life); null for the shared default assessments.
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
