@@ -53,3 +53,28 @@ input[type='text'] {
   border-radius: 12px;
   font: inherit;
 }
+
+.real-world-mode {
+  padding: 28px;
+  border-color: #eee5d8;
+  border-radius: 18px;
+  background: #fffdfa;
+
+  .mode-label { color: #798e87; font-size: 11px; letter-spacing: .08em; }
+  .prompt, .prompt-lines { max-width: 100%; margin: 24px 0; color: var(--ink); font-weight: 500; }
+  .prompt-line { padding: 3px 8px; border-radius: 3px; }
+  .prompt-line.current-line { border-left-color: #45aaa2; background: #dcefeb; color: #006978; }
+  .answer-list { gap: 10px; }
+  .answer-option { min-height: 51px; padding: 12px 14px; border-color: #e1e8e5; border-radius: 11px; color: var(--ink); }
+  .answer-option:hover { border-color: var(--selection-border); background: var(--hover-surface); }
+  .answer-option.selected { border-color: var(--selection-border); background: var(--selection-surface); color: var(--selection-text); }
+  .answer-option:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+  .exercise-actions { margin-top: 23px; }
+  .reassurance { color: #788880; }
+  .primary-button { min-height: 43px; padding-inline: 20px; border-radius: 13px; }
+  .primary-button:disabled { background: #e5e8ef; color: #515b70; }
+}
+
+@media (max-width: 640px) {
+  .real-world-mode { padding: 24px 18px; }
+}

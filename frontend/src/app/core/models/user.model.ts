@@ -8,7 +8,7 @@ export interface User {
   last_name: string;
   role: 'learner' | 'admin';
   assessment_completed: boolean;
-  onboarding_completed: boolean;
+  on_bording_completed: boolean;
   created_at: string;
   profile: {
     age_group: string;

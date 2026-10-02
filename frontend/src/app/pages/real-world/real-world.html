@@ -4,8 +4,9 @@
     <h1 class="page-title">Reading for the everyday</h1>
     <p class="page-subtitle">Practice the little reading moments that help life run smoothly.</p>
   </header>
-  <div class="scenario-layout">
+  <div class="scenario-layout" [class.showing-feedback]="feedback()">
     <div>
+      @if (!feedback()) {
       <div class="scenario-heading">
         <span class="scenario-icon" aria-hidden="true">⌖</span>
         <div>
@@ -21,10 +22,12 @@
           }
         </div>
       </article>
+      }
       @if (feedback()) {
         <app-exercise-feedback-component
           [attempt]="lastAttempt()!"
           [exercise]="scenario.exercise"
+          continueLabel="Try another scenario"
           (continued)="tryAnother()"
         />
       } @else {
@@ -35,6 +38,7 @@
         />
       }
     </div>
+    @if (!feedback()) {
     <aside class="real-life-aside">
       <span class="aside-label">A REAL-WORLD MOMENT</span>
       <h3>{{ scenario.title }}</h3>
@@ -44,5 +48,6 @@
         Real life gives us lots of chances to use reading skills. Take this one at your own pace.
       </p>
     </aside>
+    }
   </div>
 </section>

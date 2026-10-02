@@ -1,210 +1,265 @@
 {
   "category": "Everyday Life & Dyslexia",
+  "style_goal": "Real-world reading tasks presented as visual artefacts such as tickets, schedules, menus, booking cards, noticeboards, and digital messages.",
   "age_groups": {
     "under_12": [
       {
-        "id": "u12_01",
-        "title": "Shopping — Finding an item",
-        "context": "IN THE SHOP",
+        "id": "u12_rw_01",
+        "title": "Cinema ticket — Finding your screen",
+        "context": "AT THE CINEMA",
+        "scenario_type": "ticket",
         "information": [
-          "Apples → Aisle 2",
-          "Milk → Aisle 4",
-          "Bread → Aisle 1"
+          "MOVIE TICKET",
+          "Film: Dino Rescue",
+          "Time: 2:30 PM",
+          "Screen: 3",
+          "Seat: B8"
         ],
-        "question": "Which aisle should you go to?",
+        "question": "Which screen should you go to?",
         "options": [
-          "Aisle 1",
-          "Aisle 2",
-          "Aisle 3",
-          "Aisle 4"
+          "Screen 1",
+          "Screen 2",
+          "Screen 3",
+          "Screen 8"
         ],
-        "correct_answer": "Aisle 2"
+        "correct_answer": "Screen 3",
+        "visual_hint": "A colourful cinema ticket with large time, screen number, and seat."
       },
       {
-        "id": "u12_02",
-        "title": "Time — Getting ready",
-        "context": "GETTING READY",
+        "id": "u12_rw_02",
+        "title": "Zoo map sign — Finding the animals",
+        "context": "AT THE ZOO",
+        "scenario_type": "sign",
         "information": [
-          "Your swimming lesson starts at 4:00 PM.",
-          "You need to leave home at 3:30 PM.",
-          "The clock says 3:15 PM."
+          "ZOO SIGNS",
+          "Penguins →",
+          "Lions ←",
+          "Reptile House ↑"
         ],
-        "question": "What should you do now?",
+        "question": "You want to see the lions. Which way should you go?",
         "options": [
-          "Get ready to leave",
-          "Go to the swimming pool",
-          "Have dinner",
-          "Go to bed"
-        ],
-        "correct_answer": "Get ready to leave"
-      },
-      {
-        "id": "u12_03",
-        "title": "Signs — Finding the right place",
-        "context": "AT THE COMMUNITY CENTRE",
-        "information": [
-          "Toilets →",
-          "Café ←",
-          "Library ↑"
-        ],
-        "question": "You want to go to the library. Which way should you go?",
-        "options": [
-          "Left",
           "Right",
+          "Left",
           "Straight ahead",
-          "Outside"
+          "Back to the entrance"
         ],
-        "correct_answer": "Straight ahead"
+        "correct_answer": "Left",
+        "visual_hint": "A playful zoo direction sign with icons for each animal area."
+      },
+      {
+        "id": "u12_rw_03",
+        "title": "Birthday party schedule — Knowing what comes next",
+        "context": "BIRTHDAY PARTY PLAN",
+        "scenario_type": "schedule",
+        "information": [
+          "PARTY SCHEDULE",
+          "1:00 PM — Games",
+          "1:30 PM — Magic Show",
+          "2:00 PM — Cake",
+          "2:30 PM — Treasure Hunt"
+        ],
+        "question": "What happens at 2:00 PM?",
+        "options": [
+          "Games",
+          "Magic Show",
+          "Cake",
+          "Treasure Hunt"
+        ],
+        "correct_answer": "Cake",
+        "visual_hint": "A bright party timetable with playful icons beside each activity."
       }
     ],
     "12_15": [
       {
-        "id": "12_15_01",
-        "title": "Money — Choosing what you can afford",
-        "context": "AT THE SHOP",
+        "id": "12_15_rw_01",
+        "title": "Gaming event schedule — Finding your match",
+        "context": "GAMING TOURNAMENT",
+        "scenario_type": "schedule",
         "information": [
-          "You have £10.",
-          "Headphones — £7",
-          "Snack — £2",
-          "Drink — £2"
+          "TODAY'S MATCHES",
+          "Rocket Clash — 12:15 PM — Zone A",
+          "Pixel Quest — 1:00 PM — Zone C",
+          "Goal Masters — 2:30 PM — Zone B",
+          "Castle Run — 4:00 PM — Zone D"
         ],
-        "question": "Which two things can you buy without spending more than £10?",
+        "question": "Where should you go for Pixel Quest?",
         "options": [
-          "Headphones + snack",
-          "Headphones + drink",
-          "Snack + drink",
-          "All three"
+          "Zone A",
+          "Zone B",
+          "Zone C",
+          "Zone D"
         ],
-        "correct_answer": [
-          "Headphones + snack",
-          "Headphones + drink"
-        ],
-        "note": "For a single-answer question, adjust the prices so only one option is correct."
+        "correct_answer": "Zone C",
+        "visual_hint": "An esports-style event board with game titles, times, and zones."
       },
       {
-        "id": "12_15_02",
-        "title": "Instructions — Following steps",
-        "context": "CHARGE YOUR PHONE",
+        "id": "12_15_rw_02",
+        "title": "Food truck menu — Using the deal board",
+        "context": "AT THE FOOD FESTIVAL",
+        "scenario_type": "menu",
         "information": [
-          "1. Plug in the charger.",
-          "2. Connect the phone.",
-          "3. Switch on the socket."
+          "BURGER VAN",
+          "Burger — £5",
+          "Fries — £2",
+          "Drink — £2",
+          "Meal Deal: Burger + Fries — £6"
         ],
-        "question": "What should you do FIRST?",
+        "question": "How much is the meal deal?",
         "options": [
-          "Switch on the socket",
-          "Connect the phone",
-          "Plug in the charger",
-          "Put the phone away"
+          "£5",
+          "£6",
+          "£7",
+          "£8"
         ],
-        "correct_answer": "Plug in the charger"
+        "correct_answer": "£6",
+        "visual_hint": "A chalkboard-style menu with one deal highlighted in a bright label."
       },
       {
-        "id": "12_15_03",
-        "title": "Planning — Remembering an appointment",
-        "context": "YOUR WEEK",
+        "id": "12_15_rw_03",
+        "title": "Theme park ride notice — Reading the rules",
+        "context": "AT THE THEME PARK",
+        "scenario_type": "notice",
         "information": [
-          "Monday: Football — 5:00 PM",
-          "Tuesday: Dentist — 3:30 PM",
-          "Wednesday: Homework club — 4:00 PM"
+          "RIDE NOTICE",
+          "Ride: Sky Spinner",
+          "Minimum height: 140 cm",
+          "Wait time: 25 minutes",
+          "Children must keep seat belts fastened."
         ],
-        "question": "You have a dentist appointment. What day is it?",
+        "question": "What is the minimum height for the ride?",
         "options": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday"
+          "120 cm",
+          "130 cm",
+          "140 cm",
+          "150 cm"
         ],
-        "correct_answer": "Tuesday"
+        "correct_answer": "140 cm",
+        "visual_hint": "A ride information board with safety icons and a height marker."
       }
     ],
     "16_18": [
       {
-        "id": "16_18_01",
-        "title": "Money — Understanding change",
-        "context": "AT A CAFÉ",
+        "id": "16_18_rw_01",
+        "title": "Festival lineup — Finding the right act",
+        "context": "AT A MUSIC FESTIVAL",
+        "scenario_type": "schedule",
         "information": [
-          "You pay with a £10 note.",
-          "Your food costs £6.50."
+          "MAIN STAGE",
+          "5:00 PM — Neon Lights",
+          "6:15 PM — The Waves",
+          "7:30 PM — Luna Street",
+          "9:00 PM — Midnight Echo"
         ],
-        "question": "How much change should you receive?",
+        "question": "Which act starts at 7:30 PM?",
         "options": [
-          "£2.50",
-          "£3.00",
-          "£3.50",
-          "£4.50"
+          "Neon Lights",
+          "The Waves",
+          "Luna Street",
+          "Midnight Echo"
         ],
-        "correct_answer": "£3.50"
+        "correct_answer": "Luna Street",
+        "visual_hint": "A festival timetable poster with bold act names and stage times."
       },
       {
-        "id": "16_18_02",
-        "title": "Reading — Finding key information",
-        "context": "SCHOOL NOTICE",
+        "id": "16_18_rw_02",
+        "title": "Work rota — Checking your shift",
+        "context": "PART-TIME JOB",
+        "scenario_type": "rota",
         "information": [
-          "ART CLUB",
-          "Thursday 4:15 PM",
-          "Room 12",
-          "Bring a pencil and sketchbook."
+          "SATURDAY SHIFTS",
+          "Alex — 9:00 AM to 1:00 PM",
+          "Sam — 11:00 AM to 3:00 PM",
+          "Jamie — 1:00 PM to 5:00 PM",
+          "Taylor — 3:00 PM to 7:00 PM"
         ],
-        "question": "What do you need to bring?",
+        "question": "What time does Jamie start work?",
         "options": [
-          "A laptop and book",
-          "A pencil and sketchbook",
-          "Paint and a camera",
-          "Nothing"
+          "9:00 AM",
+          "11:00 AM",
+          "1:00 PM",
+          "3:00 PM"
         ],
-        "correct_answer": "A pencil and sketchbook"
+        "correct_answer": "1:00 PM",
+        "visual_hint": "A staff rota displayed like one pinned in a café or shop."
       },
       {
-        "id": "16_18_03",
-        "title": "Time management — Meeting a deadline",
-        "context": "YOUR PLAN",
+        "id": "16_18_rw_03",
+        "title": "Parcel collection message — Finding the locker",
+        "context": "PHONE MESSAGE",
+        "scenario_type": "digital_message",
         "information": [
-          "Assignment due at 6:00 PM.",
-          "Write the final paragraph — 20 min",
-          "Check your work — 10 min",
-          "Upload it — 5 min",
-          "Current time: 5:20 PM"
+          "YOUR PARCEL IS READY",
+          "Locker: 24",
+          "Code: 5831",
+          "Collect before: 8:00 PM",
+          "Location: Central Mall"
         ],
-        "question": "Do you have enough time?",
+        "question": "Which locker should you open?",
         "options": [
-          "Yes",
-          "No",
-          "Only if you skip checking",
-          "The deadline is tomorrow"
+          "Locker 14",
+          "Locker 24",
+          "Locker 34",
+          "Locker 42"
         ],
-        "correct_answer": "Yes"
+        "correct_answer": "Locker 24",
+        "visual_hint": "A phone notification or text message with a clear locker number and pickup code."
       }
     ],
     "18_plus": [
       {
-        "id": "18_plus_01",
-        "title": "Shopping — Comparing information",
-        "context": "SUPERMARKET DEAL",
+        "id": "18_plus_rw_01",
+        "title": "Boarding pass — Finding your gate",
+        "context": "AT THE AIRPORT",
+        "scenario_type": "ticket",
         "information": [
-          "Coffee",
-          "Small: €3.20",
-          "Large: €4.50",
-          "Today: Large coffee 20% off"
+          "BOARDING PASS",
+          "Flight: OA214",
+          "Destination: Rome",
+          "Boarding: 14:10",
+          "Gate: B12",
+          "Seat: 18A"
         ],
-        "question": "What is the sale price of the large coffee?",
+        "question": "Which gate should you go to?",
         "options": [
-          "€3.20",
-          "€3.60",
-          "€3.80",
-          "€4.30"
+          "A12",
+          "B12",
+          "B18",
+          "C12"
         ],
-        "correct_answer": "€3.60"
+        "correct_answer": "B12",
+        "visual_hint": "A realistic boarding pass with flight, gate, seat, and boarding time."
       },
       {
-        "id": "18_plus_02",
-        "title": "Everyday life — Reading an appointment message",
-        "context": "APPOINTMENT",
+        "id": "18_plus_rw_02",
+        "title": "Train connection board — Changing platforms",
+        "context": "AT THE TRAIN STATION",
+        "scenario_type": "schedule",
         "information": [
-          "Your appointment is confirmed.",
+          "YOUR JOURNEY",
+          "Train to Bristol — 16:20 — Platform 3",
+          "Change at Reading",
+          "Connecting train to Oxford — 17:05 — Platform 7"
+        ],
+        "question": "After changing at Reading, which platform should you go to?",
+        "options": [
+          "Platform 3",
+          "Platform 5",
+          "Platform 7",
+          "Platform 17"
+        ],
+        "correct_answer": "Platform 7",
+        "visual_hint": "A split journey card showing the first train and the connection underneath."
+      },
+      {
+        "id": "18_plus_rw_03",
+        "title": "Appointment card — Arriving on time",
+        "context": "HEALTH CENTRE APPOINTMENT",
+        "scenario_type": "appointment_card",
+        "information": [
+          "APPOINTMENT CONFIRMED",
           "Friday 14 June",
-          "10:30 AM",
-          "Green Street Health Centre",
+          "Time: 10:30 AM",
+          "Place: Green Street Health Centre",
           "Please arrive 10 minutes early."
         ],
         "question": "What time should you arrive?",
@@ -214,26 +269,8 @@
           "10:20 AM",
           "10:30 AM"
         ],
-        "correct_answer": "10:20 AM"
-      },
-      {
-        "id": "18_plus_03",
-        "title": "Work — Understanding instructions",
-        "context": "AT WORK",
-        "information": [
-          "1. Check the stock list.",
-          "2. Put new items on the shelves.",
-          "3. Report any missing items to your manager.",
-          "You notice that 5 items are missing."
-        ],
-        "question": "What should you do?",
-        "options": [
-          "Ignore them",
-          "Put them on the shelves",
-          "Report them to your manager",
-          "Throw away the stock list"
-        ],
-        "correct_answer": "Report them to your manager"
+        "correct_answer": "10:20 AM",
+        "visual_hint": "A clean appointment card or SMS confirmation with time and arrival note highlighted."
       }
     ]
   }

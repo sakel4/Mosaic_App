@@ -35,7 +35,7 @@ export class UserService {
     const [first_name, ...rest] = profile.name.trim().split(/\s+/);
     return this.http
       .patch<User>('/users/me/', {
-        ...(completeOnboarding ? { onboarding_completed: true } : {}),
+        ...(completeOnboarding ? { on_bording_completed: true } : {}),
         first_name,
         last_name: rest.join(' '),
         profile: {
@@ -73,7 +73,7 @@ export class UserService {
   }
 
   private updateCompletion(user: User): void {
-    this.onboardingDone.set(user.onboarding_completed);
+    this.onboardingDone.set(user.on_bording_completed);
     this.assessmentDone.set(user.assessment_completed);
   }
 
