@@ -5,6 +5,8 @@ import { By } from '@angular/platform-browser';
 import { RealWorld } from './real-world';
 import { RealLifeSet } from '../../core/models/real-life-set.model';
 import { ExcerciseComponent } from '../../shared/components/exercise-component/exercise-component';
+import { ProgressService } from '../../core/services/progress-service';
+import { vi } from 'vitest';
 
 const setUrl = '/real_life_set/';
 const evaluateUrl = '/real_life_set/evaluate/';
@@ -21,9 +23,14 @@ describe('RealWorld real-life set integration', () => {
   let fixture: ComponentFixture<RealWorld>;
   let http: HttpTestingController;
   let page: RealWorld;
+  const recordAttempt = vi.fn();
   beforeEach(() => {
+    recordAttempt.mockClear();
     localStorage.removeItem('mosaic.realWorld.completedAt');
-    TestBed.configureTestingModule({ imports: [RealWorld], providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({ imports: [RealWorld], providers: [
+      provideHttpClient(), provideHttpClientTesting(),
+      { provide: ProgressService, useValue: { recordAttempt } },
+    ] });
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(RealWorld);
     page = fixture.componentInstance;
@@ -87,6 +94,14 @@ describe('RealWorld real-life set integration', () => {
     page.onCompleted({ exerciseId: 'other', answer: 'Get ready', correct: false, responseTime: 1 });
     expect(page.feedback()).toBe(false);
     expect(page.results()).toEqual({});
+    expect(recordAttempt).not.toHaveBeenCalled();
+  });
+
+  it('records each answered scenario toward stars and stats', () => {
+    http.expectOne(setUrl).flush(realLifeSet());
+    page.onCompleted({ exerciseId: 'set-1_01', answer: 'Go to bed', correct: true, responseTime: 1 });
+    expect(recordAttempt).toHaveBeenCalledWith(
+      expect.objectContaining({ exerciseId: 'set-1_01', correct: false }), 'Everyday reading');
   });
 
   it('recovers from load errors and requests a new set', () => {
