@@ -70,7 +70,11 @@
         {{ currentDate | date:'EEEE, MMMM d' | uppercase }}
       </p>
 
-      <h1 class="page-title">Good afternoon, {{ firstName }} <span aria-hidden="true">✳</span></h1>
+      <h1 class="page-title">
+        {{ greeting }}, {{ firstName }}
+        <span aria-hidden="true">✳</span>
+      </h1>
+
       <p class="page-subtitle">A little practice today can take you a long way.</p>
     </div>
     @if (!assessmentCompleted) {

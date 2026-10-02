@@ -13,6 +13,7 @@ import { DatePipe, UpperCasePipe } from '@angular/common'
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
+
   private readonly users = inject(UserService);
   private readonly progressService = inject(ProgressService);
   private readonly exerciseService = inject(ExerciseService);
@@ -30,4 +31,18 @@ export class Dashboard {
   get firstName(): string {
     return this.users.profile().name.trim().split(/\s+/)[0] || 'there';
   }
+
+
+  get greeting(): string {
+    const hour = this.currentDate.getHours();
+
+    if (hour < 12) {
+      return 'Good morning';
+    } else if (hour < 18) {
+      return 'Good afternoon';
+    } else {
+      return 'Good evening';
+    }
+  }
+
 }
