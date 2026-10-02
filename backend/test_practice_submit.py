@@ -61,23 +61,27 @@ print("=" * 60)
 content_data = exercise_content.get("content_data", {})
 print(f"Content data: {json.dumps(content_data, indent=2)}")
 
-# Create simple answers for testing
+# Create simple answers for testing - MUST be strings only
 answers = {}
 if isinstance(content_data, dict):
     # If content_data has items, create answers for each
     if "items" in content_data:
         for i, item in enumerate(content_data["items"]):
             item_id = item.get("id") or str(i)
-            # For testing, just pick the first option or a default
-            if "options" in item:
-                answers[item_id] = item["options"][0] if item["options"] else "1"
+            # For testing, just pick the first option ID (must be string)
+            if "options" in item and item["options"]:
+                first_option = item["options"][0]
+                option_id = first_option.get("id") if isinstance(first_option, dict) else str(first_option)
+                answers[item_id] = option_id
             else:
                 answers[item_id] = "1"
     elif "questions" in content_data:
         for i, question in enumerate(content_data["questions"]):
             question_id = question.get("id") or str(i)
-            if "options" in question:
-                answers[question_id] = question["options"][0] if question["options"] else "A"
+            if "options" in question and question["options"]:
+                first_option = question["options"][0]
+                option_id = first_option.get("id") if isinstance(first_option, dict) else str(first_option)
+                answers[question_id] = option_id
             else:
                 answers[question_id] = "A"
     else:
