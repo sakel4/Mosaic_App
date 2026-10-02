@@ -1,22 +1,19 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RealLifeEvaluation, RealLifeSet } from '../models/real-life-set.model';
+import { DailyRealLife, DailyRealLifeAttempt } from '../models/daily-real-life.model';
 
 @Injectable({ providedIn: 'root' })
 export class RealWorldService {
   private readonly http = inject(HttpClient);
 
-  // Each call generates and stores a new set on the backend.
-  getSet(): Observable<RealLifeSet> {
-    return this.http.post<RealLifeSet>('/real_life_set/', {});
+  getDailyExercises(): Observable<DailyRealLife> {
+    return this.http.get<DailyRealLife>('/assessments/real_life/daily/');
   }
 
-  // answers maps each exercise id to whether the learner answered correctly.
-  evaluate(setId: string, answers: Record<string, boolean>): Observable<RealLifeEvaluation> {
-    return this.http.post<RealLifeEvaluation>('/real_life_set/evaluate/', {
-      real_life_set_id: setId,
-      answers,
-    });
+  completeExercise(attemptId: string, answer: string): Observable<DailyRealLifeAttempt> {
+    return this.http.post<DailyRealLifeAttempt>(
+      `/assessments/real_life/${encodeURIComponent(attemptId)}/complete/`, { answer },
+    );
   }
 }
