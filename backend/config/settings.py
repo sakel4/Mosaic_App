@@ -135,6 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+REAL_LIFE_TIME_ZONE = os.environ.get('REAL_LIFE_TIME_ZONE', 'Europe/Athens')
 
 USE_I18N = True
 

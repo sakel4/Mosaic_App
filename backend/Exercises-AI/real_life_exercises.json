@@ -1,0 +1,236 @@
+{
+  "category": "Everyday Life & Dyslexia",
+  "age_groups": {
+    "under_12": [
+      {
+        "id": "u12_01",
+        "title": "Shopping — Finding an item",
+        "context": "IN THE SHOP",
+        "information": [
+          "Apples → Aisle 2",
+          "Milk → Aisle 4",
+          "Bread → Aisle 1"
+        ],
+        "question": "Which aisle should you go to?",
+        "options": [
+          "Aisle 1",
+          "Aisle 2",
+          "Aisle 3",
+          "Aisle 4"
+        ],
+        "correct_answer": "Aisle 2"
+      },
+      {
+        "id": "u12_02",
+        "title": "Time — Getting ready",
+        "context": "GETTING READY",
+        "information": [
+          "Your swimming lesson starts at 4:00 PM.",
+          "You need to leave home at 3:30 PM.",
+          "The clock says 3:15 PM."
+        ],
+        "question": "What should you do now?",
+        "options": [
+          "Get ready to leave",
+          "Go to the swimming pool",
+          "Have dinner",
+          "Go to bed"
+        ],
+        "correct_answer": "Get ready to leave"
+      },
+      {
+        "id": "u12_03",
+        "title": "Signs — Finding the right place",
+        "context": "AT THE COMMUNITY CENTRE",
+        "information": [
+          "Toilets →",
+          "Café ←",
+          "Library ↑"
+        ],
+        "question": "You want to go to the library. Which way should you go?",
+        "options": [
+          "Left",
+          "Right",
+          "Straight ahead",
+          "Outside"
+        ],
+        "correct_answer": "Straight ahead"
+      }
+    ],
+    "12_15": [
+      {
+        "id": "12_15_01",
+        "title": "Money — Choosing what you can afford",
+        "context": "AT THE SHOP",
+        "information": [
+          "You have £10.",
+          "Headphones — £7",
+          "Snack — £2",
+          "Drink — £9"
+        ],
+        "question": "Which two things can you buy without spending more than £10?",
+        "options": [
+          "Headphones + snack",
+          "Headphones + drink",
+          "Snack + drink",
+          "All three"
+        ],
+        "correct_answer": "Headphones + snack"
+      },
+      {
+        "id": "12_15_02",
+        "title": "Instructions — Following steps",
+        "context": "CHARGE YOUR PHONE",
+        "information": [
+          "1. Plug in the charger.",
+          "2. Connect the phone.",
+          "3. Switch on the socket."
+        ],
+        "question": "What should you do FIRST?",
+        "options": [
+          "Switch on the socket",
+          "Connect the phone",
+          "Plug in the charger",
+          "Put the phone away"
+        ],
+        "correct_answer": "Plug in the charger"
+      },
+      {
+        "id": "12_15_03",
+        "title": "Planning — Remembering an appointment",
+        "context": "YOUR WEEK",
+        "information": [
+          "Monday: Football — 5:00 PM",
+          "Tuesday: Dentist — 3:30 PM",
+          "Wednesday: Homework club — 4:00 PM"
+        ],
+        "question": "You have a dentist appointment. What day is it?",
+        "options": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "correct_answer": "Tuesday"
+      }
+    ],
+    "16_18": [
+      {
+        "id": "16_18_01",
+        "title": "Money — Understanding change",
+        "context": "AT A CAFÉ",
+        "information": [
+          "You pay with a £10 note.",
+          "Your food costs £6.50."
+        ],
+        "question": "How much change should you receive?",
+        "options": [
+          "£2.50",
+          "£3.00",
+          "£3.50",
+          "£4.50"
+        ],
+        "correct_answer": "£3.50"
+      },
+      {
+        "id": "16_18_02",
+        "title": "Reading — Finding key information",
+        "context": "SCHOOL NOTICE",
+        "information": [
+          "ART CLUB",
+          "Thursday 4:15 PM",
+          "Room 12",
+          "Bring a pencil and sketchbook."
+        ],
+        "question": "What do you need to bring?",
+        "options": [
+          "A laptop and book",
+          "A pencil and sketchbook",
+          "Paint and a camera",
+          "Nothing"
+        ],
+        "correct_answer": "A pencil and sketchbook"
+      },
+      {
+        "id": "16_18_03",
+        "title": "Time management — Meeting a deadline",
+        "context": "YOUR PLAN",
+        "information": [
+          "Assignment due at 6:00 PM.",
+          "Write the final paragraph — 20 min",
+          "Check your work — 10 min",
+          "Upload it — 5 min",
+          "Current time: 5:20 PM"
+        ],
+        "question": "Do you have enough time?",
+        "options": [
+          "Yes",
+          "No",
+          "Only if you skip checking",
+          "The deadline is tomorrow"
+        ],
+        "correct_answer": "Yes"
+      }
+    ],
+    "18_plus": [
+      {
+        "id": "18_plus_01",
+        "title": "Shopping — Comparing information",
+        "context": "SUPERMARKET DEAL",
+        "information": [
+          "Coffee",
+          "Small: €3.20",
+          "Large: €4.50",
+          "Today: Large coffee 20% off"
+        ],
+        "question": "What is the sale price of the large coffee?",
+        "options": [
+          "€3.20",
+          "€3.60",
+          "€3.80",
+          "€4.30"
+        ],
+        "correct_answer": "€3.60"
+      },
+      {
+        "id": "18_plus_02",
+        "title": "Everyday life — Reading an appointment message",
+        "context": "APPOINTMENT",
+        "information": [
+          "Your appointment is confirmed.",
+          "Friday 14 June",
+          "10:30 AM",
+          "Green Street Health Centre",
+          "Please arrive 10 minutes early."
+        ],
+        "question": "What time should you arrive?",
+        "options": [
+          "10:00 AM",
+          "10:10 AM",
+          "10:20 AM",
+          "10:30 AM"
+        ],
+        "correct_answer": "10:20 AM"
+      },
+      {
+        "id": "18_plus_03",
+        "title": "Work — Understanding instructions",
+        "context": "AT WORK",
+        "information": [
+          "1. Check the stock list.",
+          "2. Put new items on the shelves.",
+          "3. Report any missing items to your manager.",
+          "You notice that 5 items are missing."
+        ],
+        "question": "What should you do?",
+        "options": [
+          "Ignore them",
+          "Put them on the shelves",
+          "Report them to your manager",
+          "Throw away the stock list"
+        ],
+        "correct_answer": "Report them to your manager"
+      }
+    ]
+  }
+}

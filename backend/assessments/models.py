@@ -6,6 +6,38 @@ from django.contrib.postgres.fields import ArrayField
 
 from user.choices import AgeGroup
 from .choices import AssessmentType, Kind, ResponseType, Skill
+
+
+class RealLifeExercise(models.Model):
+    id = models.CharField(primary_key=True, max_length=100)
+    age_group = models.CharField(max_length=10, choices=AgeGroup.choices)
+    title = models.CharField(max_length=255)
+    context = models.CharField(max_length=255)
+    information = models.JSONField(default=list)
+    question = models.TextField()
+    options = models.JSONField(default=list)
+    correct_answer = models.TextField()
+
+
+class RealLifeExerciseAttempt(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="real_life_attempts")
+    exercise = models.ForeignKey(RealLifeExercise, on_delete=models.PROTECT, related_name="attempts")
+    assigned_date = models.DateField()
+    slot = models.PositiveSmallIntegerField()
+    # Snapshot preserves historical questions even if the bank is edited later.
+    exercise_data = models.JSONField()
+    answer = models.TextField(blank=True, default="")
+    correct = models.BooleanField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "assigned_date", "slot"], name="real_life_unique_daily_slot"),
+            models.UniqueConstraint(fields=["user", "assigned_date", "exercise"], name="real_life_unique_daily_exercise"),
+            models.CheckConstraint(condition=models.Q(slot__gte=1, slot__lte=3), name="real_life_three_daily_slots"),
+        ]
+        ordering = ["assigned_date", "slot"]
     
 
 # Create your models here.

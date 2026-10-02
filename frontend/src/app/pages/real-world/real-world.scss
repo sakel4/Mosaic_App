@@ -1,5 +1,15 @@
 :host { display: block; }
 .page-header { margin-bottom: 28px; }
+.daily-overview { padding: 20px; margin-bottom: 22px; }
+.daily-overview > strong { color: var(--green-dark); font-size: 14px; }
+.daily-scenarios { display: grid; gap: 10px; margin: 16px 0 0; padding: 0; list-style: none; }
+.daily-scenarios li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font-size: 13px; }
+.scenario-status { color: var(--muted); font-size: 11px; }
+.daily-scenarios li.completed { background: var(--selection-surface); }
+.completed .scenario-status { color: var(--selection-text); font-weight: 600; }
+.daily-state { padding: 32px 24px; text-align: center; }
+.daily-state h2 { color: var(--ink); font-size: 23px; }
+.daily-state p { color: var(--muted); line-height: 1.7; }
 .scenario-layout { display: grid; grid-template-columns: minmax(0, 1fr) 230px; align-items: start; gap: 22px; }
 .scenario-layout.showing-feedback { grid-template-columns: minmax(0, 1fr); }
 .scenario-heading { display: flex; align-items: center; gap: 12px; margin: 0 0 22px 2px; }

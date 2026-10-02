@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.spec.json","include":["src/**/*.d.ts","src/app/pages/real-world/real-world.spec.ts","src/app/core/services/real-world-service.spec.ts"]}
