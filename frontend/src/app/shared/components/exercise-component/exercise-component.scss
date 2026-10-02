@@ -43,3 +43,13 @@
       .exercise-actions { align-items: stretch; flex-direction: column; }
       .exercise-actions .primary-button { width: 100%; }
     }
+input[type='text'] {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 12px 0;
+  padding: 14px 16px;
+  border: 1px solid #c9d2ca;
+  border-radius: 12px;
+  font: inherit;
+}

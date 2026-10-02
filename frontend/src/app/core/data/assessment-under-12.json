@@ -1,0 +1,215 @@
+[
+    {
+        "id": "80e1a47c-eb26-400e-8746-1a4523c94683",
+        "created_at": "2024-06-05T12:00:00Z",
+        "age_group": "under_12",
+        "language": "en",
+        "assessment_type": "assessment",
+        "estimated_duration_seconds": 540,
+        "estimated_voice_duration_seconds": 75,
+        "excercises": [
+            {
+                "id": "004accd0-a91f-4b38-a567-a7724bbe8484",
+                "position": 1,
+                "kind": "phoneme_manipulation",
+                "skill": "phonological_awareness",
+                "difficulty_level": 2,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "c",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "/f/ /i/ /sh/"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "/f/ /sh/ /i/"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "/sh/ /i/ /f/"
+                                }
+                            ],
+                            "audio_prompt": "Which option shows the sounds in fish in the correct order?",
+                            "correct_option_id": "1"
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "confidence": "84.00"
+            },
+            {
+                "id": "2c200ec2-e601-48fb-a32c-bde79eeb44dd",
+                "position": 2,
+                "kind": "letter_sound",
+                "skill": "letter_sound_association",
+                "difficulty_level": 2,
+                "response_type": "single_choice_set",
+                "instruction": "Listen to or read each prompt and choose the matching word. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "options": [
+                                {
+                                    "id": "1",
+                                    "text": "moon"
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "sun"
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "fish"
+                                }
+                            ],
+                            "grapheme": "m"
+                        }
+                    ],
+                    "audio_supported": true,
+                    "microphone_required": false
+                },
+                "confidence": "88.00"
+            },
+            {
+                "id": "cf522d8f-dc34-4c2c-bfc1-bc46f669505d",
+                "position": 3,
+                "kind": "word_reading_sample",
+                "skill": "decoding",
+                "difficulty_level": 2,
+                "response_type": "spoken",
+                "instruction": "This is one of only two short speaking parts. Read the words aloud from left to right.",
+                "content_data": {
+                    "sections": [
+                        {
+                            "id": "pseudowords",
+                            "items": [
+                                "lat",
+                                "mip",
+                                "shen",
+                                "plim",
+                                "froat"
+                            ],
+                            "label": "Made-up words"
+                        }
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 35
+                },
+                "confidence": "86.00"
+            },
+            {
+                "id": "277006bc-520e-4286-a3a1-e6914fa7d78f",
+                "position": 4,
+                "kind": "reading_fluency",
+                "skill": "reading_fluency",
+                "difficulty_level": 2,
+                "response_type": "spoken",
+                "instruction": "This is the second and final speaking part. Read the short passage aloud at a comfortable pace.",
+                "content_data": {
+                    "passage_lines": [
+                        "Maya found a small box beside the garden gate.",
+                        "She opened it carefully and saw three bright stones inside.",
+                        "She called her brother to come and look.",
+                        "Together they carried the box to the kitchen table and wondered who had left it",
+                        "there."
+                    ],
+                    "microphone_required": true,
+                    "target_voice_seconds": 40
+                },
+                "confidence": "86.00"
+            },
+            {
+                "id": "e001eb1b-7453-47bc-8a5d-cb88517fa40e",
+                "position": 5,
+                "kind": "spelling",
+                "skill": "spelling",
+                "difficulty_level": 2,
+                "response_type": "spelling",
+                "instruction": "Listen to each dictated word and type it. You do not need to speak.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "a",
+                            "word": "ship",
+                            "sentence": "The ship crossed the water."
+                        }
+                    ],
+                    "audio_required": true,
+                    "microphone_required": false
+                },
+                "confidence": "82.00"
+            },
+            {
+                "id": "cd55d43e-add7-40e8-9353-391820a4065e",
+                "position": 6,
+                "kind": "comprehension",
+                "skill": "comprehension",
+                "difficulty_level": 2,
+                "response_type": "single_choice_set",
+                "instruction": "Read the passage silently and answer both questions. No speaking is needed.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "q1",
+                            "prompt": "Why did Leo take an umbrella?",
+                            "options": [
+                                {
+                                    "id": "a",
+                                    "text": "He wanted shade from the sun."
+                                },
+                                {
+                                    "id": "b",
+                                    "text": "Rain was expected soon."
+                                },
+                                {
+                                    "id": "c",
+                                    "text": "The library asked him to bring one."
+                                }
+                            ]
+                        }
+                    ],
+                    "passage": [
+                        "Leo was getting ready to walk to the library.",
+                        "The sky was grey, and the weather report said rain would begin before noon.",
+                        "He put a book in his backpack and took an umbrella from the hall."
+                    ],
+                    "microphone_required": false
+                },
+                "confidence": "86.00"
+            },
+            {
+                "id": "0359567e-16ce-438a-8a18-05630ec2c902",
+                "position": 7,
+                "kind": "working_memory",
+                "skill": "working_memory",
+                "difficulty_level": 1,
+                "response_type": "sequence",
+                "instruction": "Watch or listen to each short sequence. When it disappears, enter it in the requested order. No speaking is needed.",
+                "content_data": {
+                    "items": [
+                        {
+                            "id": "b",
+                            "sequence": [
+                                "4",
+                                "1",
+                                "7"
+                            ],
+                            "direction": "reverse"
+                        }
+                    ],
+                    "audio_supported": true,
+                    "microphone_required": false,
+                    "display_ms_per_digit": 900
+                },
+                "confidence": "82.00"
+            }
+        ]
+    }
+]

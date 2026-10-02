@@ -20,6 +20,7 @@ export class Assessment {
   private readonly router = inject(Router);
   private readonly loadedExercises = signal<AssessmentExercise[]>([]);
   get exercises(): AssessmentExercise[] { return this.loadedExercises(); }
+  readonly estimatedMinutes = this.assessmentService.estimatedMinutes;
   readonly loading = signal(true);
   readonly loadError = signal('');
   readonly index = signal(0);
@@ -45,8 +46,8 @@ export class Assessment {
 
   onCompleted(attempt: ExerciseAttempt): void {
     if (!this.exercise()) return;
-    this.lastAttempt.set(attempt);
-    this.assessmentService.recordAttempt(attempt, this.exercise().skill);
+    this.lastAttempt.set({ exerciseId: attempt.exerciseId, answer: '', correct: attempt.correct,
+      evaluated: attempt.evaluated, responseTime: attempt.responseTime });
     this.feedback.set(true);
   }
 
@@ -56,7 +57,7 @@ export class Assessment {
       this.saving.set(true);
       this.saveError.set('');
       this.users.completeAssessment().subscribe({
-        next: () => { void this.router.navigate(['/dashboard']); },
+        next: () => { this.lastAttempt.set(null); void this.router.navigate(['/dashboard']); },
         error: () => {
           this.saving.set(false);
           this.saveError.set('Could not save your assessment. Please try again.');
@@ -66,5 +67,6 @@ export class Assessment {
     }
     this.index.update((value) => value + 1);
     this.feedback.set(false);
+    this.lastAttempt.set(null);
   }
 }

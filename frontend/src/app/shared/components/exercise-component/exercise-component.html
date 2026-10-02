@@ -13,7 +13,7 @@
         }
       }
     </span>
-    @if (users.profile().preferences.textToSpeech) {
+    @if ((users.profile().preferences.textToSpeech || apiExercise()?.content_data?.audio_required || apiExercise()?.content_data?.audio_supported) && !listening()) {
       @if (audioSupported) {
         <button
           class="audio-button"
@@ -36,6 +36,9 @@
   }
   @if (content().instruction) {
     <p class="instruction">{{ content().instruction }}</p>
+  }
+  @if (passage()) {
+    <p class="prompt" [style.white-space]="'pre-line'">{{ passage() }}</p>
   }
   @if (users.profile().preferences.currentLineHighlight) {
     <div class="prompt-lines" role="heading" aria-level="2" aria-label="Exercise prompt">
@@ -79,6 +82,34 @@
   } @else {
     <h2 class="prompt" [style.font-size]="promptFontSize()">{{ content().prompt }}</h2>
   }
+  @if (responseType() === 'spelling') {
+    <label for="typed-answer">Your spelling</label>
+    <input id="typed-answer" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+      [value]="selected() ?? ''" (input)="choose($any($event.target).value)" />
+  } @else if (responseType() === 'sequence') {
+    @if (!sequenceStarted()) {
+      <button type="button" class="primary-button" (click)="startSequence()">Show sequence</button>
+    }
+    @if (sequenceVisible() !== null) {
+      <p class="prompt" role="status">{{ sequenceVisible() }}</p>
+    }
+    @if (sequenceFinished()) {
+      <label for="sequence-answer">Your sequence (digits separated by spaces)</label>
+      <input id="sequence-answer" type="text" inputmode="numeric" autocomplete="off"
+        [value]="selected() ?? ''" (input)="choose($any($event.target).value)" />
+    }
+  } @else if (responseType() === 'spoken') {
+    @if (recognitionSupported) {
+      <button type="button" class="primary-button" (click)="listening() ? stopTranscription() : startTranscription()">
+        {{ listening() ? 'Stop transcribing' : transcript() ? 'Try again' : 'Start reading aloud' }}
+      </button>
+    } @else {
+      <p role="status">Speech recognition is not available in this browser.</p>
+    }
+    @if (listening()) { <p role="status">Listening to your reading...</p> }
+    @if (recognitionStatus()) { <p role="status">{{ recognitionStatus() }}</p> }
+    @if (transcript()) { <p class="transcript"><strong>Your transcription:</strong> {{ transcript() }}</p> }
+  }
   <div class="answer-list" role="group" aria-label="Choose an answer">
     @for (option of options(); track option.id) {
       <div class="answer-row">
@@ -93,7 +124,7 @@
           <span class="radio-mark" aria-hidden="true"></span>
           <span>{{ option.text }}</span>
         </button>
-        @if (users.profile().preferences.textToSpeech && audioSupported) {
+        @if (audioSupported) {
           <button
             type="button"
             class="choice-audio-button"
@@ -113,7 +144,7 @@
     <p class="reassurance" [style.font-size]="supportFontSize()">
       There’s no rush. Choose the answer that feels right.
     </p>
-    <button class="primary-button" type="button" [disabled]="!selected()" (click)="submit()">
+    <button class="primary-button" type="button" [disabled]="!canSubmit()" (click)="submit()">
       {{ hasNextItem() ? 'Next question' : 'Check answer' }} <span aria-hidden="true">→</span>
     </button>
   </div>
