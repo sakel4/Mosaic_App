@@ -3,7 +3,6 @@ from django.db import models
 class AssessmentType(models.TextChoices):
     ASSESSMENT = "assessment", "Assessment"
     EXCERCISE = "exercise", "Exercise"
-    REAL_LIFE = "real_life", "Real Life"
 
 class Kind(models.TextChoices):
     PHONEME_MANIPULATION = "phoneme_manipulation", "Phoneme Manipulation"

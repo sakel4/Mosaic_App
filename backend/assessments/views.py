@@ -125,7 +125,3 @@ class GenerateAssessmentView(APIView):
 
 class GenerateExerciseView(GenerateAssessmentView):
     assessment_type = AssessmentType.EXCERCISE
-
-
-class GenerateRealLifeView(GenerateAssessmentView):
-    assessment_type = AssessmentType.REAL_LIFE

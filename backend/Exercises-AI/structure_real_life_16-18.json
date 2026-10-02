@@ -1,0 +1,204 @@
+{
+    "id": "ef930791-8a8b-4b16-a80f-b1c62eb4c95d",
+    "created_at": "2026-10-02T06:36:28.779383Z",
+    "age_group": "16_18",
+    "language": "en",
+    "assessment_type": "exercise",
+    "estimated_duration_seconds": null,
+    "estimated_voice_duration_seconds": null,
+    "excercises": [
+        {
+            "id": "b8fb890c-486a-4e62-8c47-efdb19c61f66",
+            "exercise_id": null,
+            "position": 1,
+            "kind": "reading_fluency",
+            "skill": "reading_fluency",
+            "difficulty_level": 2,
+            "response_type": "spoken",
+            "instruction": "This is one of only two short speaking parts. Read the words aloud from left to right.",
+            "content_data": {
+                "sections": [
+                    {
+                        "id": "real_words",
+                        "items": [
+                            "light",
+                            "weather",
+                            "because",
+                            "through"
+                        ],
+                        "label": "Real words"
+                    }
+                ],
+                "microphone_required": true,
+                "target_voice_seconds": 35
+            },
+            "confidence": null
+        },
+        {
+            "id": "b9b14c8c-5015-4b8d-9887-367b98779c7c",
+            "exercise_id": null,
+            "position": 2,
+            "kind": "reading_fluency",
+            "skill": "reading_fluency",
+            "difficulty_level": 2,
+            "response_type": "spoken",
+            "instruction": "This is the second and final speaking part. Read the short passage aloud at a comfortable pace.",
+            "content_data": {
+                "passage_lines": [
+                    "The autumn leaves changed color as the wind blew across the park.",
+                    "Students sat on the grass and shared their lunch together.",
+                    "They watched the birds fly south for the winter months ahead.",
+                    "It was a peaceful afternoon for everyone involved."
+                ],
+                "microphone_required": true,
+                "target_voice_seconds": 40
+            },
+            "confidence": null
+        },
+        {
+            "id": "67c5c87d-dae0-4d78-aeb2-e922373399bf",
+            "exercise_id": null,
+            "position": 3,
+            "kind": "reading_fluency",
+            "skill": "reading_fluency",
+            "difficulty_level": 2,
+            "response_type": "spoken",
+            "instruction": "This is one of only two short speaking parts. Read the words aloud from left to right.",
+            "content_data": {
+                "sections": [
+                    {
+                        "id": "real_words",
+                        "items": [
+                            "school",
+                            "friend",
+                            "important",
+                            "question"
+                        ],
+                        "label": "Real words"
+                    }
+                ],
+                "microphone_required": true,
+                "target_voice_seconds": 35
+            },
+            "confidence": null
+        },
+        {
+            "id": "f44d3e70-73f9-4e4e-8e06-7e7fa91152df",
+            "exercise_id": null,
+            "position": 4,
+            "kind": "reading_fluency",
+            "skill": "reading_fluency",
+            "difficulty_level": 2,
+            "response_type": "spoken",
+            "instruction": "This is the second and final speaking part. Read the short passage aloud at a comfortable pace.",
+            "content_data": {
+                "passage_lines": [
+                    "Maya put on her coat and gloves before heading out the door.",
+                    "She walked slowly along the sidewalk to the corner store.",
+                    "The shop was closed, so she decided to go home instead.",
+                    "She looked forward to a quiet evening reading a book."
+                ],
+                "microphone_required": true,
+                "target_voice_seconds": 40
+            },
+            "confidence": null
+        },
+        {
+            "id": "65edc385-342b-4b58-8aec-6693f927a965",
+            "exercise_id": null,
+            "position": 5,
+            "kind": "phoneme_manipulation",
+            "skill": "phonological_awareness",
+            "difficulty_level": 3,
+            "response_type": "single_choice_set",
+            "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+            "content_data": {
+                "items": [
+                    {
+                        "id": "a",
+                        "options": [
+                            {
+                                "id": "1",
+                                "text": "triple"
+                            },
+                            {
+                                "id": "2",
+                                "text": "triplet"
+                            },
+                            {
+                                "id": "3",
+                                "text": "triple"
+                            }
+                        ],
+                        "audio_prompt": "Say triple in your head. Remove the first /t/ sound. Which answer is left?"
+                    }
+                ],
+                "audio_required": true,
+                "microphone_required": false
+            },
+            "confidence": null
+        },
+        {
+            "id": "55bfd6ec-6efe-450f-ac1c-92c968d59a40",
+            "exercise_id": null,
+            "position": 6,
+            "kind": "phoneme_manipulation",
+            "skill": "phonological_awareness",
+            "difficulty_level": 3,
+            "response_type": "single_choice_set",
+            "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+            "content_data": {
+                "items": [
+                    {
+                        "id": "c",
+                        "options": [
+                            {
+                                "id": "1",
+                                "text": "/l/ /e/ /v/ /e/ /l/"
+                            },
+                            {
+                                "id": "2",
+                                "text": "/l/ /e/ /v/ /e/ /l/"
+                            },
+                            {
+                                "id": "3",
+                                "text": "/l/ /e/ /v/ /e/ /l/"
+                            }
+                        ],
+                        "audio_prompt": "Which option gives the sounds in level in the correct order?"
+                    }
+                ],
+                "audio_required": true,
+                "microphone_required": false
+            },
+            "confidence": null
+        },
+        {
+            "id": "6eef2af3-c7ec-499f-bd64-442170b3185d",
+            "exercise_id": null,
+            "position": 7,
+            "kind": "working_memory",
+            "skill": "working_memory",
+            "difficulty_level": 2,
+            "response_type": "sequence",
+            "instruction": "Watch or listen to each short sequence. When it disappears, enter it in the requested order. No speaking is needed.",
+            "content_data": {
+                "items": [
+                    {
+                        "id": "b",
+                        "sequence": [
+                            "8",
+                            "3",
+                            "4"
+                        ],
+                        "direction": "reverse"
+                    }
+                ],
+                "audio_supported": true,
+                "microphone_required": false,
+                "display_ms_per_digit": 900
+            },
+            "confidence": null
+        }
+    ]
+}
