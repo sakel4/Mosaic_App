@@ -6,13 +6,7 @@ from .models import RealLifeSet, RealLifeSetExercise
 class RealLifeSetExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = RealLifeSetExercise
-        exclude = ("real_life_set",)
-
-
-class EvaluateRealLifeSetSerializer(serializers.Serializer):
-    real_life_set_id = serializers.CharField(max_length=100)
-    # Keyed by exercise id; true means the learner answered correctly.
-    answers = serializers.DictField(child=serializers.BooleanField(), allow_empty=False)
+        exclude = ("real_life_set", "correct_answer")
 
 
 class RealLifeSetSerializer(serializers.ModelSerializer):
