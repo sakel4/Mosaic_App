@@ -6,6 +6,7 @@ import { AssessmentExercise, AssessmentResponse, assessmentExercises } from '../
 
 export interface CompletedAssessment {
   assessment_id: string | null;
+  is_initial: boolean;
   answers: { exercise_id: string; answers: Record<string, string | string[]> }[];
 }
 
@@ -19,6 +20,8 @@ export class AssessmentService {
 
   readonly estimatedMinutes = signal(10);
 
+  private exercises: AssessmentExercise[] = [];
+
   getAssessment(): Observable<AssessmentExercise[]> {
     return this.http.get<AssessmentResponse>('/assessments/initial/').pipe(
       map((response) => {
@@ -27,7 +30,8 @@ export class AssessmentService {
         this.assessmentId = assessment?.id ?? null;
         this.result.set(null);
         this.estimatedMinutes.set(Math.max(1, Math.ceil((assessment?.estimated_duration_seconds ?? 600) / 60)));
-        return assessmentExercises(response);
+        this.exercises = assessmentExercises(response);
+        return this.exercises;
       }),
     );
   }
@@ -35,10 +39,15 @@ export class AssessmentService {
   finishAssessment(attempts: ExerciseAttempt[]): void {
     this.result.set({
       assessment_id: this.assessmentId,
-      answers: attempts.map((attempt) => ({
-        exercise_id: String(attempt.exerciseId),
-        answers: structuredClone(attempt.itemAnswers ?? { answer: attempt.answer }),
-      })),
+      is_initial: true,
+      answers: attempts.map((attempt) => {
+        const exercise = this.exercises.find((e) => String(e.id ?? e.position) === String(attempt.exerciseId));
+        const itemId = exercise?.content_data.items?.[0]?.id;
+        return {
+          exercise_id: itemId ? `${attempt.exerciseId}_${itemId}` : String(attempt.exerciseId),
+          answers: structuredClone(attempt.itemAnswers ?? { answer: attempt.answer }),
+        };
+      }),
     });
     console.log('Completed assessment:', this.completedAssessment());
   }
