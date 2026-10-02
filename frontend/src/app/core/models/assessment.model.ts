@@ -24,7 +24,7 @@ export interface AssessmentExercise {
   difficulty?: number;
   difficulty_level?: number;
   confidence?: string;
-  response_type: 'single_choice_set' | 'spoken' | 'spelling' | 'sequence';
+  response_type: 'single_choice_set' | 'spoken' | 'spelling' | 'typed_text' | 'sequence';
   instruction: string;
   language?: string;
   content_data: {

@@ -13,7 +13,7 @@
         }
       }
     </span>
-    @if ((users.profile().preferences.textToSpeech || apiExercise()?.content_data?.audio_required || apiExercise()?.content_data?.audio_supported) && !listening()) {
+    @if ((responseType() === 'spelling' || users.profile().preferences.textToSpeech || apiExercise()?.content_data?.audio_required || apiExercise()?.content_data?.audio_supported) && !listening()) {
       @if (audioSupported) {
         <button
           class="audio-button"

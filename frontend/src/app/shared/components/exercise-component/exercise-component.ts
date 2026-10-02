@@ -47,7 +47,11 @@ export class ExcerciseComponent {
     return 'content_data' in exercise ? exercise : null;
   });
   readonly item = computed(() => this.apiExercise()?.content_data.items?.[this.itemIndex()]);
-  readonly responseType = computed(() => this.apiExercise()?.response_type ?? 'single_choice_set');
+  readonly responseType = computed(() => {
+    const exercise = this.apiExercise();
+    return exercise?.response_type === 'typed_text' && exercise.kind === 'spelling'
+      ? 'spelling' : exercise?.response_type ?? 'single_choice_set';
+  });
   readonly passage = computed(() => (this.apiExercise()?.content_data.passage ?? []).join('\n'));
   readonly listening = signal(false);
   readonly transcript = signal('');
@@ -73,7 +77,7 @@ export class ExcerciseComponent {
       prompt: exercise.response_type === 'spoken'
         ? (exercise.content_data.passage_lines ?? exercise.content_data.sections?.flatMap((section) => section.items) ?? []).join('\n')
         : exercise.response_type === 'sequence' ? `Enter the sequence in ${item?.direction ?? 'forward'} order.`
-        : exercise.response_type === 'spelling' ? 'Listen to the word, then type its spelling.'
+        : this.responseType() === 'spelling' ? 'Listen to the word, then type its spelling.'
         : item?.prompt ?? item?.audio_prompt ?? item?.grapheme ?? '',
       correctAnswer: item?.correct_option_id ?? '',
     };

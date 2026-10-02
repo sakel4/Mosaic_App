@@ -100,6 +100,38 @@ describe('ExcerciseComponent', () => {
     expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ correct: true, itemAnswers: { a: 'ship' } }));
   });
 
+  it('supports typed_text spelling through the Listen button and typed input', async () => {
+    const speak = vi.fn();
+    vi.stubGlobal('speechSynthesis', { cancel: vi.fn(), speak });
+    vi.stubGlobal('SpeechSynthesisUtterance', class { constructor(public text: string) {} });
+    const spellingFixture = TestBed.createComponent(ExcerciseComponent);
+    try {
+      spellingFixture.componentRef.setInput('exercise', {
+        id: 'spelling', position: 1, kind: 'spelling', skill: 'spelling', response_type: 'typed_text',
+        instruction: 'Listen to each dictated word and type it. You do not need to speak.',
+        content_data: { items: [{ id: 'a', word: 'ship', sentence: 'The ship crossed the water.' }] },
+      });
+      spellingFixture.componentRef.setInput('mode', 'assessment');
+      await spellingFixture.whenStable();
+      spellingFixture.nativeElement.querySelector('.audio-button').click();
+      expect(speak).toHaveBeenCalledWith(expect.objectContaining({ text: 'ship' }));
+      const input = spellingFixture.nativeElement.querySelector('input');
+      expect(input).toBeTruthy();
+      input.value = 'Ship';
+      input.dispatchEvent(new Event('input'));
+      spellingFixture.detectChanges();
+      const emitted = vi.fn();
+      spellingFixture.componentInstance.completed.subscribe(emitted);
+      const submit = spellingFixture.nativeElement.querySelector('.exercise-actions .primary-button');
+      expect(submit.disabled).toBe(false);
+      submit.click();
+      expect(emitted).toHaveBeenCalledWith(expect.objectContaining({ correct: true, itemAnswers: { a: 'Ship' } }));
+    } finally {
+      spellingFixture.destroy();
+      vi.unstubAllGlobals();
+    }
+  });
+
   it('shows the comprehension passage and question', async () => {
     await loadSupplied(5);
     expect(fixture.nativeElement.textContent).toContain('Leo was getting ready');
