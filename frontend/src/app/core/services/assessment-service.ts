@@ -7,9 +7,8 @@ import { AssessmentExercise, AssessmentResponse, assessmentExercises } from '../
 export interface CompletedAssessment {
   assessment_id: string | null;
   is_initial: boolean;
-  answers: Record<string, Record<string, string | string[]>>[];
+  answers: Record<string, boolean>[];
 }
-
 @Injectable({ providedIn: 'root' })
 export class AssessmentService {
   private readonly http = inject(HttpClient);
@@ -35,7 +34,6 @@ export class AssessmentService {
       }),
     );
   }
-
   finishAssessment(attempts: ExerciseAttempt[]): void {
     this.result.set({
       assessment_id: this.assessmentId,
@@ -44,7 +42,7 @@ export class AssessmentService {
         const exercise = this.exercises.find((e) => String(e.id ?? e.position) === String(attempt.exerciseId));
         const itemId = exercise?.content_data.items?.[0]?.id;
         const key = itemId ? `${attempt.exerciseId}_${itemId}` : String(attempt.exerciseId);
-        return { [key]: structuredClone(attempt.itemAnswers ?? { answer: attempt.answer }) };
+        return { [key]: attempt.correct };
       }),
     });
     console.log('Completed assessment:', this.completedAssessment());
