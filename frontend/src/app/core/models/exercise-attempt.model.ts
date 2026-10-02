@@ -5,4 +5,5 @@
   responseTime: number;
   errorType?: string;
   hintsUsed?: number;
+  itemAnswers?: Record<string, string>;
 }

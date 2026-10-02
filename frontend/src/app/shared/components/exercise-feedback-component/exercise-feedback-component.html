@@ -5,11 +5,11 @@
         <p>
             {{
             attempt().correct
-            ? exercise().content.explanation
+            ? content().explanation
             : 'The answer was “' +
-            exercise().content.correctAnswer +
+            content().correctAnswer +
             '”. ' +
-            exercise().content.explanation
+            content().explanation
             }}
         </p>
     </div>

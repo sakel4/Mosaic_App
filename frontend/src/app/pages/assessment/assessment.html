@@ -14,6 +14,11 @@
         begin.
       </p>
     </div>
+    @if (loading()) {
+      <p role="status">Loading your assessment...</p>
+    } @else if (loadError()) {
+      <p role="alert">{{ loadError() }}</p>
+    } @else if (exercise()) {
     <div class="step-progress">
       <div class="progress-caption">
         <span>Activity {{ index() + 1 }} of {{ exercises.length }}</span
@@ -43,6 +48,7 @@
         mode="assessment"
         (completed)="onCompleted($event)"
       />
+    }
     }
     @if (saving()) {
       <p role="status">Saving your assessment...</p>

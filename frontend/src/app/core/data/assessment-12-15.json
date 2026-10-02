@@ -1,0 +1,259 @@
+{
+  "assessment": {
+    "age_group": "12_15",
+    "language": "en",
+    "estimated_duration_seconds": 72,
+    "estimated_voice_duration_seconds": 600,
+    "type": "assessment",
+    "excercises": [
+      {
+        "position": 1,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "a",
+              "audio_prompt": "Say smile in your head. Remove the first /s/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "mile"
+                },
+                {
+                  "id": "2",
+                  "text": "smile"
+                },
+                {
+                  "id": "3",
+                  "text": "style"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 2,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "b",
+              "audio_prompt": "Say plane in your head. Remove the first /p/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "lane"
+                },
+                {
+                  "id": "2",
+                  "text": "plane"
+                },
+                {
+                  "id": "3",
+                  "text": "plain"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 3,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "c",
+              "audio_prompt": "Say train in your head. Remove the first /t/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "rain"
+                },
+                {
+                  "id": "2",
+                  "text": "train"
+                },
+                {
+                  "id": "3",
+                  "text": "rein"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 4,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "d",
+              "audio_prompt": "Say clap in your head. Remove the first /k/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "lap"
+                },
+                {
+                  "id": "2",
+                  "text": "clap"
+                },
+                {
+                  "id": "3",
+                  "text": "cap"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 5,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "e",
+              "audio_prompt": "Say green in your head. Remove the first /g/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "reen"
+                },
+                {
+                  "id": "2",
+                  "text": "green"
+                },
+                {
+                  "id": "3",
+                  "text": "queen"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 6,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "f",
+              "audio_prompt": "Say stop in your head. Remove the first /s/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "top"
+                },
+                {
+                  "id": "2",
+                  "text": "stop"
+                },
+                {
+                  "id": "3",
+                  "text": "shop"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 7,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "g",
+              "audio_prompt": "Say frog in your head. Remove the first /f/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "rog"
+                },
+                {
+                  "id": "2",
+                  "text": "frog"
+                },
+                {
+                  "id": "3",
+                  "text": "log"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      },
+      {
+        "position": 8,
+        "kind": "phoneme_manipulation",
+        "skill": "phonological_awareness",
+        "difficulty": 3,
+        "response_type": "single_choice_set",
+        "instruction": "Listen to each sound prompt and choose the answer. You do not need to speak.",
+        "content_data": {
+          "items": [
+            {
+              "id": "h",
+              "audio_prompt": "Say brush in your head. Remove the first /b/ sound. Which answer is left?",
+              "options": [
+                {
+                  "id": "1",
+                  "text": "rush"
+                },
+                {
+                  "id": "2",
+                  "text": "brush"
+                },
+                {
+                  "id": "3",
+                  "text": "crush"
+                }
+              ],
+              "correct_option_id": "1"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

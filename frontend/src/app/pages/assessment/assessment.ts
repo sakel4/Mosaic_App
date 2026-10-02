@@ -5,6 +5,8 @@ import { ExerciseAttempt } from '../../core/models/exercise-attempt.model';
 import { AssessmentService } from '../../core/services/assessment-service';
 import { UserService } from '../../core/services/user-service';
 import { ExerciseFeedbackComponent } from '../../shared/components/exercise-feedback-component/exercise-feedback-component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AssessmentExercise } from '../../core/models/assessment.model';
 
 @Component({
   imports: [ExcerciseComponent, ExerciseFeedbackComponent, RouterLink],
@@ -16,7 +18,10 @@ export class Assessment {
   private readonly assessmentService = inject(AssessmentService);
   private readonly users = inject(UserService);
   private readonly router = inject(Router);
-  readonly exercises = this.assessmentService.getAssessment();
+  private readonly loadedExercises = signal<AssessmentExercise[]>([]);
+  get exercises(): AssessmentExercise[] { return this.loadedExercises(); }
+  readonly loading = signal(true);
+  readonly loadError = signal('');
   readonly index = signal(0);
   readonly exercise = computed(() => this.exercises[this.index()]);
   readonly feedback = signal(false);
@@ -24,7 +29,22 @@ export class Assessment {
   readonly saving = signal(false);
   readonly saveError = signal('');
 
+  constructor() {
+    this.assessmentService.getAssessment().pipe(takeUntilDestroyed()).subscribe({
+      next: (exercises) => {
+        this.loadedExercises.set(exercises);
+        this.loading.set(false);
+        if (!exercises.length) this.loadError.set('No assessment activities are available.');
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set('Could not load your assessment. Please refresh to try again.');
+      },
+    });
+  }
+
   onCompleted(attempt: ExerciseAttempt): void {
+    if (!this.exercise()) return;
     this.lastAttempt.set(attempt);
     this.assessmentService.recordAttempt(attempt, this.exercise().skill);
     this.feedback.set(true);

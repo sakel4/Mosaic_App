@@ -9,6 +9,7 @@ import { AuthService } from './auth-service';
 import { ProgressService } from './progress-service';
 import { UserService } from './user-service';
 import { Exercise } from '../models/exercise.model';
+import { AssessmentExercise } from '../models/assessment.model';
 
 describe('Page service connections', () => {
   const navigate = vi.fn().mockResolvedValue(true);
@@ -24,9 +25,9 @@ describe('Page service connections', () => {
     });
   });
 
-  const attempt = (exercise: Exercise) => ({
-    exerciseId: exercise.id,
-    answer: exercise.content.correctAnswer,
+  const attempt = (exercise: Exercise | AssessmentExercise) => ({
+    exerciseId: exercise.id ?? ('position' in exercise ? exercise.position : 0),
+    answer: 'content' in exercise ? exercise.content.correctAnswer : exercise.content_data.items[0].correct_option_id,
     correct: true,
     responseTime: 1000,
   });
