@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/users/', include('user.urls')),
     path('api/practice/', include('personalized_practice.urls')),
     path('api/assessments/', include('assessments.urls')),
+    path('api/real_life_set/', include('real_life_set.urls')),
 ]

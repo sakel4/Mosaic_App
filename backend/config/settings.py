@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'authentication',
     'personalized_practice.apps.PersonalizedPracticeConfig',
     'assessments',
+    'real_life_set',
 ]
 
 AUTH_USER_MODEL = 'user.User'
