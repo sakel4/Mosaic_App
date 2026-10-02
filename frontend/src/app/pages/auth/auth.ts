@@ -3,9 +3,10 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth-service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MatIconModule],
   selector: 'app-auth',
   styleUrl: './auth.scss',
   templateUrl: './auth.html',
@@ -18,6 +19,9 @@ export class Auth {
 
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  
+  showPassword = false;
+
 
   readonly form = this.fb.nonNullable.group({
     name: ['', this.isRegister ? Validators.required : []],

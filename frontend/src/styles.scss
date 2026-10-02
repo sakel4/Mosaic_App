@@ -252,6 +252,10 @@ body * {
   font-family: var(--reading-font-family) !important;
 }
 
+body .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
 html[data-letter-spacing='wide'] {
   --reading-letter-spacing: 0.04em;
 }
