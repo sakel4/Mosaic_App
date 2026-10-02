@@ -8,10 +8,10 @@ from personalized_practice.domain import PracticeDataError
 
 BANK_DIRECTORY = Path(__file__).resolve().parents[1] / "Exercises-AI"
 BANK_FILES = {
-    "under_12": "under_12.json",
-    "12_15": "12-15.json",
-    "16_18": "16-18.json",
-    "19_plus": "19_plus.json",
+    "under_12": "structure_under_12.json",
+    "12_15": "structure_12-15.json",
+    "16_18": "structure_16-18.json",
+    "19_plus": "structure_19_plus.json",
 }
 PRIVATE_FIELDS = {
     "answer_key",
@@ -38,9 +38,35 @@ def load_age_bank(age_group: str) -> dict[str, Any]:
         raise PracticeDataError("Unsupported age group.") from exc
     path = BANK_DIRECTORY / file_name
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        raw_data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise PracticeDataError(f"Could not load exercise bank for {age_group}.") from exc
+    
+    # Handle structure file format (nested under "assessment")
+    if "assessment" in raw_data:
+        assessment = raw_data["assessment"]
+        # Handle both "exercises" and misspelled "excercises"
+        exercises = assessment.get("exercises") or assessment.get("excercises", [])
+        
+        # Auto-generate exercise IDs if not present
+        for exercise in exercises:
+            if "id" not in exercise and "kind" in exercise:
+                position = exercise.get("position", 0)
+                kind = exercise.get("kind", "unknown")
+                exercise["id"] = f"{age_group}_position_{position:02d}_{kind}"
+        
+        data = {
+            "age_group": assessment.get("age_group"),
+            "assessment_version": assessment.get("assessment_version", f"onoma_en_{age_group}_limited_voice_v2"),
+            "assessment_type": assessment.get("assessment_type", "assessment"),
+            "language": assessment.get("language", "en"),
+            "estimated_duration_seconds": assessment.get("estimated_duration_seconds", 0),
+            "estimated_voice_duration_seconds": assessment.get("estimated_voice_duration_seconds", 0),
+            "exercises": exercises,
+        }
+    else:
+        data = raw_data
+    
     if data.get("age_group") != age_group or not isinstance(data.get("exercises"), list):
         raise PracticeDataError(f"Exercise bank metadata is invalid for {age_group}.")
     return data

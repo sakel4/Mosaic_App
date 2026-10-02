@@ -118,7 +118,10 @@ def _align(
 
 
 def score_transcription(exercise: Mapping[str, Any], transcription: Mapping[str, Any]) -> dict[str, Any]:
+    import sys
+    print(f"DEBUG: Transcription received: {transcription}", file=sys.stderr)
     recognized = _word_items(transcription)
+    print(f"DEBUG: Recognized words: {recognized}", file=sys.stderr)
     if not recognized:
         raise SpeechScoringError("Transcribe did not recognize any speech.")
 

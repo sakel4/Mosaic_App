@@ -5,6 +5,8 @@ from personalized_practice.views import (
     NextExerciseView,
     SubmitAssessmentView,
     UploadSpeechAssessmentView,
+    SpeechStreamChunkView,
+    SpeechStreamFinalizeView,
 )
 
 
@@ -13,4 +15,6 @@ urlpatterns = [
     path("next/", NextExerciseView.as_view(), name="next-practice-exercise"),
     path("assessment/submit/", SubmitAssessmentView.as_view(), name="submit-assessment"),
     path("assessment/speech/", UploadSpeechAssessmentView.as_view(), name="upload-assessment-speech"),
+    path("assessment/speech-stream/", SpeechStreamChunkView.as_view(), name="speech-stream-chunk"),
+    path("assessment/speech-finalize/", SpeechStreamFinalizeView.as_view(), name="speech-stream-finalize"),
 ]
